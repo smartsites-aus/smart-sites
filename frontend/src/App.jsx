@@ -1,7 +1,8 @@
 import React from 'react';
+import Homepage from './pages/Homepage.jsx';
 
 function App() {
-  return <div style={{ color: 'red', fontSize: '2rem' }}>TEST: App is Rendering</div>;
+  return <Homepage />;
 }
 
 export default App;
