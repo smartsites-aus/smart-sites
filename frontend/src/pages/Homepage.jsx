@@ -30,5 +30,3 @@ export default function Homepage() {
     </div>
   );
 }
-
-export default Homepage;
