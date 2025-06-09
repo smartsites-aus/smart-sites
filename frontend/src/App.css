@@ -1,0 +1,29 @@
+/* App.css */
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f4f4f7;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.main-content {
+  flex-grow: 1;
+  padding: 20px;
+  margin-left: 220px; /* Matches sidebar width */
+  transition: margin-left 0.3s ease;
+}
+
+.app-container.collapsed .main-content {
+  margin-left: 60px; /* Matches collapsed sidebar width */
+}
+
+/* Optional: give cards a soft container background */
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}

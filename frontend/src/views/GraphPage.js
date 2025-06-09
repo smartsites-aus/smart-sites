@@ -1,72 +1,89 @@
 // frontend/src/views/GraphPage.js
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import SensorGraph from '../components/SensorGraph';
 
-const GraphPage = () => {
+function GraphPage() {
   const [siteId, setSiteId] = useState('');
   const [sensorType, setSensorType] = useState('');
-  const [start, setStart] = useState('');
-  const [end, setEnd] = useState('');
-  const [data, setData] = useState([]);
-  const [availableSensors, setAvailableSensors] = useState([]);
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+  const [sensorOptions, setSensorOptions] = useState([]);
+  const [graphData, setGraphData] = useState([]);
 
+  // Fetch all available sensors for dropdowns
   useEffect(() => {
-    axios.get('/api/sensors')
-      .then((res) => setAvailableSensors(res.data))
-      .catch((err) => console.error(err));
+    axios.get('/sensors')
+      .then(res => {
+        setSensorOptions(res.data);
+      })
+      .catch(err => {
+        console.error('Error fetching sensors:', err);
+      });
   }, []);
 
-  const handleFetch = async () => {
-    if (!siteId || !sensorType || !start || !end) return;
+  const handleGenerateGraph = async () => {
+    if (!siteId || !sensorType || !startDate || !endDate) {
+      alert('Please fill out all fields');
+      return;
+    }
+
     try {
-      const res = await axios.get('/api/readings', {
-        params: { site: siteId, sensor: sensorType, start, end }
+      const res = await axios.get('/graph-data', {
+        params: { site: siteId, sensor: sensorType, start: startDate, end: endDate }
       });
-      setData(res.data);
-    } catch (err) {
-      console.error('❌ Error fetching data:', err);
+      setGraphData(res.data);
+    } catch (error) {
+      console.error('Error fetching graph data:', error);
+      alert('Failed to fetch graph data');
     }
   };
 
   return (
-    <div style={{ padding: '2rem' }}>
-      <h2>Graph Sensor Data</h2>
+    <div className="container">
+      <h2>📈 Graph Sensor Data</h2>
 
-      <div style={{ marginBottom: '1rem' }}>
+      <div className="form-section">
         <label>Site ID:</label>
-        <input value={siteId} onChange={e => setSiteId(e.target.value)} />
-      </div>
-
-      <div style={{ marginBottom: '1rem' }}>
-        <label>Sensor Type:</label>
-        <select value={sensorType} onChange={e => setSensorType(e.target.value)}>
-          <option value="">-- Select Sensor --</option>
-          {availableSensors.map((s, idx) => (
-            <option key={idx} value={s.sensor_type}>{s.sensor_type}</option>
+        <select value={siteId} onChange={(e) => setSiteId(e.target.value)}>
+          <option value="">-- Select Site --</option>
+          {[...new Set(sensorOptions.map(s => s.site_id))].map(site => (
+            <option key={site} value={site}>{site}</option>
           ))}
         </select>
       </div>
 
-      <div style={{ marginBottom: '1rem' }}>
-        <label>Start Date/Time:</label>
-        <input type="datetime-local" value={start} onChange={e => setStart(e.target.value)} />
+      <div className="form-section">
+        <label>Sensor Type:</label>
+        <select value={sensorType} onChange={(e) => setSensorType(e.target.value)}>
+          <option value="">-- Select Sensor --</option>
+          {[...new Set(sensorOptions.map(s => s.sensor_type))].map(type => (
+            <option key={type} value={type}>{type}</option>
+          ))}
+        </select>
       </div>
 
-      <div style={{ marginBottom: '1rem' }}>
-        <label>End Date/Time:</label>
-        <input type="datetime-local" value={end} onChange={e => setEnd(e.target.value)} />
+      <div className="form-section">
+        <label>Start Date:</label>
+        <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
       </div>
 
-      <button onClick={handleFetch}>Fetch and Graph</button>
+      <div className="form-section">
+        <label>End Date:</label>
+        <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
+      </div>
 
-      {data.length > 0 && (
-        <div style={{ marginTop: '2rem' }}>
-          <SensorGraph dataPoints={data} />
-        </div>
-      )}
+      <button onClick={handleGenerateGraph}>Generate Graph</button>
+
+      <div style={{ marginTop: '40px' }}>
+        {graphData.length > 0 ? (
+          <SensorGraph data={graphData} />
+        ) : (
+          <p>No data loaded yet</p>
+        )}
+      </div>
     </div>
   );
-};
+}
 
 export default GraphPage;

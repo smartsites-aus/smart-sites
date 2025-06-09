@@ -1,0 +1,10 @@
+chmod +x install-smart-sites.sh
+./install-smart-sites.sh
+
+
+
+⚠️ Important Notes After Running
+	•	Reboot your Pi after the script finishes to apply Docker group permissions.
+	•	Make sure you have already copied the full Smart Sites project into ~/SmartSites.
+	•	Replace /dev/ttyUSB0 in the script if your Z-Wave dongle uses a different port.
+	•	Access Z-Wave JS UI via a browser: http://<your-pi-ip>:8091
