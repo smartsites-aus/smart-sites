@@ -1,7 +1,7 @@
 import React from 'react';
 import './Homepage.css';
 
-export default function Homepage() {
+function Homepage() {
   return (
     <div className="homepage">
       <h1>Smart Sites Dashboard</h1>
@@ -30,3 +30,5 @@ export default function Homepage() {
     </div>
   );
 }
+
+export default Homepage;
