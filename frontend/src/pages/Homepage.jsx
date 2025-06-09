@@ -1,5 +1,7 @@
 /* frontend/src/pages/Homepage.css */
 
+import './Homepage.css';
+
 .homepage {
   padding: 2rem;
   font-family: "Segoe UI", Roboto, sans-serif;
