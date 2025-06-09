@@ -28,7 +28,7 @@ fi
 
 echo "📁 Cloning Smart Sites repo (skipped if already cloned)..."
 if [ ! -d "smart-sites" ]; then
-  git clone git@github.com:smartsitessystem/smart-sites.git
+  git clone git@github.com:smartsites-aus/smart-sites.git
 fi
 
 cd smart-sites || { echo "❌ Failed to enter smart-sites directory."; exit 1; }
