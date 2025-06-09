@@ -38,7 +38,7 @@ cd backend && npm install || echo "⚠️ Backend dependencies failed."
 cd ..
 
 echo "📦 Installing frontend dependencies..."
-cd frontend && npm install || echo "⚠️ Frontend dependencies failed."
+cd ~/smart-sites/smart-sites/frontend && npm install || echo "⚠️ Frontend dependencies failed."
 npm run build || echo "⚠️ Frontend build failed."
 cd ..
 
