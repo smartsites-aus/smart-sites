@@ -1,19 +1,31 @@
+// /home/pi/smart-sites/smart-sites/scripts/sendZWaveCommand.js
+
 const mqtt = require('mqtt');
-const client = mqtt.connect('mqtt://localhost');
 
-function sendZWaveCommand(nodeId, commandClass, command, value) {
-  const topic = `zwave/_CLIENTS/ZWAVE_GATEWAY-SmartSites/api/sendCommand/set`;
-  const payload = {
-    command: 'sendCommand',
-    nodeId: nodeId,
-    commandClass: commandClass,
-    endpoint: 0,
-    property: command,
-    value: value
-  };
+function sendZWaveCommand(deviceId, commandClass, property, value) {
+  return new Promise((resolve, reject) => {
+    const client = mqtt.connect('mqtt://localhost');
 
-  client.publish(topic, JSON.stringify(payload));
-  console.log(`Sent Z-Wave command to node ${nodeId}: ${commandClass} -> ${command} = ${value}`);
+    client.on('connect', () => {
+      const topic = `zwave/${deviceId}/set`;
+      const payload = JSON.stringify({
+        commandClass,
+        property,
+        value
+      });
+
+      client.publish(topic, payload, {}, (err) => {
+        client.end();
+        if (err) return reject(err);
+        resolve({ success: true, message: 'Command sent' });
+      });
+    });
+
+    client.on('error', (err) => {
+      client.end();
+      reject(err);
+    });
+  });
 }
 
 module.exports = sendZWaveCommand;
