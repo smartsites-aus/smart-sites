@@ -30,3 +30,5 @@ import './Homepage.css';
   font-size: 1.2rem;
   padding: 2rem;
 }
+
+export default Homepage;
