@@ -1,12 +1,7 @@
 import React from 'react';
-import Homepage from './pages/Homepage';
 
 function App() {
-  return (
-    <div className="App">
-      <Homepage />
-    </div>
-  );
+  return <div style={{ color: 'red', fontSize: '2rem' }}>TEST: App is Rendering</div>;
 }
 
 export default App;
