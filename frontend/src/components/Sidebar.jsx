@@ -1,26 +1,14 @@
+// src/components/Sidebar.jsx
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 function Sidebar() {
-  const location = useLocation();
-  const isActive = (path) => location.pathname === path;
-
   return (
-    <div className="w-64 bg-gray-800 text-white p-4 flex-shrink-0">
-      <h2 className="text-2xl font-bold mb-6">Smart Sites</h2>
-      <nav className="flex flex-col gap-4">
-        <Link
-          to="/"
-          className={`hover:text-blue-400 ${isActive('/') ? 'text-blue-400' : ''}`}
-        >
-          Dashboard
-        </Link>
-        <Link
-          to="/esphome"
-          className={`hover:text-blue-400 ${isActive('/esphome') ? 'text-blue-400' : ''}`}
-        >
-          ESPHome
-        </Link>
+    <div className="w-64 bg-gray-800 text-white p-4">
+      <h2 className="text-xl font-bold mb-4">Smart Sites</h2>
+      <nav className="flex flex-col gap-2">
+        <Link to="/" className="hover:bg-gray-700 p-2 rounded">Dashboard</Link>
+        <Link to="/esphome" className="hover:bg-gray-700 p-2 rounded">ESPHome</Link>
       </nav>
     </div>
   );
