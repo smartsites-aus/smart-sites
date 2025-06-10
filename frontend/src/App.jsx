@@ -1,3 +1,4 @@
+// src/App.jsx
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
@@ -9,7 +10,7 @@ function App() {
     <Router>
       <div className="flex h-screen">
         <Sidebar />
-        <div className="flex-grow p-6 overflow-auto">
+        <div className="flex-1 p-4 overflow-auto">
           <Routes>
             <Route path="/" element={<Homepage />} />
             <Route path="/esphome" element={<ESPHomePage />} />
