@@ -2394,6 +2394,176 @@ ${generateSensorConfig(template)}`;
             loadESPHomeData();
         }
 
+        // Automation Builder Variables
+let currentAutomation = {
+    name: '',
+    description: '',
+    triggers: [],
+    conditions: [],
+    actions: []
+};
+
+let editingAutomationId = null;
+
+// Load automation page data
+async function loadAutomations() {
+    try {
+        // Load templates
+        const templatesResponse = await fetch(`${API_BASE}/automations/templates`);
+        const templates = await templatesResponse.json();
+        renderTemplates(templates);
+        
+        // Load existing automations
+        const rulesResponse = await fetch(`${API_BASE}/automations/rules`);
+        const rules = await rulesResponse.json();
+        renderAutomations(rules);
+        
+    } catch (error) {
+        console.error('Failed to load automation data:', error);
+    }
+}
+
+function renderTemplates(templates) {
+    const grid = document.getElementById('template-grid');
+    
+    const templateIcons = {
+        'motion_lights': '💡',
+        'noise_alert': '🔊',
+        'security_alert': '🚨'
+    };
+    
+    grid.innerHTML = Object.entries(templates).map(([key, template]) => `
+        <div class="template-card" onclick="useTemplate('${key}')">
+            <div class="template-icon">${templateIcons[key] || '⚡'}</div>
+            <div class="template-name">${template.name}</div>
+            <div class="template-description">${template.description}</div>
+        </div>
+    `).join('');
+}
+
+function renderAutomations(automations) {
+    const list = document.getElementById('automation-list');
+    
+    if (automations.length === 0) {
+        list.innerHTML = `
+            <div class="empty-automation-state">
+                <div class="icon">⚡</div>
+                <h3>No Automations Yet</h3>
+                <p>Create your first automation to make your construction site smarter.</p>
+            </div>
+        `;
+        return;
+    }
+    
+    list.innerHTML = automations.map(automation => `
+        <div class="automation-item">
+            <div class="automation-info">
+                <h4>${automation.name}</h4>
+                <p>${automation.description}</p>
+                <div class="automation-stats">
+                    <span>Triggered: ${automation.trigger_count} times</span>
+                    <span>Last: ${automation.last_triggered ? new Date(automation.last_triggered).toLocaleString() : 'Never'}</span>
+                    <span>Created: ${new Date(automation.created_at).toLocaleDateString()}</span>
+                </div>
+            </div>
+            <div class="automation-controls">
+                <div class="toggle-switch ${automation.is_enabled ? 'active' : ''}" 
+                     onclick="toggleAutomation(${automation.id})">
+                </div>
+                <div class="automation-actions">
+                    <button onclick="editAutomation(${automation.id})">✏️ Edit</button>
+                    <button onclick="duplicateAutomation(${automation.id})">📋 Copy</button>
+                    <button onclick="deleteAutomation(${automation.id})" style="color: #dc3545;">🗑️ Delete</button>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+// Show/close automation builder
+function showAutomationBuilder() {
+    document.getElementById('automation-builder-modal').style.display = 'flex';
+    editingAutomationId = null;
+    resetAutomationBuilder();
+}
+
+function closeAutomationBuilder() {
+    document.getElementById('automation-builder-modal').style.display = 'none';
+    resetAutomationBuilder();
+}
+
+function resetAutomationBuilder() {
+    currentAutomation = {
+        name: '',
+        description: '',
+        triggers: [],
+        conditions: [],
+        actions: []
+    };
+    
+    document.getElementById('automation-name').value = '';
+    document.getElementById('automation-description').value = '';
+    document.getElementById('triggers-container').innerHTML = '';
+    document.getElementById('conditions-container').innerHTML = '';
+    document.getElementById('actions-container').innerHTML = '';
+    
+    updatePreview();
+}
+
+// Simple placeholder functions (you can expand these later)
+function addTrigger() {
+    alert('Trigger builder coming soon!');
+}
+
+function addCondition() {
+    alert('Condition builder coming soon!');
+}
+
+function addAction() {
+    alert('Action builder coming soon!');
+}
+
+function saveAutomation() {
+    const name = document.getElementById('automation-name').value;
+    if (!name) {
+        alert('Please enter an automation name');
+        return;
+    }
+    alert('Save automation coming soon!');
+}
+
+function updatePreview() {
+    const preview = document.getElementById('automation-preview');
+    const name = document.getElementById('automation-name').value || 'Untitled Automation';
+    preview.innerHTML = `<div class="preview-section"><strong>Name:</strong> ${name}</div>`;
+}
+
+function toggleAutomation(id) {
+    alert(`Toggle automation ${id} - coming soon!`);
+}
+
+function editAutomation(id) {
+    alert(`Edit automation ${id} - coming soon!`);
+}
+
+function duplicateAutomation(id) {
+    alert(`Duplicate automation ${id} - coming soon!`);
+}
+
+function deleteAutomation(id) {
+    if (confirm('Are you sure you want to delete this automation?')) {
+        alert(`Delete automation ${id} - coming soon!`);
+    }
+}
+
+function useTemplate(key) {
+    alert(`Use template ${key} - coming soon!`);
+}
+
+// Update the existing createAutomation function
+function createAutomation() {
+    showAutomationBuilder();
+}
         // Initialize app
         document.addEventListener('DOMContentLoaded', function() {
             // Load initial page data
