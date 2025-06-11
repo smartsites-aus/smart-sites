@@ -1,1 +1,35 @@
+version: '3.8'
 
+services:
+  smart-sites:
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_ENV=production
+      - DATABASE_URL=sqlite:///data/smart_sites.db
+      - SECRET_KEY=your-secret-key-here
+    volumes:
+      - ./data:/app/data
+      - ./config:/app/config
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+
+  celery:
+    build: .
+    command: celery -A app.celery worker --loglevel=info
+    environment:
+      - FLASK_ENV=production
+      - DATABASE_URL=sqlite:///data/smart_sites.db
+      - CELERY_BROKER_URL=redis://redis:6379
+    volumes:
+      - ./data:/app/data
+      - ./config:/app/config
+    depends_on:
+      - redis
+    restart: unless-stopped
