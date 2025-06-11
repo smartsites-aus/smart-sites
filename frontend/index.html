@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Sites</title>
+    <title>Smart Sites - Construction Site Management</title>
     <style>
         * {
             margin: 0;
@@ -12,74 +12,53 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background-color: #f8f9fa;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: #f8f9fa;
             color: #333;
-            overflow-x: hidden;
+            line-height: 1.6;
         }
 
         .container {
             display: flex;
-            height: 100vh;
+            min-height: 100vh;
         }
 
         /* Sidebar */
         .sidebar {
             width: 60px;
             background: white;
-            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            border-right: 1px solid #e9ecef;
             transition: width 0.3s ease;
             overflow: hidden;
-            position: relative;
-            z-index: 1000;
+            position: fixed;
+            height: 100vh;
+            z-index: 100;
         }
 
-        .sidebar.expanded {
-            width: 250px;
+        .sidebar:hover {
+            width: 240px;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid #e9ecef;
+            white-space: nowrap;
         }
 
         .logo {
-            display: flex;
-            align-items: center;
-            padding: 20px;
-            cursor: pointer;
-            border-bottom: 1px solid #e9ecef;
-        }
-
-        .logo-icon {
-            width: 20px;
-            height: 20px;
-            background: #333;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            font-size: 12px;
-            flex-shrink: 0;
-        }
-
-        .logo-text {
-            margin-left: 15px;
-            font-weight: 600;
+            font-size: 18px;
+            font-weight: 500;
             color: #333;
-            white-space: nowrap;
             opacity: 0;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.3s ease 0.1s;
         }
 
-        .sidebar.expanded .logo-text {
+        .sidebar:hover .logo {
             opacity: 1;
         }
 
-        .nav-menu {
-            list-style: none;
+        .sidebar-nav {
             padding: 20px 0;
-        }
-
-        .nav-item {
-            margin-bottom: 5px;
         }
 
         .nav-link {
@@ -89,77 +68,119 @@
             color: #666;
             text-decoration: none;
             transition: all 0.2s ease;
+            white-space: nowrap;
+            border: none;
+            background: none;
+            width: 100%;
             cursor: pointer;
         }
 
         .nav-link:hover {
-            background-color: #f8f9fa;
+            background: #f8f9fa;
             color: #333;
         }
 
         .nav-link.active {
-            background-color: #e9ecef;
+            background: #e9ecef;
             color: #333;
-            border-right: 3px solid #333;
         }
 
         .nav-icon {
             width: 20px;
             height: 20px;
+            margin-right: 12px;
             flex-shrink: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
         .nav-text {
-            margin-left: 15px;
-            white-space: nowrap;
             opacity: 0;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.3s ease 0.1s;
         }
 
-        .sidebar.expanded .nav-text {
+        .sidebar:hover .nav-text {
             opacity: 1;
         }
 
         /* Main Content */
         .main-content {
             flex: 1;
+            margin-left: 60px;
+            padding: 0;
+            transition: margin-left 0.3s ease;
+        }
+
+        .page-content {
+            display: none;
             padding: 30px;
-            overflow-y: auto;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .page-content.active {
+            display: block;
         }
 
         .page-header {
-            margin-bottom: 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin-bottom: 30px;
         }
 
         .page-title {
-            font-size: 28px;
+            font-size: 32px;
             font-weight: 300;
             color: #333;
         }
 
         .edit-btn {
-            background: white;
-            border: 1px solid #ddd;
-            padding: 8px 16px;
-            border-radius: 6px;
+            background: #333;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
             cursor: pointer;
             display: flex;
             align-items: center;
             gap: 8px;
-            transition: all 0.2s ease;
-            font-size: 14px;
-            color: #666;
+            transition: background 0.2s ease;
         }
 
         .edit-btn:hover {
-            background: #f8f9fa;
-            border-color: #ccc;
+            background: #222;
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 20px;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .card-content {
+            padding: 20px;
+        }
+
+        .card-content p {
+            color: #666;
+            margin-bottom: 10px;
+            font-weight: 300;
         }
 
         /* Dashboard Grid */
@@ -170,117 +191,61 @@
             margin-bottom: 30px;
         }
 
-        .card {
+        .stat-card {
             background: white;
+            padding: 24px;
             border-radius: 8px;
-            padding: 20px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            transition: transform 0.2s ease;
+            text-align: center;
         }
 
-        .card:hover {
-            transform: translateY(-2px);
-        }
-
-        .card-header {
-            margin-bottom: 15px;
-            display: flex;
-            justify-content: between;
-            align-items: center;
-        }
-
-        .card-title {
-            font-size: 16px;
-            font-weight: 500;
-            color: #333;
-        }
-
-        .card-content {
-            color: #666;
-            line-height: 1.5;
-        }
-
-        .metric {
-            font-size: 24px;
+        .stat-value {
+            font-size: 36px;
             font-weight: 300;
             color: #333;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
         }
 
-        .metric-label {
-            font-size: 12px;
-            color: #999;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        /* Empty State */
-        .empty-dashboard {
-            text-align: center;
-            padding: 60px 20px;
+        .stat-label {
             color: #666;
+            font-size: 14px;
+            font-weight: 300;
         }
 
-        .empty-icon {
-            width: 80px;
-            height: 80px;
-            background: #f0f0f0;
-            border-radius: 50%;
-            margin: 0 auto 20px;
+        /* Filters */
+        .filters {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 36px;
-        }
-
-        /* Page Content Styles */
-        .page-content {
-            display: none;
-        }
-
-        .page-content.active {
-            display: block;
-        }
-
-        .search-filters {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        .filter-row {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 15px;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
         }
 
         .filter-group {
             display: flex;
             flex-direction: column;
+            gap: 5px;
         }
 
-        .filter-label {
+        .filter-group label {
             font-size: 12px;
             color: #666;
-            margin-bottom: 5px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            font-weight: 500;
         }
 
-        .filter-select {
+        .filter-group select {
             padding: 8px 12px;
             border: 1px solid #ddd;
             border-radius: 4px;
             background: white;
             font-size: 14px;
+            min-width: 150px;
         }
 
-        .devices-grid {
+        /* Device Grid */
+        .device-grid {
             display: grid;
-            gap: 15px;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
         }
 
         .device-card {
@@ -288,150 +253,746 @@
             border-radius: 8px;
             padding: 20px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            display: grid;
-            grid-template-columns: auto 1fr auto;
-            gap: 15px;
-            align-items: center;
+            position: relative;
         }
 
         .device-status {
+            position: absolute;
+            top: 15px;
+            right: 15px;
             width: 12px;
             height: 12px;
             border-radius: 50%;
-            background: #28a745;
-        }
-
-        .device-status.offline {
             background: #dc3545;
         }
 
-        .device-info h3 {
-            margin-bottom: 5px;
-            font-size: 16px;
-            color: #333;
+        .device-status.online {
+            background: #28a745;
         }
 
-        .device-info p {
+        .device-name {
+            font-size: 16px;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .device-info {
             color: #666;
             font-size: 14px;
-            margin-bottom: 3px;
+            margin-bottom: 5px;
         }
 
-        .device-value {
-            text-align: right;
-            font-size: 18px;
-            font-weight: 300;
+        .device-sensors {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .sensor-reading {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .sensor-name {
+            color: #666;
+        }
+
+        .sensor-value {
             color: #333;
+            font-weight: 500;
         }
 
+        /* History Table */
         .history-table {
+            width: 100%;
+            border-collapse: collapse;
             background: white;
             border-radius: 8px;
             overflow: hidden;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
 
-        .history-table table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .history-table th,
-        .history-table td {
-            padding: 12px 15px;
+        .history-table th {
+            background: #f8f9fa;
+            padding: 15px;
             text-align: left;
+            font-weight: 500;
+            color: #333;
             border-bottom: 1px solid #e9ecef;
         }
 
-        .history-table th {
-            background: #f8f9fa;
-            font-weight: 500;
-            color: #333;
-            font-size: 14px;
+        .history-table td {
+            padding: 15px;
+            border-bottom: 1px solid #e9ecef;
+            color: #666;
         }
 
-        .history-table td {
+        .history-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .history-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .sidebar:hover {
+                transform: translateX(0);
+                width: 240px;
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .page-content {
+                padding: 20px;
+            }
+            
+            .filters {
+                flex-direction: column;
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        /* ESPHome specific styles - matching Smart Sites design system */
+        .esphome-devices-grid {
+            display: grid;
+            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        }
+
+        /* Ensure ESPHome page inherits exact same fonts as Overview */
+        #esphome-page .page-title {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-weight: 300;
+            font-size: 32px;
+            color: #333;
+        }
+
+        #esphome-page .card-title {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-weight: 500;
+            font-size: 18px;
+            color: #333;
+        }
+
+        #esphome-page .card-content p {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-weight: 300;
+            font-size: 16px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        /* Override any inherited fonts in the ESPHome page */
+        #esphome-page * {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        #esphome-page h1, #esphome-page h2, #esphome-page h3, #esphome-page h4 {
+            font-weight: 300;
+        }
+
+        #esphome-page .card-title {
+            font-weight: 500 !important;
+        }
+
+        .esphome-device-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            position: relative;
+            transition: transform 0.2s ease;
+        }
+
+        .esphome-device-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .esphome-device-card h3 {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-size: 16px;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 15px;
+            padding-right: 30px;
+        }
+
+        .esphome-device-card p {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            color: #666;
+            font-size: 14px;
+            font-weight: 300;
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+
+        .device-status-indicator {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #dc3545;
+        }
+
+        .device-status-indicator.online {
+            background: #28a745;
+        }
+
+        .device-status-indicator.compiling {
+            background: #ffc107;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .device-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .device-actions button {
+            padding: 6px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background: white;
+            cursor: pointer;
+            font-size: 12px;
+            font-family: inherit;
+            transition: all 0.2s ease;
+            color: #666;
+        }
+
+        .device-actions button:hover {
+            background: #f8f9fa;
+            border-color: #ccc;
+        }
+
+        .device-actions button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .device-actions .compile-btn:hover {
+            border-color: #333;
+            color: #333;
+        }
+
+        .device-actions .upload-btn:hover {
+            border-color: #333;
+            color: #333;
+        }
+
+        /* Modal styles - matching Smart Sites design */
+        .modal {
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+
+        /* Override fonts in modal to match Smart Sites */
+        .modal-content * {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+        }
+
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            font-size: 20px;
+            font-weight: 300 !important;
+            color: #333;
+            margin: 0;
+        }
+
+        .close {
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+            transition: color 0.2s ease;
+            line-height: 1;
+        }
+
+        .close:hover {
+            color: #333;
+        }
+
+        .wizard-steps {
+            display: flex;
+            padding: 20px;
+            border-bottom: 1px solid #e9ecef;
+            background: #f8f9fa;
+        }
+
+        .step {
+            flex: 1;
+            text-align: center;
+            padding: 12px 10px;
+            background: #e9ecef;
+            margin-right: 10px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 300 !important;
+            color: #666;
+            transition: all 0.2s ease;
+        }
+
+        .step:last-child {
+            margin-right: 0;
+        }
+
+        .step.active {
+            background: #333;
+            color: white;
+            font-weight: 500 !important;
+        }
+
+        .wizard-content {
+            padding: 30px;
+            min-height: 400px;
+        }
+
+        .wizard-content h3 {
+            font-size: 18px;
+            font-weight: 300 !important;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .wizard-step {
+            display: none;
+        }
+
+        .wizard-step.active {
+            display: block;
+        }
+
+        .device-types-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .device-type-card {
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+
+        .device-type-card:hover {
+            border-color: #333;
+            background: #f8f9fa;
+        }
+
+        .device-type-card.selected {
+            border-color: #333;
+            background: #f8f9fa;
+        }
+
+        .device-type-icon {
+            font-size: 32px;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .device-type-name {
+            font-weight: 500 !important;
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .device-type-description {
+            font-size: 14px;
+            font-weight: 300 !important;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .pin-config {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .esp32-diagram {
+            text-align: center;
+        }
+
+        .esp32-diagram img {
+            max-width: 100%;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+        }
+
+        .pin-settings h4 {
+            font-size: 16px;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .pin-settings p {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: border-color 0.2s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #333;
+        }
+
+        .location-config {
+            max-width: 500px;
+        }
+
+        .config-review {
+            margin-top: 20px;
+        }
+
+        .review-section {
+            margin-bottom: 30px;
+        }
+
+        .review-section h4 {
+            font-size: 16px;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 12px;
+        }
+
+        .review-section p {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 6px;
+        }
+
+        #generated-config {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            padding: 20px;
+            font-family: 'Courier New', Monaco, monospace;
+            font-size: 12px;
+            overflow-x: auto;
+            max-height: 300px;
+            overflow-y: auto;
+            color: #333;
+            line-height: 1.4;
+        }
+
+        .wizard-footer {
+            padding: 20px;
+            border-top: 1px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+            background: #f8f9fa;
+        }
+
+        .btn-primary, .btn-secondary {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-family: inherit;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background: #333;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #222;
+        }
+
+        .btn-primary:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #545b62;
+        }
+
+        .discover-btn {
+            background: #333;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-family: inherit;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .discover-btn:hover {
+            background: #222;
+        }
+
+        .discover-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        #discovery-results {
+            margin-top: 20px;
+        }
+
+        #discovery-results h4 {
+            font-size: 16px;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        #discovery-results p {
             color: #666;
             font-size: 14px;
         }
 
-        .status-badge {
-            padding: 4px 8px;
-            border-radius: 12px;
+        .discovered-device {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .discovered-device strong {
+            font-weight: 500;
+            color: #333;
+        }
+
+        .discovered-device small {
+            color: #666;
+            font-size: 12px;
+        }
+
+        .discovered-device button {
+            background: #333;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
             font-size: 12px;
             font-weight: 500;
+            transition: background 0.2s ease;
         }
 
-        .status-on {
-            background: #d4edda;
-            color: #155724;
+        .discovered-device button:hover {
+            background: #222;
         }
 
-        .status-off {
-            background: #f8d7da;
-            color: #721c24;
+        .pin-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .pin-selector > div {
+            margin-bottom: 15px;
+        }
+
+        .pin-selector label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .pin-select {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        .compilation-log {
+            background: #000;
+            color: #0f0;
+            padding: 15px;
+            border-radius: 4px;
+            font-family: 'Courier New', Monaco, monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 15px;
+            line-height: 1.4;
+        }
+
+        /* Empty state styling */
+        .esphome-devices-grid .card .card-content {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .esphome-devices-grid .card h3 {
+            font-size: 18px;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .esphome-devices-grid .card p {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 20px;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <!-- Sidebar -->
-        <nav class="sidebar" id="sidebar">
-            <div class="logo" onclick="toggleSidebar()">
-                <div class="logo-icon">SS</div>
-                <span class="logo-text">Smart Sites</span>
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">Smart Sites</div>
             </div>
-            <ul class="nav-menu">
-                <li class="nav-item">
-                    <a class="nav-link active" onclick="showPage('overview')">
-                        <div class="nav-icon">📊</div>
-                        <span class="nav-text">Overview</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" onclick="showPage('devices')">
-                        <div class="nav-icon">📱</div>
-                        <span class="nav-text">Devices</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" onclick="showPage('automations')">
-                        <div class="nav-icon">⚡</div>
-                        <span class="nav-text">Automations</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" onclick="showPage('reporting')">
-                        <div class="nav-icon">📈</div>
-                        <span class="nav-text">Reporting</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" onclick="showPage('history')">
-                        <div class="nav-icon">📋</div>
-                        <span class="nav-text">History</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" onclick="showPage('energy')">
-                        <div class="nav-icon">⚡</div>
-                        <span class="nav-text">Energy</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" onclick="showPage('esphome')">
-                        <div class="nav-icon">🔧</div>
-                        <span class="nav-text">ESPHome</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" onclick="showPage('settings')">
-                        <div class="nav-icon">⚙️</div>
-                        <span class="nav-text">Settings</span>
-                    </a>
-                </li>
-            </ul>
-        </nav>
+            <nav class="sidebar-nav">
+                <button class="nav-link active" onclick="showPage('overview')">
+                    <div class="nav-icon">📊</div>
+                    <span class="nav-text">Overview</span>
+                </button>
+                <button class="nav-link" onclick="showPage('devices')">
+                    <div class="nav-icon">📱</div>
+                    <span class="nav-text">Devices</span>
+                </button>
+                <button class="nav-link" onclick="showPage('history')">
+                    <div class="nav-icon">📈</div>
+                    <span class="nav-text">History</span>
+                </button>
+                <button class="nav-link" onclick="showPage('locations')">
+                    <div class="nav-icon">📍</div>
+                    <span class="nav-text">Locations</span>
+                </button>
+                <button class="nav-link" onclick="showPage('automations')">
+                    <div class="nav-icon">⚡</div>
+                    <span class="nav-text">Automations</span>
+                </button>
+                <button class="nav-link" onclick="showPage('esphome')">
+                    <div class="nav-icon">🔧</div>
+                    <span class="nav-text">ESPHome Builder</span>
+                </button>
+                <button class="nav-link" onclick="showPage('power')">
+                    <div class="nav-icon">🔋</div>
+                    <span class="nav-text">Power</span>
+                </button>
+                <button class="nav-link" onclick="showPage('reports')">
+                    <div class="nav-icon">📄</div>
+                    <span class="nav-text">Reports</span>
+                </button>
+            </nav>
+        </aside>
 
         <!-- Main Content -->
         <main class="main-content">
@@ -445,14 +1006,17 @@
                     </button>
                 </div>
                 
-                <div class="empty-dashboard" id="empty-dashboard">
-                    <div class="empty-icon">📊</div>
-                    <h2>Welcome to Smart Sites</h2>
-                    <p>Your dashboard is empty. Click "Edit Dashboard" to add cards and customize your view.</p>
+                <div class="dashboard-grid" id="dashboard-grid">
+                    <!-- Dashboard cards will be loaded here -->
                 </div>
 
-                <div class="dashboard-grid" id="dashboard-grid" style="display: none;">
-                    <!-- Dashboard cards will be added here -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Welcome to Smart Sites</h3>
+                    </div>
+                    <div class="card-content">
+                        <p>Your dashboard is empty. Click "Edit Dashboard" to add cards and customize your view.</p>
+                    </div>
                 </div>
             </div>
 
@@ -460,84 +1024,52 @@
             <div class="page-content" id="devices-page">
                 <div class="page-header">
                     <h1 class="page-title">Devices</h1>
+                    <button class="edit-btn" onclick="addDevice()">
+                        <span>➕</span>
+                        <span>Add Device</span>
+                    </button>
                 </div>
                 
-                <div class="search-filters">
-                    <div class="filter-row">
-                        <div class="filter-group">
-                            <label class="filter-label">Site Location</label>
-                            <select class="filter-select" id="location-filter">
-                                <option value="">All Locations</option>
-                                <option value="male-toilet">Male Toilet</option>
-                                <option value="female-toilet">Female Toilet</option>
-                                <option value="main-office">Main Office</option>
-                                <option value="workshop">Workshop</option>
-                            </select>
-                        </div>
-                        <div class="filter-group">
-                            <label class="filter-label">Sensor Type</label>
-                            <select class="filter-select" id="sensor-filter">
-                                <option value="">All Sensors</option>
-                                <option value="motion">Motion Sensor</option>
-                                <option value="light">Light Sensor</option>
-                                <option value="air-quality">Air Quality</option>
-                                <option value="noise">Noise Monitor</option>
-                            </select>
-                        </div>
-                        <div class="filter-group">
-                            <label class="filter-label">Entity</label>
-                            <select class="filter-select" id="entity-filter">
-                                <option value="">All Entities</option>
-                                <option value="mmwave">MMWave</option>
-                                <option value="lux">Lux</option>
-                                <option value="temperature">Temperature</option>
-                                <option value="humidity">Humidity</option>
-                            </select>
-                        </div>
-                        <div class="filter-group">
-                            <label class="filter-label">Label</label>
-                            <select class="filter-select" id="label-filter">
-                                <option value="">All Labels</option>
-                                <option value="critical">Critical</option>
-                                <option value="environmental">Environmental</option>
-                                <option value="safety">Safety</option>
-                            </select>
-                        </div>
+                <div class="filters">
+                    <div class="filter-group">
+                        <label>Location</label>
+                        <select id="location-filter" onchange="filterDevices()">
+                            <option value="">All Locations</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Sensor Type</label>
+                        <select id="sensor-type-filter" onchange="filterDevices()">
+                            <option value="">All Types</option>
+                            <option value="motion">Motion</option>
+                            <option value="light">Light</option>
+                            <option value="air_quality">Air Quality</option>
+                            <option value="power">Power</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Entity</label>
+                        <select id="entity-filter" onchange="filterDevices()">
+                            <option value="">All Entities</option>
+                            <option value="mmwave">mmWave</option>
+                            <option value="lux">Lux</option>
+                            <option value="temperature">Temperature</option>
+                            <option value="humidity">Humidity</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Label</label>
+                        <select id="label-filter" onchange="filterDevices()">
+                            <option value="">All Labels</option>
+                            <option value="toilet">Toilet</option>
+                            <option value="office">Office</option>
+                            <option value="workshop">Workshop</option>
+                        </select>
                     </div>
                 </div>
 
-                <div class="devices-grid" id="devices-grid">
-                    <!-- Sample devices -->
-                    <div class="device-card">
-                        <div class="device-status"></div>
-                        <div class="device-info">
-                            <h3>Motion Sensor - Main Office</h3>
-                            <p>Type: Motion Sensor</p>
-                            <p>Entity: MMWave</p>
-                            <p>Label: Environmental</p>
-                        </div>
-                        <div class="device-value">Active</div>
-                    </div>
-                    <div class="device-card">
-                        <div class="device-status"></div>
-                        <div class="device-info">
-                            <h3>Light Sensor - Male Toilet</h3>
-                            <p>Type: Light Sensor</p>
-                            <p>Entity: Lux</p>
-                            <p>Label: Environmental</p>
-                        </div>
-                        <div class="device-value">450 lux</div>
-                    </div>
-                    <div class="device-card">
-                        <div class="device-status offline"></div>
-                        <div class="device-info">
-                            <h3>Air Quality - Workshop</h3>
-                            <p>Type: Air Quality</p>
-                            <p>Entity: Temperature, Humidity</p>
-                            <p>Label: Critical</p>
-                        </div>
-                        <div class="device-value">Offline</div>
-                    </div>
+                <div class="device-grid" id="device-grid">
+                    <!-- Devices will be loaded here -->
                 </div>
             </div>
 
@@ -545,118 +1077,224 @@
             <div class="page-content" id="history-page">
                 <div class="page-header">
                     <h1 class="page-title">History</h1>
+                    <button class="edit-btn" onclick="exportHistory()">
+                        <span>📥</span>
+                        <span>Export CSV</span>
+                    </button>
                 </div>
                 
-                <div class="history-table">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Date/Time</th>
-                                <th>Site Location</th>
-                                <th>Sensor Type</th>
-                                <th>Entity</th>
-                                <th>State Change</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>11/06/2025 09:15:32</td>
-                                <td>Main Office</td>
-                                <td>Motion Sensor</td>
-                                <td>MMWave</td>
-                                <td><span class="status-badge status-on">ON</span></td>
-                            </tr>
-                            <tr>
-                                <td>11/06/2025 09:10:15</td>
-                                <td>Male Toilet</td>
-                                <td>Light Control</td>
-                                <td>Switch</td>
-                                <td><span class="status-badge status-off">OFF</span></td>
-                            </tr>
-                            <tr>
-                                <td>11/06/2025 08:45:22</td>
-                                <td>Workshop</td>
-                                <td>Air Quality</td>
-                                <td>Temperature</td>
-                                <td><span class="status-badge status-on">ALERT</span></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="card">
+                    <div class="card-content">
+                        <table class="history-table" id="history-table">
+                            <thead>
+                                <tr>
+                                    <th>Timestamp</th>
+                                    <th>Site Location</th>
+                                    <th>Device Type</th>
+                                    <th>Entity</th>
+                                    <th>Old Value</th>
+                                    <th>New Value</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- History entries will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
-            <!-- Other pages (placeholders) -->
+            <!-- Locations Page -->
+            <div class="page-content" id="locations-page">
+                <div class="page-header">
+                    <h1 class="page-title">Site Locations</h1>
+                    <button class="edit-btn" onclick="addLocation()">
+                        <span>➕</span>
+                        <span>Add Location</span>
+                    </button>
+                </div>
+                
+                <div class="device-grid" id="locations-grid">
+                    <!-- Locations will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Automations Page -->
             <div class="page-content" id="automations-page">
                 <div class="page-header">
                     <h1 class="page-title">Automations</h1>
+                    <button class="edit-btn" onclick="createAutomation()">
+                        <span>➕</span>
+                        <span>Create Automation</span>
+                    </button>
                 </div>
+                
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">Automations</h3>
+                        <h3 class="card-title">Smart Automations</h3>
                     </div>
                     <div class="card-content">
-                        <p>Create and manage automations for your construction site devices.</p>
-                        <p>Coming soon: Visual automation builder with time-based and condition-based triggers.</p>
+                        <p>Create intelligent automations for your construction site using time-based triggers and device conditions.</p>
+                        <p>Coming soon: Visual automation builder with drag-and-drop interface.</p>
                     </div>
                 </div>
             </div>
 
-            <div class="page-content" id="reporting-page">
-                <div class="page-header">
-                    <h1 class="page-title">Reporting</h1>
-                </div>
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Reports</h3>
-                    </div>
-                    <div class="card-content">
-                        <p>Generate CSV reports and graphs from your sensor data.</p>
-                        <p>Coming soon: Custom report builder with email scheduling.</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="page-content" id="energy-page">
-                <div class="page-header">
-                    <h1 class="page-title">Energy Consumption</h1>
-                </div>
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Energy Monitoring</h3>
-                    </div>
-                    <div class="card-content">
-                        <p>Monitor power consumption across your construction site.</p>
-                        <p>Coming soon: CT meter integration and live power monitoring graphs.</p>
-                    </div>
-                </div>
-            </div>
-
+            <!-- ESPHome Page -->
             <div class="page-content" id="esphome-page">
                 <div class="page-header">
                     <h1 class="page-title">ESPHome Builder</h1>
+                    <button class="edit-btn" onclick="showDeviceWizard()">
+                        <span>➕</span>
+                        <span>Add Device</span>
+                    </button>
                 </div>
-                <div class="card">
+                
+                <!-- Device Discovery -->
+                <div class="card" style="margin-bottom: 20px;">
                     <div class="card-header">
-                        <h3 class="card-title">ESPHome Integration</h3>
+                        <h3 class="card-title">Device Discovery</h3>
                     </div>
                     <div class="card-content">
-                        <p>Configure and manage ESP32 devices on your construction site.</p>
-                        <p>Coming soon: Visual ESPHome configuration builder.</p>
+                        <p>Scan your network for existing ESPHome devices or create new configurations.</p>
+                        <button class="discover-btn" onclick="discoverDevices()">
+                            <span>🔍</span>
+                            <span>Scan Network</span>
+                        </button>
+                        <div id="discovery-results"></div>
+                    </div>
+                </div>
+
+                <!-- ESPHome Devices Grid -->
+                <div class="esphome-devices-grid" id="esphome-devices-grid">
+                    <!-- Devices will be loaded here -->
+                </div>
+
+                <!-- Device Creation Wizard Modal -->
+                <div class="modal" id="device-wizard-modal" style="display: none;">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2>Create New ESP32 Device</h2>
+                            <span class="close" onclick="closeDeviceWizard()">&times;</span>
+                        </div>
+                        
+                        <div class="wizard-steps">
+                            <div class="step active" data-step="1">1. Device Type</div>
+                            <div class="step" data-step="2">2. Configuration</div>
+                            <div class="step" data-step="3">3. Location</div>
+                            <div class="step" data-step="4">4. Review</div>
+                        </div>
+
+                        <div class="wizard-content">
+                            <!-- Step 1: Device Type Selection -->
+                            <div class="wizard-step active" id="step-1">
+                                <h3>Select Device Type</h3>
+                                <div class="device-types-grid" id="device-types-grid">
+                                    <!-- Device types will be loaded here -->
+                                </div>
+                            </div>
+
+                            <!-- Step 2: Pin Configuration -->
+                            <div class="wizard-step" id="step-2">
+                                <h3>Configure Pins & Settings</h3>
+                                <div class="pin-config" id="pin-config">
+                                    <div class="esp32-diagram">
+                                        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDQwMCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjZjhmOWZhIi8+CjxyZWN0IHg9IjUwIiB5PSI1MCIgd2lkdGg9IjMwMCIgaGVpZ2h0PSIyMDAiIGZpbGw9IiMzMzMiIHJ4PSI4Ii8+Cjx0ZXh0IHg9IjIwMCIgeT0iMTUwIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE0Ij5FU1AzMiBEZXZraXQ8L3RleHQ+CjwhLS0gUGluIGxhYmVscyB3aWxsIGJlIGFkZGVkIGR5bmFtaWNhbGx5IC0tPgo8L3N2Zz4=" alt="ESP32 Pinout" />
+                                    </div>
+                                    <div class="pin-settings" id="pin-settings">
+                                        <!-- Pin configuration options -->
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Step 3: Location Assignment -->
+                            <div class="wizard-step" id="step-3">
+                                <h3>Assign Location</h3>
+                                <div class="location-config">
+                                    <div class="form-group">
+                                        <label>Device Name</label>
+                                        <input type="text" id="device-name" placeholder="e.g., Main Office Motion Sensor" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Site Location</label>
+                                        <select id="device-location">
+                                            <option value="">Select Location</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>WiFi Network</label>
+                                        <input type="text" id="wifi-ssid" placeholder="Network Name" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label>WiFi Password</label>
+                                        <input type="password" id="wifi-password" placeholder="Network Password" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Step 4: Review & Generate -->
+                            <div class="wizard-step" id="step-4">
+                                <h3>Review Configuration</h3>
+                                <div class="config-review">
+                                    <div class="review-section">
+                                        <h4>Device Information</h4>
+                                        <div id="review-device-info"></div>
+                                    </div>
+                                    <div class="review-section">
+                                        <h4>Generated Configuration</h4>
+                                        <pre id="generated-config"></pre>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="wizard-footer">
+                            <button class="btn-secondary" onclick="previousStep()" id="prev-btn" style="display: none;">Previous</button>
+                            <button class="btn-primary" onclick="nextStep()" id="next-btn">Next</button>
+                            <button class="btn-primary" onclick="createDevice()" id="create-btn" style="display: none;">Create Device</button>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="page-content" id="settings-page">
+            <!-- Power Page -->
+            <div class="page-content" id="power-page">
                 <div class="page-header">
-                    <h1 class="page-title">Settings</h1>
+                    <h1 class="page-title">Power Management</h1>
+                    <button class="edit-btn" onclick="addPowerMeter()">
+                        <span>➕</span>
+                        <span>Add CT Clamp</span>
+                    </button>
                 </div>
+                
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">System Settings</h3>
+                        <h3 class="card-title">Power Consumption</h3>
                     </div>
                     <div class="card-content">
-                        <p>Manage users, permissions, and system configuration.</p>
-                        <p>Coming soon: User management, security settings, and system preferences.</p>
+                        <p>Monitor real-time power consumption across your construction site using CT clamps and smart meters.</p>
+                        <p>Coming soon: Real-time power monitoring dashboard with usage analytics.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reports Page -->
+            <div class="page-content" id="reports-page">
+                <div class="page-header">
+                    <h1 class="page-title">Reports</h1>
+                    <button class="edit-btn" onclick="generateReport()">
+                        <span>📊</span>
+                        <span>Generate Report</span>
+                    </button>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Export Reports</h3>
+                    </div>
+                    <div class="card-content">
+                        <p>Generate detailed reports for construction site monitoring data, energy consumption, and device performance.</p>
+                        <p>Coming soon: Automated email reports and customizable report templates.</p>
                     </div>
                 </div>
             </div>
@@ -664,222 +1302,20 @@
     </div>
 
     <script>
-        // Sidebar functionality
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            sidebar.classList.toggle('expanded');
-        }
-
-        // Page navigation
-        function showPage(pageId) {
-            // Hide all pages
-            const pages = document.querySelectorAll('.page-content');
-            pages.forEach(page => page.classList.remove('active'));
-            
-            // Show selected page
-            document.getElementById(pageId + '-page').classList.add('active');
-            
-            // Update active nav link
-            const navLinks = document.querySelectorAll('.nav-link');
-            navLinks.forEach(link => link.classList.remove('active'));
-            event.target.closest('.nav-link').classList.add('active');
-        }
-
-        // API Base URL
+        // Configuration
         const API_BASE = '/api';
         
-        // Dashboard edit mode
+        // State
         let editMode = false;
-        function toggleEditMode() {
-            editMode = !editMode;
-            const editBtn = document.querySelector('.edit-btn span:last-child');
-            const emptyDashboard = document.getElementById('empty-dashboard');
-            const dashboardGrid = document.getElementById('dashboard-grid');
-            
-            if (editMode) {
-                editBtn.textContent = 'Save Dashboard';
-                emptyDashboard.style.display = 'none';
-                dashboardGrid.style.display = 'grid';
-                loadDashboardStats();
-            } else {
-                editBtn.textContent = 'Edit Dashboard';
-            }
-        }
+        let currentPage = 'overview';
 
-        // Load dashboard statistics from API
-        async function loadDashboardStats() {
-            try {
-                const response = await fetch(`${API_BASE}/dashboard-stats`);
-                const stats = await response.json();
-                
-                const grid = document.getElementById('dashboard-grid');
-                grid.innerHTML = `
-                    <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title">Active Devices</h3>
-                        </div>
-                        <div class="card-content">
-                            <div class="metric">${stats.online_devices}</div>
-                            <div class="metric-label">Online Sensors</div>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title">Power Consumption</h3>
-                        </div>
-                        <div class="card-content">
-                            <div class="metric">${stats.total_power} kW</div>
-                            <div class="metric-label">Current Usage</div>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title">Total Devices</h3>
-                        </div>
-                        <div class="card-content">
-                            <div class="metric">${stats.total_devices}</div>
-                            <div class="metric-label">All Sensors</div>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title">Recent Alerts</h3>
-                        </div>
-                        <div class="card-content">
-                            <div class="metric">${stats.recent_alerts}</div>
-                            <div class="metric-label">Last 24 Hours</div>
-                        </div>
-                    </div>
-                `;
-            } catch (error) {
-                console.error('Failed to load dashboard stats:', error);
-            }
-        }
+        // ESPHome JavaScript functionality
+        let currentStep = 1;
+        let selectedDeviceType = null;
+        let deviceConfig = {};
+        let deviceTemplates = {};
 
-        // Load devices from API
-        async function loadDevices() {
-            try {
-                const params = new URLSearchParams();
-                const locationFilter = document.getElementById('location-filter').value;
-                const sensorFilter = document.getElementById('sensor-filter').value;
-                const entityFilter = document.getElementById('entity-filter').value;
-                const labelFilter = document.getElementById('label-filter').value;
-                
-                if (locationFilter) params.append('location', locationFilter);
-                if (sensorFilter) params.append('sensor_type', sensorFilter);
-                if (entityFilter) params.append('entity', entityFilter);
-                if (labelFilter) params.append('label', labelFilter);
-                
-                const response = await fetch(`${API_BASE}/devices?${params}`);
-                const devices = await response.json();
-                
-                renderDevices(devices);
-            } catch (error) {
-                console.error('Failed to load devices:', error);
-            }
-        }
-
-        // Render devices in the grid
-        function renderDevices(devices) {
-            const grid = document.getElementById('devices-grid');
-            
-            if (devices.length === 0) {
-                grid.innerHTML = '<p>No devices found matching the current filters.</p>';
-                return;
-            }
-            
-            grid.innerHTML = devices.map(device => {
-                const statusClass = device.status === 'online' ? '' : 'offline';
-                const mainEntity = device.entities[0] || {};
-                const entityValue = mainEntity.value || device.status;
-                
-                return `
-                    <div class="device-card">
-                        <div class="device-status ${statusClass}"></div>
-                        <div class="device-info">
-                            <h3>${device.name}</h3>
-                            <p>Type: ${device.type}</p>
-                            <p>Location: ${device.location}</p>
-                            <p>Entities: ${device.entities.map(e => e.name).join(', ')}</p>
-                        </div>
-                        <div class="device-value">${entityValue}${mainEntity.unit || ''}</div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        // Load history from API
-        async function loadHistory() {
-            try {
-                const response = await fetch(`${API_BASE}/history`);
-                const data = await response.json();
-                
-                renderHistory(data.history);
-            } catch (error) {
-                console.error('Failed to load history:', error);
-            }
-        }
-
-        // Render history table
-        function renderHistory(history) {
-            const tbody = document.querySelector('.history-table tbody');
-            
-            if (history.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5">No history records found.</td></tr>';
-                return;
-            }
-            
-            tbody.innerHTML = history.map(record => {
-                const date = new Date(record.timestamp).toLocaleString();
-                const statusClass = record.new_value === 'ON' || record.new_value === 'true' ? 'status-on' : 'status-off';
-                
-                return `
-                    <tr>
-                        <td>${date}</td>
-                        <td>${record.site_location}</td>
-                        <td>${record.device_type}</td>
-                        <td>${record.entity}</td>
-                        <td><span class="status-badge ${statusClass}">${record.new_value}</span></td>
-                    </tr>
-                `;
-            }).join('');
-        }
-
-        // Load site locations for filter dropdown
-        async function loadLocations() {
-            try {
-                const response = await fetch(`${API_BASE}/locations`);
-                const locations = await response.json();
-                
-                const locationSelect = document.getElementById('location-filter');
-                locationSelect.innerHTML = '<option value="">All Locations</option>' +
-                    locations.map(loc => `<option value="${loc.name}">${loc.name}</option>`).join('');
-            } catch (error) {
-                console.error('Failed to load locations:', error);
-            }
-        }
-
-        // Device filtering
-        function filterDevices() {
-            loadDevices();
-        }
-
-        // Page-specific data loading
-        function loadPageData(pageId) {
-            switch (pageId) {
-                case 'overview':
-                    if (editMode) loadDashboardStats();
-                    break;
-                case 'devices':
-                    loadDevices();
-                    break;
-                case 'history':
-                    loadHistory();
-                    break;
-            }
-        }
-
-        // Enhanced page navigation with data loading
+        // Navigation
         function showPage(pageId) {
             // Hide all pages
             const pages = document.querySelectorAll('.page-content');
@@ -894,37 +1330,516 @@
             event.target.closest('.nav-link').classList.add('active');
             
             // Load page-specific data
+            currentPage = pageId;
             loadPageData(pageId);
-        }
-
-        // Auto-refresh functionality
-        function startAutoRefresh() {
-            setInterval(() => {
-                const activePage = document.querySelector('.page-content.active');
-                if (activePage) {
-                    const pageId = activePage.id.replace('-page', '');
-                    loadPageData(pageId);
-                }
-            }, 30000); // Refresh every 30 seconds
-        }
-
-        // Initialize application
-        document.addEventListener('DOMContentLoaded', function() {
-            // Load initial data
-            loadLocations();
-            loadDevices();
             
-            // Set up filter event listeners
-            const filters = document.querySelectorAll('.filter-select');
-            filters.forEach(filter => {
-                filter.addEventListener('change', filterDevices);
+            // Initialize ESPHome page if selected
+            if (pageId === 'esphome') {
+                initializeESPHomePage();
+            }
+        }
+
+        // Load page data
+        async function loadPageData(pageId) {
+            switch (pageId) {
+                case 'overview':
+                    await loadDashboardStats();
+                    break;
+                case 'devices':
+                    await loadDevices();
+                    break;
+                case 'history':
+                    await loadHistory();
+                    break;
+                case 'locations':
+                    await loadLocations();
+                    break;
+                case 'automations':
+                    await loadAutomations();
+                    break;
+                case 'power':
+                    await loadPowerData();
+                    break;
+            }
+        }
+
+        // Dashboard functions
+        async function loadDashboardStats() {
+            try {
+                const response = await fetch(`${API_BASE}/dashboard-stats`);
+                const stats = await response.json();
+                
+                const grid = document.getElementById('dashboard-grid');
+                grid.innerHTML = `
+                    <div class="stat-card">
+                        <div class="stat-value">${stats.total_devices}</div>
+                        <div class="stat-label">Total Devices</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${stats.online_devices}</div>
+                        <div class="stat-label">Online Devices</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${stats.total_power}W</div>
+                        <div class="stat-label">Power Consumption</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${stats.recent_alerts}</div>
+                        <div class="stat-label">Recent Alerts</div>
+                    </div>
+                `;
+            } catch (error) {
+                console.error('Failed to load dashboard stats:', error);
+            }
+        }
+
+        function toggleEditMode() {
+            editMode = !editMode;
+            const btn = document.querySelector('.edit-btn');
+            btn.innerHTML = editMode ? 
+                '<span>💾</span><span>Save Dashboard</span>' : 
+                '<span>✏️</span><span>Edit Dashboard</span>';
+        }
+
+        // Device functions
+        async function loadDevices() {
+            try {
+                const params = new URLSearchParams();
+                const locationFilter = document.getElementById('location-filter')?.value;
+                const sensorTypeFilter = document.getElementById('sensor-type-filter')?.value;
+                const entityFilter = document.getElementById('entity-filter')?.value;
+                const labelFilter = document.getElementById('label-filter')?.value;
+                
+                if (locationFilter) params.append('location', locationFilter);
+                if (sensorTypeFilter) params.append('sensor_type', sensorTypeFilter);
+                if (entityFilter) params.append('entity', entityFilter);
+                if (labelFilter) params.append('label', labelFilter);
+                
+                const response = await fetch(`${API_BASE}/devices?${params}`);
+                const devices = await response.json();
+                
+                renderDevices(devices);
+            } catch (error) {
+                console.error('Failed to load devices:', error);
+            }
+        }
+
+        function renderDevices(devices) {
+            const grid = document.getElementById('device-grid');
+            
+            if (devices.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📱</div>
+                        <h3>No devices found</h3>
+                        <p>Try adjusting your filters or add a new device.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            grid.innerHTML = devices.map(device => `
+                <div class="device-card">
+                    <div class="device-status ${device.status === 'online' ? 'online' : ''}"></div>
+                    <div class="device-name">${device.name}</div>
+                    <div class="device-info">Type: ${device.type}</div>
+                    <div class="device-info">Location: ${device.location}</div>
+                    <div class="device-info">Last seen: ${device.last_seen ? new Date(device.last_seen).toLocaleString() : 'Never'}</div>
+                    
+                    <div class="device-sensors">
+                        ${device.entities.map(entity => `
+                            <div class="sensor-reading">
+                                <span class="sensor-name">${entity.name}</span>
+                                <span class="sensor-value">${entity.value}${entity.unit ? ' ' + entity.unit : ''}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterDevices() {
+            loadDevices();
+        }
+
+        function addDevice() {
+            alert('Add device functionality coming soon!');
+        }
+
+        // History functions
+        async function loadHistory() {
+            try {
+                const response = await fetch(`${API_BASE}/history`);
+                const data = await response.json();
+                
+                const tbody = document.querySelector('#history-table tbody');
+                tbody.innerHTML = data.history.map(entry => `
+                    <tr>
+                        <td>${new Date(entry.timestamp).toLocaleString()}</td>
+                        <td>${entry.site_location}</td>
+                        <td>${entry.device_type}</td>
+                        <td>${entry.entity}</td>
+                        <td>${entry.old_value || 'N/A'}</td>
+                        <td>${entry.new_value}</td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+                console.error('Failed to load history:', error);
+            }
+        }
+
+        function exportHistory() {
+            window.open(`${API_BASE}/history?format=csv`, '_blank');
+        }
+
+        // Location functions
+        async function loadLocations() {
+            try {
+                const response = await fetch(`${API_BASE}/locations`);
+                const locations = await response.json();
+                
+                const grid = document.getElementById('locations-grid');
+                grid.innerHTML = locations.map(location => `
+                    <div class="device-card">
+                        <div class="device-name">${location.name}</div>
+                        <div class="device-info">${location.description}</div>
+                        <div class="device-info">Devices: ${location.device_count}</div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Failed to load locations:', error);
+            }
+        }
+
+        function addLocation() {
+            const name = prompt('Enter location name:');
+            if (name) {
+                fetch(`${API_BASE}/locations`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, description: '' })
+                }).then(() => loadLocations());
+            }
+        }
+
+        // Automation functions
+        async function loadAutomations() {
+            try {
+                const response = await fetch(`${API_BASE}/automations`);
+                const automations = await response.json();
+                console.log('Automations loaded:', automations);
+            } catch (error) {
+                console.error('Failed to load automations:', error);
+            }
+        }
+
+        function createAutomation() {
+            alert('Automation builder coming soon!');
+        }
+
+        // Power functions
+        async function loadPowerData() {
+            try {
+                const response = await fetch(`${API_BASE}/power-consumption`);
+                const data = await response.json();
+                console.log('Power data loaded:', data);
+            } catch (error) {
+                console.error('Failed to load power data:', error);
+            }
+        }
+
+        function addPowerMeter() {
+            alert('CT clamp configuration coming soon!');
+        }
+
+        function generateReport() {
+            alert('Report generation coming soon!');
+        }
+
+        // ESPHome Functions
+        // Load ESPHome page data
+        async function loadESPHomeData() {
+            try {
+                // Load device templates
+                const templatesResponse = await fetch(`${API_BASE}/esphome/templates`);
+                deviceTemplates = await templatesResponse.json();
+                
+                // Load existing devices
+                await loadESPHomeDevices();
+                
+                // Load locations for dropdown
+                await loadLocationsDropdown();
+                
+            } catch (error) {
+                console.error('Failed to load ESPHome data:', error);
+            }
+        }
+
+        // Load existing ESPHome devices
+        async function loadESPHomeDevices() {
+            try {
+                const response = await fetch(`${API_BASE}/esphome/devices`);
+                const devices = await response.json();
+                
+                renderESPHomeDevices(devices);
+            } catch (error) {
+                console.error('Failed to load ESPHome devices:', error);
+            }
+        }
+
+        // Render ESPHome devices grid
+        function renderESPHomeDevices(devices) {
+            const grid = document.getElementById('esphome-devices-grid');
+            
+            if (devices.length === 0) {
+                grid.innerHTML = `
+                    <div class="card">
+                        <div class="card-content" style="text-align: center; padding: 40px;">
+                            <div style="font-size: 48px; margin-bottom: 20px;">🔧</div>
+                            <h3>No ESP32 Devices Yet</h3>
+                            <p>Create your first ESP32 device configuration to get started with construction site monitoring.</p>
+                            <button class="btn-primary" onclick="showDeviceWizard()" style="margin-top: 15px;">
+                                Create First Device
+                            </button>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+            
+            grid.innerHTML = devices.map(device => {
+                const statusClass = getStatusClass(device.compilation_status);
+                const statusText = getStatusText(device.compilation_status);
+                
+                return `
+                    <div class="esphome-device-card">
+                        <div class="device-status-indicator ${statusClass}"></div>
+                        <h3>${device.name}</h3>
+                        <p><strong>Type:</strong> ${device.type}</p>
+                        <p><strong>Location:</strong> ${device.location || 'Unassigned'}</p>
+                        <p><strong>IP Address:</strong> ${device.ip_address || 'Not connected'}</p>
+                        <p><strong>Status:</strong> ${statusText}</p>
+                        <p><strong>Last Seen:</strong> ${device.last_seen ? new Date(device.last_seen).toLocaleString() : 'Never'}</p>
+                        
+                        <div class="device-actions">
+                            <button class="compile-btn" onclick="compileDevice(${device.id})" 
+                                    ${device.compilation_status === 'compiling' ? 'disabled' : ''}>
+                                🔨 Compile
+                            </button>
+                            <button class="upload-btn" onclick="uploadFirmware(${device.id})"
+                                    ${device.compilation_status !== 'success' ? 'disabled' : ''}>
+                                📤 Upload
+                            </button>
+                            <button class="logs-btn" onclick="showDeviceLogs(${device.id})">
+                                📝 Logs
+                            </button>
+                            <button onclick="editDevice(${device.id})">
+                                ✏️ Edit
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function getStatusClass(status) {
+            switch (status) {
+                case 'success': return 'online';
+                case 'compiling': return 'compiling';
+                case 'error': return 'offline';
+                default: return 'offline';
+            }
+        }
+
+        function getStatusText(status) {
+            switch (status) {
+                case 'success': return 'Ready to upload';
+                case 'compiling': return 'Compiling...';
+                case 'error': return 'Compilation failed';
+                case 'pending': return 'Waiting to compile';
+                default: return 'Unknown';
+            }
+        }
+
+        // Device discovery
+        async function discoverDevices() {
+            const button = event.target;
+            const originalText = button.innerHTML;
+            button.innerHTML = '<span>🔍</span><span>Scanning...</span>';
+            button.disabled = true;
+            
+            try {
+                const response = await fetch(`${API_BASE}/esphome/discover`);
+                const discovered = await response.json();
+                
+                const resultsDiv = document.getElementById('discovery-results');
+                
+                if (discovered.length === 0) {
+                    resultsDiv.innerHTML = '<p>No ESPHome devices found on the network.</p>';
+                } else {
+                    resultsDiv.innerHTML = `
+                        <h4>Discovered Devices:</h4>
+                        ${discovered.map(device => `
+                            <div class="discovered-device">
+                                <div>
+                                    <strong>${device.hostname || device.ip}</strong><br>
+                                    <small>IP: ${device.ip}</small>
+                                </div>
+                                <button onclick="adoptDevice('${device.ip}')">Adopt</button>
+                            </div>
+                        `).join('')}
+                    `;
+                }
+            } catch (error) {
+                console.error('Discovery failed:', error);
+                document.getElementById('discovery-results').innerHTML = 
+                    '<p style="color: red;">Discovery failed. Make sure devices are powered on and connected.</p>';
+            } finally {
+                button.innerHTML = originalText;
+                button.disabled = false;
+            }
+        }
+
+        // Show device creation wizard
+        function showDeviceWizard() {
+            document.getElementById('device-wizard-modal').style.display = 'flex';
+            currentStep = 1;
+            selectedDeviceType = null;
+            deviceConfig = {};
+            
+            showStep(1);
+            loadDeviceTypes();
+        }
+
+        // Close device wizard
+        function closeDeviceWizard() {
+            document.getElementById('device-wizard-modal').style.display = 'none';
+        }
+
+        // Load device types in wizard
+        function loadDeviceTypes() {
+            const grid = document.getElementById('device-types-grid');
+            
+            const typeIcons = {
+                'motion_sensor': '👋',
+                'light_sensor': '💡',
+                'air_quality': '🌬️',
+                'noise_monitor': '🔊',
+                'power_monitor': '⚡'
+            };
+            
+            grid.innerHTML = Object.entries(deviceTemplates).map(([key, template]) => `
+                <div class="device-type-card" onclick="selectDeviceType('${key}')">
+                    <div class="device-type-icon">${typeIcons[key] || '📱'}</div>
+                    <div class="device-type-name">${template.name}</div>
+                    <div class="device-type-description">${template.description}</div>
+                </div>
+            `).join('');
+        }
+
+        // Select device type
+        function selectDeviceType(type) {
+            selectedDeviceType = type;
+            deviceConfig.type = type;
+            
+            // Update UI
+            document.querySelectorAll('.device-type-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            event.target.closest('.device-type-card').classList.add('selected');
+            
+            // Enable next button
+            document.getElementById('next-btn').disabled = false;
+        }
+
+        // Load locations dropdown
+        async function loadLocationsDropdown() {
+            try {
+                const response = await fetch(`${API_BASE}/locations`);
+                const locations = await response.json();
+                
+                const select = document.getElementById('device-location');
+                select.innerHTML = '<option value="">Select Location</option>' +
+                    locations.map(loc => `<option value="${loc.id}">${loc.name}</option>`).join('');
+            } catch (error) {
+                console.error('Failed to load locations:', error);
+            }
+        }
+
+        // Wizard navigation
+        function nextStep() {
+            if (currentStep < 4) {
+                if (validateStep(currentStep)) {
+                    currentStep++;
+                    showStep(currentStep);
+                    
+                    if (currentStep === 2) {
+                        loadPinConfiguration();
+                    } else if (currentStep === 4) {
+                        generateConfigPreview();
+                    }
+                }
+            }
+        }
+
+        function previousStep() {
+            if (currentStep > 1) {
+                currentStep--;
+                showStep(currentStep);
+            }
+        }
+
+        function showStep(step) {
+            // Update step indicators
+            document.querySelectorAll('.step').forEach((stepEl, index) => {
+                if (index + 1 <= step) {
+                    stepEl.classList.add('active');
+                } else {
+                    stepEl.classList.remove('active');
+                }
             });
             
-            // Start auto-refresh
-            startAutoRefresh();
+            // Show/hide step content
+            document.querySelectorAll('.wizard-step').forEach((stepEl, index) => {
+                if (index + 1 === step) {
+                    stepEl.classList.add('active');
+                } else {
+                    stepEl.classList.remove('active');
+                }
+            });
             
-            console.log('Smart Sites initialized successfully');
-        });
-    </script>
-</body>
-</html>
+            // Update buttons
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const createBtn = document.getElementById('create-btn');
+            
+            prevBtn.style.display = step > 1 ? 'block' : 'none';
+            nextBtn.style.display = step < 4 ? 'block' : 'none';
+            createBtn.style.display = step === 4 ? 'block' : 'none';
+        }
+
+        function validateStep(step) {
+            switch (step) {
+                case 1:
+                    if (!selectedDeviceType) {
+                        alert('Please select a device type');
+                        return false;
+                    }
+                    break;
+                case 2:
+                    // Validate pin configuration
+                    break;
+                case 3:
+                    const name = document.getElementById('device-name').value;
+                    if (!name) {
+                        alert('Please enter a device name');
+                        return false;
+                    }
+                    deviceConfig.name = name;
+                    deviceConfig.location_id = document.getElementById('device-location').value;
+                    deviceConfig.wifi_ssid = document.getElementById('wifi-ssid').value;
+                    deviceConfig.wifi_password = document.getElementById('wifi-password').value;
+                    break;
+            }
+            return true;
+        }
