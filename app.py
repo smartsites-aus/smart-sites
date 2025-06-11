@@ -823,3 +823,602 @@ def create_entities_from_config(device_id, config):
 def initialize_esphome():
     init_mqtt()
     print("ESPHome integration initialized")
+
+# automation_engine.py - Add this to your app.py file
+
+import json
+import schedule
+import time
+from datetime import datetime, timedelta
+from threading import Thread
+from flask import jsonify, request
+import smtplib
+from email.mime.text import MimeText
+from email.mime.multipart import MimeMultipart
+
+# Enhanced Automation Model
+class AutomationRule(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.Text)
+    
+    # Automation Configuration (JSON)
+    triggers = db.Column(db.Text)  # JSON array of trigger configs
+    conditions = db.Column(db.Text)  # JSON array of condition configs  
+    actions = db.Column(db.Text)  # JSON array of action configs
+    
+    # Settings
+    is_enabled = db.Column(db.Boolean, default=True)
+    mode = db.Column(db.String(20), default='single')  # single, restart, queued, parallel
+    
+    # Metadata
+    created_by = db.Column(db.Integer, db.ForeignKey('user.id'))
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    last_triggered = db.Column(db.DateTime)
+    trigger_count = db.Column(db.Integer, default=0)
+    
+    # Relationships
+    creator = db.relationship('User', backref=db.backref('automation_rules', lazy=True))
+
+class AutomationLog(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    automation_id = db.Column(db.Integer, db.ForeignKey('automation_rule.id'), nullable=False)
+    triggered_at = db.Column(db.DateTime, default=datetime.utcnow)
+    trigger_data = db.Column(db.Text)  # JSON data about what triggered it
+    action_results = db.Column(db.Text)  # JSON results of actions taken
+    success = db.Column(db.Boolean, default=True)
+    error_message = db.Column(db.Text)
+    
+    automation = db.relationship('AutomationRule', backref=db.backref('logs', lazy=True))
+
+# Automation Engine Class
+class AutomationEngine:
+    def __init__(self, app, db):
+        self.app = app
+        self.db = db
+        self.running_automations = {}
+        self.scheduler_thread = None
+        self.start_scheduler()
+    
+    def start_scheduler(self):
+        """Start the automation scheduler in a background thread"""
+        if self.scheduler_thread and self.scheduler_thread.is_alive():
+            return
+            
+        self.scheduler_thread = Thread(target=self._run_scheduler, daemon=True)
+        self.scheduler_thread.start()
+        print("Automation engine started")
+    
+    def _run_scheduler(self):
+        """Run the scheduler loop"""
+        while True:
+            schedule.run_pending()
+            time.sleep(1)
+    
+    def register_automation(self, automation_rule):
+        """Register an automation rule with the engine"""
+        if not automation_rule.is_enabled:
+            return
+            
+        triggers = json.loads(automation_rule.triggers or '[]')
+        
+        for trigger in triggers:
+            if trigger['type'] == 'time':
+                self._register_time_trigger(automation_rule, trigger)
+            elif trigger['type'] == 'state':
+                self._register_state_trigger(automation_rule, trigger)
+    
+    def _register_time_trigger(self, automation_rule, trigger):
+        """Register time-based triggers"""
+        trigger_time = trigger.get('time')
+        days = trigger.get('days', [])  # weekdays, weekends, or specific days
+        
+        def job():
+            self.execute_automation(automation_rule.id, {
+                'trigger_type': 'time',
+                'trigger_time': trigger_time,
+                'current_time': datetime.now().isoformat()
+            })
+        
+        if not days or 'daily' in days:
+            schedule.every().day.at(trigger_time).do(job)
+        elif 'weekdays' in days:
+            for day in ['monday', 'tuesday', 'wednesday', 'thursday', 'friday']:
+                getattr(schedule.every(), day).at(trigger_time).do(job)
+        elif 'weekends' in days:
+            schedule.every().saturday.at(trigger_time).do(job)
+            schedule.every().sunday.at(trigger_time).do(job)
+    
+    def _register_state_trigger(self, automation_rule, trigger):
+        """Register state-based triggers (handled by device state changes)"""
+        # State triggers are handled in the device update functions
+        # This just validates the trigger configuration
+        required_fields = ['entity_id', 'from_state', 'to_state']
+        for field in required_fields:
+            if field not in trigger:
+                print(f"Warning: State trigger missing required field: {field}")
+    
+    def check_state_triggers(self, entity_id, old_value, new_value):
+        """Check if any automations should trigger based on state changes"""
+        with self.app.app_context():
+            automations = AutomationRule.query.filter_by(is_enabled=True).all()
+            
+            for automation in automations:
+                triggers = json.loads(automation.triggers or '[]')
+                
+                for trigger in triggers:
+                    if (trigger['type'] == 'state' and 
+                        trigger.get('entity_id') == entity_id):
+                        
+                        # Check if state change matches trigger
+                        if self._matches_state_trigger(trigger, old_value, new_value):
+                            self.execute_automation(automation.id, {
+                                'trigger_type': 'state',
+                                'entity_id': entity_id,
+                                'old_value': old_value,
+                                'new_value': new_value,
+                                'triggered_at': datetime.now().isoformat()
+                            })
+    
+    def _matches_state_trigger(self, trigger, old_value, new_value):
+        """Check if a state change matches the trigger conditions"""
+        from_state = trigger.get('from_state')
+        to_state = trigger.get('to_state')
+        
+        # Handle different trigger patterns
+        if from_state == 'any' or from_state is None:
+            return str(new_value) == str(to_state)
+        elif to_state == 'any' or to_state is None:
+            return str(old_value) == str(from_state)
+        else:
+            return (str(old_value) == str(from_state) and 
+                   str(new_value) == str(to_state))
+    
+    def execute_automation(self, automation_id, trigger_data):
+        """Execute an automation rule"""
+        with self.app.app_context():
+            automation = AutomationRule.query.get(automation_id)
+            if not automation or not automation.is_enabled:
+                return
+            
+            print(f"Executing automation: {automation.name}")
+            
+            # Check conditions
+            if not self._check_conditions(automation, trigger_data):
+                print(f"Automation {automation.name} conditions not met")
+                return
+            
+            # Execute actions
+            action_results = []
+            success = True
+            error_message = None
+            
+            try:
+                actions = json.loads(automation.actions or '[]')
+                for action in actions:
+                    result = self._execute_action(action, trigger_data)
+                    action_results.append(result)
+                    
+                # Update automation stats
+                automation.last_triggered = datetime.utcnow()
+                automation.trigger_count += 1
+                
+            except Exception as e:
+                success = False
+                error_message = str(e)
+                print(f"Error executing automation {automation.name}: {e}")
+            
+            # Log the execution
+            log_entry = AutomationLog(
+                automation_id=automation_id,
+                trigger_data=json.dumps(trigger_data),
+                action_results=json.dumps(action_results),
+                success=success,
+                error_message=error_message
+            )
+            
+            db.session.add(log_entry)
+            db.session.commit()
+    
+    def _check_conditions(self, automation, trigger_data):
+        """Check if automation conditions are met"""
+        conditions = json.loads(automation.conditions or '[]')
+        
+        if not conditions:
+            return True  # No conditions = always execute
+        
+        for condition in conditions:
+            if not self._evaluate_condition(condition, trigger_data):
+                return False
+        
+        return True
+    
+    def _evaluate_condition(self, condition, trigger_data):
+        """Evaluate a single condition"""
+        condition_type = condition.get('type')
+        
+        if condition_type == 'time_range':
+            return self._check_time_range_condition(condition)
+        elif condition_type == 'state':
+            return self._check_state_condition(condition)
+        elif condition_type == 'numeric':
+            return self._check_numeric_condition(condition)
+        
+        return True  # Unknown condition types pass by default
+    
+    def _check_time_range_condition(self, condition):
+        """Check if current time is within specified range"""
+        now = datetime.now().time()
+        start_time = datetime.strptime(condition['start'], '%H:%M').time()
+        end_time = datetime.strptime(condition['end'], '%H:%M').time()
+        
+        if start_time <= end_time:
+            return start_time <= now <= end_time
+        else:  # Overnight range
+            return now >= start_time or now <= end_time
+    
+    def _check_state_condition(self, condition):
+        """Check if an entity has a specific state"""
+        entity_id = condition['entity_id']
+        expected_state = condition['state']
+        
+        # Get current entity state from database
+        entity = Entity.query.filter_by(id=entity_id).first()
+        if entity:
+            return str(entity.current_value) == str(expected_state)
+        
+        return False
+    
+    def _check_numeric_condition(self, condition):
+        """Check numeric conditions (greater than, less than, etc.)"""
+        entity_id = condition['entity_id']
+        operator = condition['operator']  # 'gt', 'lt', 'eq', 'gte', 'lte'
+        threshold = float(condition['value'])
+        
+        entity = Entity.query.filter_by(id=entity_id).first()
+        if entity:
+            try:
+                current_value = float(entity.current_value)
+                
+                if operator == 'gt':
+                    return current_value > threshold
+                elif operator == 'lt':
+                    return current_value < threshold
+                elif operator == 'eq':
+                    return current_value == threshold
+                elif operator == 'gte':
+                    return current_value >= threshold
+                elif operator == 'lte':
+                    return current_value <= threshold
+            except ValueError:
+                return False
+        
+        return False
+    
+    def _execute_action(self, action, trigger_data):
+        """Execute a single action"""
+        action_type = action.get('type')
+        
+        if action_type == 'notify':
+            return self._send_notification(action, trigger_data)
+        elif action_type == 'email':
+            return self._send_email(action, trigger_data)
+        elif action_type == 'device_control':
+            return self._control_device(action, trigger_data)
+        elif action_type == 'log':
+            return self._log_message(action, trigger_data)
+        
+        return {'success': False, 'error': f'Unknown action type: {action_type}'}
+    
+    def _send_notification(self, action, trigger_data):
+        """Send a notification (could be extended to push notifications)"""
+        message = action.get('message', 'Smart Sites Alert')
+        # For now, just log the notification
+        print(f"NOTIFICATION: {message}")
+        return {'success': True, 'type': 'notification', 'message': message}
+    
+    def _send_email(self, action, trigger_data):
+        """Send an email alert"""
+        try:
+            recipient = action.get('recipient')
+            subject = action.get('subject', 'Smart Sites Alert')
+            message = action.get('message', 'An automation has been triggered')
+            
+            # Replace template variables
+            message = message.replace('{trigger_data}', json.dumps(trigger_data, indent=2))
+            message = message.replace('{timestamp}', datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+            
+            # Email configuration (should be in environment variables)
+            smtp_server = 'localhost'  # Configure your SMTP server
+            smtp_port = 587
+            
+            msg = MimeMultipart()
+            msg['From'] = 'smartsites@yoursite.com'
+            msg['To'] = recipient
+            msg['Subject'] = subject
+            
+            msg.attach(MimeText(message, 'plain'))
+            
+            # Note: Email sending commented out for demo - configure your SMTP
+            # server = smtplib.SMTP(smtp_server, smtp_port)
+            # server.send_message(msg)
+            # server.quit()
+            
+            print(f"EMAIL SENT: {subject} to {recipient}")
+            return {'success': True, 'type': 'email', 'recipient': recipient}
+            
+        except Exception as e:
+            return {'success': False, 'type': 'email', 'error': str(e)}
+    
+    def _control_device(self, action, trigger_data):
+        """Control a device (turn on/off, set value)"""
+        device_id = action.get('device_id')
+        command = action.get('command')  # 'turn_on', 'turn_off', 'set_value'
+        value = action.get('value')
+        
+        # This would integrate with your device control system
+        print(f"DEVICE CONTROL: Device {device_id} - {command} {value or ''}")
+        
+        return {
+            'success': True, 
+            'type': 'device_control',
+            'device_id': device_id,
+            'command': command,
+            'value': value
+        }
+    
+    def _log_message(self, action, trigger_data):
+        """Log a custom message"""
+        message = action.get('message', 'Automation triggered')
+        level = action.get('level', 'info')  # info, warning, error
+        
+        # Create a history entry
+        # This could be enhanced to create custom log entries
+        print(f"AUTOMATION LOG [{level.upper()}]: {message}")
+        
+        return {'success': True, 'type': 'log', 'message': message, 'level': level}
+
+# Initialize automation engine
+automation_engine = None
+
+def init_automation_engine(app, db):
+    global automation_engine
+    automation_engine = AutomationEngine(app, db)
+    
+    # Register existing automations
+    with app.app_context():
+        automations = AutomationRule.query.filter_by(is_enabled=True).all()
+        for automation in automations:
+            automation_engine.register_automation(automation)
+    
+    return automation_engine
+
+# API Routes for Automation Management
+@app.route('/api/automations/rules')
+def get_automation_rules():
+    """Get all automation rules"""
+    rules = AutomationRule.query.all()
+    return jsonify([{
+        'id': rule.id,
+        'name': rule.name,
+        'description': rule.description,
+        'is_enabled': rule.is_enabled,
+        'mode': rule.mode,
+        'triggers': json.loads(rule.triggers or '[]'),
+        'conditions': json.loads(rule.conditions or '[]'),
+        'actions': json.loads(rule.actions or '[]'),
+        'last_triggered': rule.last_triggered.isoformat() if rule.last_triggered else None,
+        'trigger_count': rule.trigger_count,
+        'created_at': rule.created_at.isoformat()
+    } for rule in rules])
+
+@app.route('/api/automations/rules', methods=['POST'])
+def create_automation_rule():
+    """Create a new automation rule"""
+    data = request.get_json()
+    
+    rule = AutomationRule(
+        name=data['name'],
+        description=data.get('description', ''),
+        triggers=json.dumps(data.get('triggers', [])),
+        conditions=json.dumps(data.get('conditions', [])),
+        actions=json.dumps(data.get('actions', [])),
+        is_enabled=data.get('is_enabled', True),
+        mode=data.get('mode', 'single'),
+        created_by=1  # TODO: Get from current user session
+    )
+    
+    db.session.add(rule)
+    db.session.commit()
+    
+    # Register with automation engine
+    if automation_engine and rule.is_enabled:
+        automation_engine.register_automation(rule)
+    
+    return jsonify({
+        'id': rule.id,
+        'message': 'Automation rule created successfully'
+    })
+
+@app.route('/api/automations/rules/<int:rule_id>', methods=['PUT'])
+def update_automation_rule(rule_id):
+    """Update an automation rule"""
+    rule = AutomationRule.query.get_or_404(rule_id)
+    data = request.get_json()
+    
+    rule.name = data.get('name', rule.name)
+    rule.description = data.get('description', rule.description)
+    rule.triggers = json.dumps(data.get('triggers', json.loads(rule.triggers or '[]')))
+    rule.conditions = json.dumps(data.get('conditions', json.loads(rule.conditions or '[]')))
+    rule.actions = json.dumps(data.get('actions', json.loads(rule.actions or '[]')))
+    rule.is_enabled = data.get('is_enabled', rule.is_enabled)
+    rule.mode = data.get('mode', rule.mode)
+    
+    db.session.commit()
+    
+    # Re-register with automation engine if enabled
+    if automation_engine and rule.is_enabled:
+        automation_engine.register_automation(rule)
+    
+    return jsonify({'message': 'Automation rule updated successfully'})
+
+@app.route('/api/automations/rules/<int:rule_id>', methods=['DELETE'])
+def delete_automation_rule(rule_id):
+    """Delete an automation rule"""
+    rule = AutomationRule.query.get_or_404(rule_id)
+    
+    db.session.delete(rule)
+    db.session.commit()
+    
+    return jsonify({'message': 'Automation rule deleted successfully'})
+
+@app.route('/api/automations/rules/<int:rule_id>/toggle', methods=['POST'])
+def toggle_automation_rule(rule_id):
+    """Enable/disable an automation rule"""
+    rule = AutomationRule.query.get_or_404(rule_id)
+    rule.is_enabled = not rule.is_enabled
+    
+    db.session.commit()
+    
+    # Register/unregister with automation engine
+    if automation_engine and rule.is_enabled:
+        automation_engine.register_automation(rule)
+    
+    return jsonify({
+        'is_enabled': rule.is_enabled,
+        'message': f'Automation rule {"enabled" if rule.is_enabled else "disabled"}'
+    })
+
+@app.route('/api/automations/logs')
+def get_automation_logs():
+    """Get automation execution logs"""
+    page = request.args.get('page', 1, type=int)
+    per_page = request.args.get('per_page', 50, type=int)
+    
+    logs = AutomationLog.query.order_by(AutomationLog.triggered_at.desc()).paginate(
+        page=page, per_page=per_page, error_out=False
+    )
+    
+    return jsonify({
+        'logs': [{
+            'id': log.id,
+            'automation_name': log.automation.name,
+            'triggered_at': log.triggered_at.isoformat(),
+            'trigger_data': json.loads(log.trigger_data or '{}'),
+            'action_results': json.loads(log.action_results or '[]'),
+            'success': log.success,
+            'error_message': log.error_message
+        } for log in logs.items],
+        'pagination': {
+            'page': logs.page,
+            'pages': logs.pages,
+            'per_page': logs.per_page,
+            'total': logs.total
+        }
+    })
+
+@app.route('/api/automations/templates')
+def get_automation_templates():
+    """Get pre-built automation templates"""
+    templates = {
+        'motion_lights': {
+            'name': 'Motion-Activated Lights',
+            'description': 'Turn on lights when motion is detected during specific hours',
+            'triggers': [{
+                'type': 'state',
+                'entity_id': 'motion_sensor',
+                'from_state': 'off',
+                'to_state': 'on'
+            }],
+            'conditions': [{
+                'type': 'time_range',
+                'start': '18:00',
+                'end': '08:00'
+            }],
+            'actions': [{
+                'type': 'device_control',
+                'device_id': 'workshop_lights',
+                'command': 'turn_on'
+            }]
+        },
+        'noise_alert': {
+            'name': 'Noise Level Alert',
+            'description': 'Send email when noise exceeds safe levels',
+            'triggers': [{
+                'type': 'state',
+                'entity_id': 'noise_sensor',
+                'threshold': 85,
+                'operator': 'gt'
+            }],
+            'conditions': [{
+                'type': 'time_range',
+                'start': '07:00',
+                'end': '18:00'
+            }],
+            'actions': [{
+                'type': 'email',
+                'recipient': 'safety@constructionsite.com',
+                'subject': 'Noise Level Exceeded',
+                'message': 'Noise level has exceeded 85dB. Please investigate.'
+            }]
+        },
+        'security_alert': {
+            'name': 'After-Hours Motion Alert',
+            'description': 'Send notification for motion detected outside work hours',
+            'triggers': [{
+                'type': 'state',
+                'entity_id': 'any_motion_sensor',
+                'from_state': 'off',
+                'to_state': 'on'
+            }],
+            'conditions': [{
+                'type': 'time_range',
+                'start': '20:00',
+                'end': '06:00'
+            }],
+            'actions': [{
+                'type': 'email',
+                'recipient': 'security@constructionsite.com',
+                'subject': 'After-Hours Motion Detected',
+                'message': 'Motion detected at {timestamp}. Location: {entity_name}'
+            }]
+        }
+    }
+    
+    return jsonify(templates)
+
+# Enhanced device update function to trigger automations
+def update_device_sensor_value_with_automation(device_name, sensor_name, value):
+    """Update sensor value and check for automation triggers"""
+    device = Device.query.filter_by(name=device_name).first()
+    if device:
+        device.status = 'online'
+        device.last_seen = datetime.utcnow()
+        
+        entity = Entity.query.filter_by(device_id=device.id, entity_name=sensor_name).first()
+        if entity:
+            old_value = entity.current_value
+            entity.current_value = value
+            entity.last_updated = datetime.utcnow()
+            
+            # Record history for significant changes
+            if old_value != value:
+                history = History(
+                    entity_id=entity.id,
+                    old_value=old_value,
+                    new_value=value
+                )
+                db.session.add(history)
+                
+                # Check for automation triggers
+                if automation_engine:
+                    automation_engine.check_state_triggers(entity.id, old_value, value)
+        
+        db.session.commit()
+
+# Initialize automation engine when app starts
+@app.before_first_request
+def initialize_automation_engine():
+    global automation_engine
+    automation_engine = init_automation_engine(app, db)
+    print("Automation engine initialized")
