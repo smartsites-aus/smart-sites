@@ -1,9 +1,0 @@
-/* frontend/src/index.css */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-/* Optional: Global dark mode base */
-body {
-  @apply bg-gray-900 text-white font-sans;
-}
