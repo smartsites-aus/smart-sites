@@ -376,3 +376,450 @@ if __name__ == '__main__':
     with app.app_context():
         create_tables()
     app.run(host='0.0.0.0', port=5000, debug=True)
+
+# esphome_integration.py - Add this to your app.py file
+
+import yaml
+import subprocess
+import os
+import requests
+import json
+from flask import jsonify, request
+import paho.mqtt.client as mqtt
+from threading import Thread
+import time
+
+# ESPHome configuration templates
+ESPHOME_TEMPLATES = {
+    'motion_sensor': {
+        'name': 'Motion Sensor',
+        'description': 'PIR or mmWave motion detection',
+        'sensors': ['binary_sensor'],
+        'config': {
+            'binary_sensor': {
+                'platform': 'gpio',
+                'pin': 'GPIO2',
+                'name': 'Motion',
+                'device_class': 'motion'
+            }
+        }
+    },
+    'light_sensor': {
+        'name': 'Light Sensor',
+        'description': 'Ambient light monitoring',
+        'sensors': ['sensor'],
+        'config': {
+            'sensor': {
+                'platform': 'adc',
+                'pin': 'A0',
+                'name': 'Light Level',
+                'unit_of_measurement': 'lux'
+            }
+        }
+    },
+    'air_quality': {
+        'name': 'Air Quality Monitor',
+        'description': 'Temperature, humidity, and air quality',
+        'sensors': ['sensor'],
+        'config': {
+            'sensor': [
+                {
+                    'platform': 'dht',
+                    'pin': 'GPIO4',
+                    'temperature': {'name': 'Temperature'},
+                    'humidity': {'name': 'Humidity'}
+                },
+                {
+                    'platform': 'mq135',
+                    'pin': 'A0',
+                    'name': 'Air Quality'
+                }
+            ]
+        }
+    },
+    'noise_monitor': {
+        'name': 'Noise Level Monitor',
+        'description': 'Sound level monitoring',
+        'sensors': ['sensor'],
+        'config': {
+            'sensor': {
+                'platform': 'adc',
+                'pin': 'A0',
+                'name': 'Noise Level',
+                'unit_of_measurement': 'dB'
+            }
+        }
+    },
+    'power_monitor': {
+        'name': 'Power Monitor',
+        'description': 'CT clamp power monitoring',
+        'sensors': ['sensor'],
+        'config': {
+            'sensor': {
+                'platform': 'ct_clamp',
+                'pin': 'A0',
+                'name': 'Power Consumption',
+                'unit_of_measurement': 'W'
+            }
+        }
+    }
+}
+
+# Database model for ESPHome devices
+class ESPHomeDevice(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    device_type = db.Column(db.String(50), nullable=False)
+    mac_address = db.Column(db.String(17), unique=True)
+    ip_address = db.Column(db.String(15))
+    esphome_config = db.Column(db.Text)  # YAML configuration
+    firmware_version = db.Column(db.String(20))
+    compilation_status = db.Column(db.String(20), default='pending')  # pending, compiling, success, error
+    last_seen = db.Column(db.DateTime)
+    site_location_id = db.Column(db.Integer, db.ForeignKey('site_location.id'))
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    site_location = db.relationship('SiteLocation', backref=db.backref('esphome_devices', lazy=True))
+
+# MQTT client for real-time communication
+mqtt_client = None
+
+def init_mqtt():
+    global mqtt_client
+    mqtt_client = mqtt.Client()
+    mqtt_client.on_connect = on_mqtt_connect
+    mqtt_client.on_message = on_mqtt_message
+    
+    try:
+        mqtt_client.connect("localhost", 1883, 60)
+        mqtt_client.loop_start()
+        print("MQTT client connected successfully")
+    except Exception as e:
+        print(f"MQTT connection failed: {e}")
+
+def on_mqtt_connect(client, userdata, flags, rc):
+    print(f"Connected to MQTT with result code {rc}")
+    # Subscribe to all device topics
+    client.subscribe("smartsites/+/+")
+    client.subscribe("esphome/+/+")
+
+def on_mqtt_message(client, userdata, msg):
+    try:
+        topic_parts = msg.topic.split('/')
+        if len(topic_parts) >= 3:
+            device_name = topic_parts[1]
+            sensor_name = topic_parts[2]
+            value = msg.payload.decode()
+            
+            # Update device status in database
+            update_device_sensor_value(device_name, sensor_name, value)
+            
+    except Exception as e:
+        print(f"Error processing MQTT message: {e}")
+
+def update_device_sensor_value(device_name, sensor_name, value):
+    """Update sensor value in database"""
+    device = Device.query.filter_by(name=device_name).first()
+    if device:
+        device.status = 'online'
+        device.last_seen = datetime.utcnow()
+        
+        entity = Entity.query.filter_by(device_id=device.id, entity_name=sensor_name).first()
+        if entity:
+            old_value = entity.current_value
+            entity.current_value = value
+            entity.last_updated = datetime.utcnow()
+            
+            # Record history for significant changes
+            if old_value != value:
+                history = History(
+                    entity_id=entity.id,
+                    old_value=old_value,
+                    new_value=value
+                )
+                db.session.add(history)
+        
+        db.session.commit()
+
+# ESPHome API Routes
+@app.route('/api/esphome/templates')
+def get_esphome_templates():
+    """Get available ESPHome device templates"""
+    return jsonify(ESPHOME_TEMPLATES)
+
+@app.route('/api/esphome/devices')
+def get_esphome_devices():
+    """Get all ESPHome devices"""
+    devices = ESPHomeDevice.query.all()
+    return jsonify([{
+        'id': device.id,
+        'name': device.name,
+        'type': device.device_type,
+        'mac_address': device.mac_address,
+        'ip_address': device.ip_address,
+        'compilation_status': device.compilation_status,
+        'last_seen': device.last_seen.isoformat() if device.last_seen else None,
+        'location': device.site_location.name if device.site_location else None,
+        'firmware_version': device.firmware_version
+    } for device in devices])
+
+@app.route('/api/esphome/devices', methods=['POST'])
+def create_esphome_device():
+    """Create a new ESPHome device configuration"""
+    data = request.get_json()
+    
+    # Generate ESPHome YAML configuration
+    config = generate_esphome_config(data)
+    
+    device = ESPHomeDevice(
+        name=data['name'],
+        device_type=data['type'],
+        esphome_config=config,
+        site_location_id=data.get('site_location_id'),
+        compilation_status='pending'
+    )
+    
+    db.session.add(device)
+    db.session.commit()
+    
+    # Start compilation in background
+    Thread(target=compile_esphome_device, args=(device.id,)).start()
+    
+    return jsonify({
+        'id': device.id,
+        'message': 'Device created successfully',
+        'config': config
+    })
+
+@app.route('/api/esphome/devices/<int:device_id>/config')
+def get_device_config(device_id):
+    """Get device configuration"""
+    device = ESPHomeDevice.query.get_or_404(device_id)
+    return jsonify({
+        'config': device.esphome_config,
+        'status': device.compilation_status
+    })
+
+@app.route('/api/esphome/devices/<int:device_id>/compile', methods=['POST'])
+def compile_device(device_id):
+    """Compile ESPHome configuration"""
+    device = ESPHomeDevice.query.get_or_404(device_id)
+    
+    # Update compilation status
+    device.compilation_status = 'compiling'
+    db.session.commit()
+    
+    # Start compilation in background
+    Thread(target=compile_esphome_device, args=(device_id,)).start()
+    
+    return jsonify({'message': 'Compilation started'})
+
+@app.route('/api/esphome/devices/<int:device_id>/upload', methods=['POST'])
+def upload_firmware(device_id):
+    """Upload firmware to device"""
+    device = ESPHomeDevice.query.get_or_404(device_id)
+    
+    if device.compilation_status != 'success':
+        return jsonify({'error': 'Device must be compiled successfully first'}), 400
+    
+    # Start upload in background
+    Thread(target=upload_esphome_firmware, args=(device_id,)).start()
+    
+    return jsonify({'message': 'Firmware upload started'})
+
+@app.route('/api/esphome/discover')
+def discover_devices():
+    """Discover ESPHome devices on network"""
+    discovered = []
+    
+    # Scan local network for ESPHome devices
+    try:
+        import nmap
+        nm = nmap.PortScanner()
+        nm.scan('192.168.1.0/24', '80')
+        
+        for host in nm.all_hosts():
+            if nm[host].state() == 'up':
+                # Check if it's an ESPHome device
+                try:
+                    response = requests.get(f'http://{host}/', timeout=2)
+                    if 'ESPHome' in response.text:
+                        discovered.append({
+                            'ip': host,
+                            'hostname': nm[host].hostname(),
+                            'status': 'discovered'
+                        })
+                except:
+                    pass
+    except ImportError:
+        # Fallback discovery method
+        pass
+    
+    return jsonify(discovered)
+
+def generate_esphome_config(data):
+    """Generate ESPHome YAML configuration"""
+    template = ESPHOME_TEMPLATES.get(data['type'])
+    if not template:
+        raise ValueError(f"Unknown device type: {data['type']}")
+    
+    config = {
+        'esphome': {
+            'name': data['name'].lower().replace(' ', '_'),
+            'platform': 'ESP32',
+            'board': 'esp32dev'
+        },
+        'wifi': {
+            'ssid': '${wifi_ssid}',
+            'password': '${wifi_password}',
+            'ap': {
+                'ssid': f"{data['name']} Fallback",
+                'password': 'smartsites123'
+            }
+        },
+        'captive_portal': {},
+        'logger': {},
+        'api': {
+            'encryption': {
+                'key': '${api_key}'
+            }
+        },
+        'ota': {
+            'password': '${ota_password}'
+        },
+        'mqtt': {
+            'broker': '${mqtt_broker}',
+            'port': 1883,
+            'topic_prefix': f'smartsites/{data["name"].lower().replace(" ", "_")}'
+        },
+        'web_server': {
+            'port': 80
+        }
+    }
+    
+    # Add sensor configurations
+    config.update(template['config'])
+    
+    # Add custom pins and settings from user input
+    if 'pins' in data:
+        for pin_config in data['pins']:
+            # Update pin configurations based on user selection
+            pass
+    
+    return yaml.dump(config, default_flow_style=False)
+
+def compile_esphome_device(device_id):
+    """Compile ESPHome configuration in background"""
+    device = ESPHomeDevice.query.get(device_id)
+    if not device:
+        return
+    
+    try:
+        # Create temporary directory for compilation
+        config_dir = f'/tmp/esphome/{device.name}'
+        os.makedirs(config_dir, exist_ok=True)
+        
+        # Write configuration file
+        config_file = f'{config_dir}/{device.name}.yaml'
+        with open(config_file, 'w') as f:
+            f.write(device.esphome_config)
+        
+        # Run ESPHome compilation
+        result = subprocess.run([
+            'esphome', 'compile', config_file
+        ], capture_output=True, text=True, timeout=300)
+        
+        if result.returncode == 0:
+            device.compilation_status = 'success'
+            device.firmware_version = 'compiled'
+        else:
+            device.compilation_status = 'error'
+            print(f"Compilation error: {result.stderr}")
+            
+    except subprocess.TimeoutExpired:
+        device.compilation_status = 'error'
+        print("Compilation timeout")
+    except Exception as e:
+        device.compilation_status = 'error'
+        print(f"Compilation exception: {e}")
+    
+    db.session.commit()
+
+def upload_esphome_firmware(device_id):
+    """Upload firmware to ESPHome device"""
+    device = ESPHomeDevice.query.get(device_id)
+    if not device:
+        return
+    
+    try:
+        config_file = f'/tmp/esphome/{device.name}/{device.name}.yaml'
+        
+        # Upload firmware over the air
+        if device.ip_address:
+            result = subprocess.run([
+                'esphome', 'upload', config_file, '--device', device.ip_address
+            ], capture_output=True, text=True, timeout=300)
+            
+            if result.returncode == 0:
+                print(f"Firmware uploaded successfully to {device.name}")
+                # Create corresponding Device and Entity records
+                create_device_from_esphome(device)
+            else:
+                print(f"Upload error: {result.stderr}")
+                
+    except Exception as e:
+        print(f"Upload exception: {e}")
+
+def create_device_from_esphome(esphome_device):
+    """Create Device and Entity records from ESPHome device"""
+    # Check if device already exists
+    existing = Device.query.filter_by(name=esphome_device.name).first()
+    if existing:
+        return existing
+    
+    # Create new device
+    device = Device(
+        name=esphome_device.name,
+        device_type=esphome_device.device_type,
+        site_location_id=esphome_device.site_location_id,
+        status='online',
+        ip_address=esphome_device.ip_address,
+        firmware_version=esphome_device.firmware_version
+    )
+    
+    db.session.add(device)
+    db.session.flush()  # Get device ID
+    
+    # Create entities based on device type
+    template = ESPHOME_TEMPLATES.get(esphome_device.device_type)
+    if template and 'config' in template:
+        create_entities_from_config(device.id, template['config'])
+    
+    db.session.commit()
+    return device
+
+def create_entities_from_config(device_id, config):
+    """Create Entity records from ESPHome configuration"""
+    for component_type, component_config in config.items():
+        if component_type in ['sensor', 'binary_sensor', 'switch']:
+            if isinstance(component_config, list):
+                configs = component_config
+            else:
+                configs = [component_config]
+            
+            for cfg in configs:
+                if isinstance(cfg, dict) and 'name' in cfg:
+                    entity = Entity(
+                        device_id=device_id,
+                        entity_name=cfg['name'].lower().replace(' ', '_'),
+                        entity_type=component_type,
+                        unit_of_measurement=cfg.get('unit_of_measurement'),
+                        current_value='unknown'
+                    )
+                    db.session.add(entity)
+
+# Initialize MQTT when app starts
+@app.before_first_request
+def initialize_esphome():
+    init_mqtt()
+    print("ESPHome integration initialized")
