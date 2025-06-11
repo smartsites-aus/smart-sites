@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+    <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -949,6 +949,275 @@
             line-height: 1.5;
             margin-bottom: 20px;
         }
+
+        /* Automation Builder Styles */
+        .automation-modal {
+            max-width: 1000px;
+            max-height: 95vh;
+        }
+
+        .automation-builder {
+            padding: 20px;
+            max-height: calc(90vh - 140px);
+            overflow-y: auto;
+        }
+
+        /* Ensure Automation page inherits exact same fonts as Overview/ESPHome */
+        #automations-page .page-title {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-weight: 300;
+            font-size: 32px;
+            color: #333;
+        }
+
+        #automations-page .card-title {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-weight: 500;
+            font-size: 18px;
+            color: #333;
+        }
+
+        #automations-page .card-content p {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-weight: 300;
+            font-size: 16px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        #automations-page * {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        #automations-page h1, #automations-page h2, #automations-page h3, #automations-page h4 {
+            font-weight: 300;
+        }    
+
+        #automations-page .card-title {
+            font-weight: 500 !important;
+        }
+
+        .builder-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 2px solid transparent;
+            transition: border-color 0.2s ease;
+        }
+
+        .builder-section:hover {
+            border-color: #e9ecef;
+        }
+
+        .builder-section h3 {
+            font-size: 16px;
+            font-weight: 300;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .add-btn {
+            background: #333;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background 0.2s ease;
+        }
+
+        .add-btn:hover {
+            background: #222;
+        }
+
+        .template-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+        }
+
+        .template-card {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .template-card:hover {
+            border-color: #333;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .template-icon {
+            font-size: 24px;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .template-name {
+            font-weight: 500;
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .template-description {
+            font-size: 14px;
+            font-weight: 300;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .automation-list {
+            margin-bottom: 15px;
+        }
+
+        .automation-item {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            padding: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.2s ease;
+        }
+
+        .automation-item:hover {
+            border-color: #333;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .automation-info h4 {
+            font-size: 16px;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .automation-info p {
+            color: #666;
+            font-size: 14px;
+            font-weight: 300;
+            margin-bottom: 8px;
+        }
+
+        .automation-stats {
+            display: flex;
+            gap: 15px;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .automation-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 24px;
+            background: #ccc;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .toggle-switch.active {
+            background: #28a745;
+        }
+
+        .toggle-switch::before {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.2s ease;
+        }
+
+        .toggle-switch.active::before {
+            transform: translateX(26px);
+        }
+
+        .automation-actions button {
+            padding: 6px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background: white;
+            cursor: pointer;
+            font-size: 12px;
+            margin-left: 5px;
+            transition: all 0.2s ease;
+        }
+
+        .automation-actions button:hover {
+            background: #f8f9fa;
+            border-color: #333;
+        }
+
+        .automation-preview {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            padding: 20px;
+            font-family: 'Courier New', Monaco, monospace;
+            font-size: 12px;
+            color: #333;
+            line-height: 1.5;
+        }
+
+        .preview-section {
+            margin-bottom: 15px;
+        }
+
+        .preview-section strong {
+            color: #007bff;
+        }
+
+        .empty-automation-state {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .empty-automation-state .icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+
+        .empty-automation-state h3 {
+            font-size: 18px;
+            font-weight: 300;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .empty-automation-state p {
+            color: #666;
+            font-size: 14px;
+            font-weight: 300;
+            line-height: 1.5;
+        }
     </style>
 </head>
 <body>
@@ -1120,25 +1389,110 @@
             </div>
 
             <!-- Automations Page -->
-            <div class="page-content" id="automations-page">
-                <div class="page-header">
-                    <h1 class="page-title">Automations</h1>
-                    <button class="edit-btn" onclick="createAutomation()">
-                        <span>➕</span>
-                        <span>Create Automation</span>
-                    </button>
+<div class="page-content" id="automations-page">
+    <div class="page-header">
+        <h1 class="page-title">Automations</h1>
+        <button class="edit-btn" onclick="showAutomationBuilder()">
+            <span>➕</span>
+            <span>Create Automation</span>
+        </button>
+    </div>
+    
+    <!-- Automation Templates -->
+    <div class="card" style="margin-bottom: 20px;">
+        <div class="card-header">
+            <h3 class="card-title">Quick Start Templates</h3>
+        </div>
+        <div class="card-content">
+            <div class="template-grid" id="template-grid">
+                <!-- Templates will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Existing Automations -->
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Your Automations</h3>
+        </div>
+        <div class="card-content">
+            <div class="automation-list" id="automation-list">
+                <!-- Automations will be loaded here -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Automation Builder Modal - ADD this after the automations page -->
+<div class="modal" id="automation-builder-modal" style="display: none;">
+    <div class="modal-content automation-modal">
+        <div class="modal-header">
+            <h2 id="automation-modal-title">Create New Automation</h2>
+            <span class="close" onclick="closeAutomationBuilder()">&times;</span>
+        </div>
+        
+        <div class="automation-builder">
+            <!-- Basic Information -->
+            <div class="builder-section">
+                <h3>Basic Information</h3>
+                <div class="form-group">
+                    <label>Automation Name</label>
+                    <input type="text" id="automation-name" placeholder="e.g., Motion-Activated Workshop Lights" />
                 </div>
-                
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Smart Automations</h3>
-                    </div>
-                    <div class="card-content">
-                        <p>Create intelligent automations for your construction site using time-based triggers and device conditions.</p>
-                        <p>Coming soon: Visual automation builder with drag-and-drop interface.</p>
-                    </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="automation-description" placeholder="Describe what this automation does..."></textarea>
                 </div>
             </div>
+
+            <!-- Triggers Section -->
+            <div class="builder-section">
+                <div class="section-header">
+                    <h3>When (Triggers)</h3>
+                    <button class="add-btn" onclick="addTrigger()">+ Add Trigger</button>
+                </div>
+                <div class="triggers-container" id="triggers-container">
+                    <!-- Trigger cards will be added here -->
+                </div>
+            </div>
+
+            <!-- Conditions Section -->
+            <div class="builder-section">
+                <div class="section-header">
+                    <h3>If (Conditions) - Optional</h3>
+                    <button class="add-btn" onclick="addCondition()">+ Add Condition</button>
+                </div>
+                <div class="conditions-container" id="conditions-container">
+                    <!-- Condition cards will be added here -->
+                </div>
+            </div>
+
+            <!-- Actions Section -->
+            <div class="builder-section">
+                <div class="section-header">
+                    <h3>Then (Actions)</h3>
+                    <button class="add-btn" onclick="addAction()">+ Add Action</button>
+                </div>
+                <div class="actions-container" id="actions-container">
+                    <!-- Action cards will be added here -->
+                </div>
+            </div>
+
+            <!-- Preview Section -->
+            <div class="builder-section">
+                <h3>Preview</h3>
+                <div class="automation-preview" id="automation-preview">
+                    <!-- Live preview will be shown here -->
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button class="btn-secondary" onclick="closeAutomationBuilder()">Cancel</button>
+            <button class="btn-primary" onclick="saveAutomation()" id="save-automation-btn">Save Automation</button>
+        </div>
+    </div>
+</div>
 
             <!-- ESPHome Page -->
             <div class="page-content" id="esphome-page">
