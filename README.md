@@ -22,4 +22,4 @@ A lightweight construction site management system focused on environmental monit
 
 ### One-Line Install
 ```bash
-curl -sSL https://raw.githubusercontent.com/yourusername/smart-sites/main/install.sh | bash
+curl -sSL https://raw.githubusercontent.com/smartsites-aus/smart-sites/main/install.sh | bash
