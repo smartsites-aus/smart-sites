@@ -1,4 +1,4 @@
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -378,904 +378,6 @@
             margin-bottom: 20px;
             opacity: 0.5;
         }
-
-        /* ESPHome specific styles - matching Smart Sites design system */
-        .esphome-devices-grid {
-            display: grid;
-            gap: 20px;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-        }
-
-        /* Ensure ESPHome page inherits exact same fonts as Overview */
-        #esphome-page .page-title {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            font-weight: 300;
-            font-size: 32px;
-            color: #333;
-        }
-
-        #esphome-page .card-title {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            font-weight: 500;
-            font-size: 18px;
-            color: #333;
-        }
-
-        #esphome-page .card-content p {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            font-weight: 300;
-            font-size: 16px;
-            color: #666;
-            line-height: 1.5;
-        }
-
-        /* Override any inherited fonts in the ESPHome page */
-        #esphome-page * {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-        }
-
-        #esphome-page h1, #esphome-page h2, #esphome-page h3, #esphome-page h4 {
-            font-weight: 300;
-        }
-
-        #esphome-page .card-title {
-            font-weight: 500 !important;
-        }
-
-        .esphome-device-card {
-            background: white;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            position: relative;
-            transition: transform 0.2s ease;
-        }
-
-        .esphome-device-card:hover {
-            transform: translateY(-2px);
-        }
-
-        .esphome-device-card h3 {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            font-size: 16px;
-            font-weight: 500;
-            color: #333;
-            margin-bottom: 15px;
-            padding-right: 30px;
-        }
-
-        .esphome-device-card p {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            color: #666;
-            font-size: 14px;
-            font-weight: 300;
-            margin-bottom: 8px;
-            line-height: 1.4;
-        }
-
-        .device-status-indicator {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: #dc3545;
-        }
-
-        .device-status-indicator.online {
-            background: #28a745;
-        }
-
-        .device-status-indicator.compiling {
-            background: #ffc107;
-            animation: pulse 1s infinite;
-        }
-
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.5; }
-            100% { opacity: 1; }
-        }
-
-        .device-actions {
-            display: flex;
-            gap: 8px;
-            margin-top: 20px;
-            flex-wrap: wrap;
-        }
-
-        .device-actions button {
-            padding: 6px 12px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            background: white;
-            cursor: pointer;
-            font-size: 12px;
-            font-family: inherit;
-            transition: all 0.2s ease;
-            color: #666;
-        }
-
-        .device-actions button:hover {
-            background: #f8f9fa;
-            border-color: #ccc;
-        }
-
-        .device-actions button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .device-actions .compile-btn:hover {
-            border-color: #333;
-            color: #333;
-        }
-
-        .device-actions .upload-btn:hover {
-            border-color: #333;
-            color: #333;
-        }
-
-        /* Modal styles - matching Smart Sites design */
-        .modal {
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal-content {
-            background: white;
-            border-radius: 8px;
-            width: 90%;
-            max-width: 800px;
-            max-height: 90vh;
-            overflow-y: auto;
-            position: relative;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-        }
-
-        /* Override fonts in modal to match Smart Sites */
-        .modal-content * {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
-        }
-
-        .modal-header {
-            padding: 20px;
-            border-bottom: 1px solid #e9ecef;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .modal-header h2 {
-            font-size: 20px;
-            font-weight: 300 !important;
-            color: #333;
-            margin: 0;
-        }
-
-        .close {
-            font-size: 24px;
-            cursor: pointer;
-            color: #666;
-            transition: color 0.2s ease;
-            line-height: 1;
-        }
-
-        .close:hover {
-            color: #333;
-        }
-
-        .wizard-steps {
-            display: flex;
-            padding: 20px;
-            border-bottom: 1px solid #e9ecef;
-            background: #f8f9fa;
-        }
-
-        .step {
-            flex: 1;
-            text-align: center;
-            padding: 12px 10px;
-            background: #e9ecef;
-            margin-right: 10px;
-            border-radius: 4px;
-            font-size: 14px;
-            font-weight: 300 !important;
-            color: #666;
-            transition: all 0.2s ease;
-        }
-
-        .step:last-child {
-            margin-right: 0;
-        }
-
-        .step.active {
-            background: #333;
-            color: white;
-            font-weight: 500 !important;
-        }
-
-        .wizard-content {
-            padding: 30px;
-            min-height: 400px;
-        }
-
-        .wizard-content h3 {
-            font-size: 18px;
-            font-weight: 300 !important;
-            color: #333;
-            margin-bottom: 20px;
-        }
-
-        .wizard-step {
-            display: none;
-        }
-
-        .wizard-step.active {
-            display: block;
-        }
-
-        .device-types-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .device-type-card {
-            border: 2px solid #e9ecef;
-            border-radius: 8px;
-            padding: 20px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            text-align: center;
-        }
-
-        .device-type-card:hover {
-            border-color: #333;
-            background: #f8f9fa;
-        }
-
-        .device-type-card.selected {
-            border-color: #333;
-            background: #f8f9fa;
-        }
-
-        .device-type-icon {
-            font-size: 32px;
-            margin-bottom: 12px;
-            display: block;
-        }
-
-        .device-type-name {
-            font-weight: 500 !important;
-            font-size: 16px;
-            color: #333;
-            margin-bottom: 8px;
-        }
-
-        .device-type-description {
-            font-size: 14px;
-            font-weight: 300 !important;
-            color: #666;
-            line-height: 1.4;
-        }
-
-        .pin-config {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            margin-top: 20px;
-        }
-
-        .esp32-diagram {
-            text-align: center;
-        }
-
-        .esp32-diagram img {
-            max-width: 100%;
-            border: 1px solid #e9ecef;
-            border-radius: 8px;
-        }
-
-        .pin-settings h4 {
-            font-size: 16px;
-            font-weight: 500;
-            color: #333;
-            margin-bottom: 15px;
-        }
-
-        .pin-settings p {
-            color: #666;
-            font-size: 14px;
-            margin-bottom: 20px;
-            line-height: 1.5;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 6px;
-            font-weight: 500;
-            font-size: 14px;
-            color: #333;
-        }
-
-        .form-group input,
-        .form-group select {
-            width: 100%;
-            padding: 10px 12px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 14px;
-            font-family: inherit;
-            transition: border-color 0.2s ease;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus {
-            outline: none;
-            border-color: #333;
-        }
-
-        .location-config {
-            max-width: 500px;
-        }
-
-        .config-review {
-            margin-top: 20px;
-        }
-
-        .review-section {
-            margin-bottom: 30px;
-        }
-
-        .review-section h4 {
-            font-size: 16px;
-            font-weight: 500;
-            color: #333;
-            margin-bottom: 12px;
-        }
-
-        .review-section p {
-            color: #666;
-            font-size: 14px;
-            margin-bottom: 6px;
-        }
-
-        #generated-config {
-            background: #f8f9fa;
-            border: 1px solid #e9ecef;
-            border-radius: 4px;
-            padding: 20px;
-            font-family: 'Courier New', Monaco, monospace;
-            font-size: 12px;
-            overflow-x: auto;
-            max-height: 300px;
-            overflow-y: auto;
-            color: #333;
-            line-height: 1.4;
-        }
-
-        .wizard-footer {
-            padding: 20px;
-            border-top: 1px solid #e9ecef;
-            display: flex;
-            justify-content: space-between;
-            background: #f8f9fa;
-        }
-
-        .btn-primary, .btn-secondary {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-            font-family: inherit;
-            font-weight: 500;
-            transition: all 0.2s ease;
-        }
-
-        .btn-primary {
-            background: #333;
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: #222;
-        }
-
-        .btn-primary:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-        }
-
-        .btn-secondary {
-            background: #6c757d;
-            color: white;
-        }
-
-        .btn-secondary:hover {
-            background: #545b62;
-        }
-
-        .discover-btn {
-            background: #333;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-            font-family: inherit;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.2s ease;
-        }
-
-        .discover-btn:hover {
-            background: #222;
-        }
-
-        .discover-btn:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-        }
-
-        #discovery-results {
-            margin-top: 20px;
-        }
-
-        #discovery-results h4 {
-            font-size: 16px;
-            font-weight: 500;
-            color: #333;
-            margin-bottom: 15px;
-        }
-
-        #discovery-results p {
-            color: #666;
-            font-size: 14px;
-        }
-
-        .discovered-device {
-            background: #f8f9fa;
-            border: 1px solid #e9ecef;
-            border-radius: 6px;
-            padding: 15px;
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .discovered-device strong {
-            font-weight: 500;
-            color: #333;
-        }
-
-        .discovered-device small {
-            color: #666;
-            font-size: 12px;
-        }
-
-        .discovered-device button {
-            background: #333;
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 12px;
-            font-weight: 500;
-            transition: background 0.2s ease;
-        }
-
-        .discovered-device button:hover {
-            background: #222;
-        }
-
-        .pin-selector {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-top: 15px;
-        }
-
-        .pin-selector > div {
-            margin-bottom: 15px;
-        }
-
-        .pin-selector label {
-            display: block;
-            margin-bottom: 6px;
-            font-weight: 500;
-            font-size: 14px;
-            color: #333;
-        }
-
-        .pin-select {
-            width: 100%;
-            padding: 8px 12px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 14px;
-            font-family: inherit;
-        }
-
-        .compilation-log {
-            background: #000;
-            color: #0f0;
-            padding: 15px;
-            border-radius: 4px;
-            font-family: 'Courier New', Monaco, monospace;
-            font-size: 12px;
-            max-height: 300px;
-            overflow-y: auto;
-            margin-top: 15px;
-            line-height: 1.4;
-        }
-
-        /* Empty state styling */
-        .esphome-devices-grid .card .card-content {
-            text-align: center;
-            padding: 40px 20px;
-        }
-
-        .esphome-devices-grid .card h3 {
-            font-size: 18px;
-            font-weight: 500;
-            color: #333;
-            margin-bottom: 10px;
-        }
-
-        .esphome-devices-grid .card p {
-            color: #666;
-            font-size: 14px;
-            line-height: 1.5;
-            margin-bottom: 20px;
-        }
-
-        /* Automation Builder Styles */
-        .automation-modal {
-            max-width: 1000px;
-            max-height: 95vh;
-        }
-
-        .automation-builder {
-            padding: 20px;
-            max-height: calc(90vh - 140px);
-            overflow-y: auto;
-        }
-
-        /* Ensure Automation page inherits exact same fonts as Overview/ESPHome */
-        #automations-page .page-title {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            font-weight: 300;
-            font-size: 32px;
-            color: #333;
-        }
-
-        #automations-page .card-title {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            font-weight: 500;
-            font-size: 18px;
-            color: #333;
-        }
-
-        #automations-page .card-content p {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            font-weight: 300;
-            font-size: 16px;
-            color: #666;
-            line-height: 1.5;
-        }
-
-        #automations-page * {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-        }
-
-        #automations-page h1, #automations-page h2, #automations-page h3, #automations-page h4 {
-            font-weight: 300;
-        }    
-
-        #automations-page .card-title {
-            font-weight: 500 !important;
-        }
-
-        .builder-section {
-            margin-bottom: 30px;
-            padding: 20px;
-            background: #f8f9fa;
-            border-radius: 8px;
-            border: 2px solid transparent;
-            transition: border-color 0.2s ease;
-        }
-
-        .builder-section:hover {
-            border-color: #e9ecef;
-        }
-
-        .builder-section h3 {
-            font-size: 16px;
-            font-weight: 300;
-            color: #333;
-            margin-bottom: 15px;
-        }
-
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .add-btn {
-            background: #333;
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 12px;
-            transition: background 0.2s ease;
-        }
-
-        .add-btn:hover {
-            background: #222;
-        }
-
-        .template-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 15px;
-        }
-
-        .template-card {
-            background: white;
-            border: 1px solid #e9ecef;
-            border-radius: 6px;
-            padding: 15px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .template-card:hover {
-            border-color: #333;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-
-        .template-icon {
-            font-size: 24px;
-            margin-bottom: 10px;
-            display: block;
-        }
-
-        .template-name {
-            font-weight: 500;
-            font-size: 16px;
-            color: #333;
-            margin-bottom: 8px;
-        }
-
-        .template-description {
-            font-size: 14px;
-            font-weight: 300;
-            color: #666;
-            line-height: 1.4;
-        }
-
-        .automation-list {
-            margin-bottom: 15px;
-        }
-
-        .automation-item {
-            background: white;
-            border: 1px solid #e9ecef;
-            border-radius: 6px;
-            padding: 20px;
-            margin-bottom: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: all 0.2s ease;
-        }
-
-        .automation-item:hover {
-            border-color: #333;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        .automation-info h4 {
-            font-size: 16px;
-            font-weight: 500;
-            color: #333;
-            margin-bottom: 5px;
-        }
-
-        .automation-info p {
-            color: #666;
-            font-size: 14px;
-            font-weight: 300;
-            margin-bottom: 8px;
-        }
-
-        .automation-stats {
-            display: flex;
-            gap: 15px;
-            font-size: 12px;
-            color: #666;
-        }
-
-        .automation-controls {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-
-        .toggle-switch {
-            position: relative;
-            width: 50px;
-            height: 24px;
-            background: #ccc;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: background 0.2s ease;
-        }
-
-        .toggle-switch.active {
-            background: #28a745;
-        }
-
-        .toggle-switch::before {
-            content: '';
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            width: 20px;
-            height: 20px;
-            background: white;
-            border-radius: 50%;
-            transition: transform 0.2s ease;
-        }
-
-        .toggle-switch.active::before {
-            transform: translateX(26px);
-        }
-
-        .automation-actions button {
-            padding: 6px 12px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            background: white;
-            cursor: pointer;
-            font-size: 12px;
-            margin-left: 5px;
-            transition: all 0.2s ease;
-        }
-
-        .automation-actions button:hover {
-            background: #f8f9fa;
-            border-color: #333;
-        }
-
-        .automation-preview {
-            background: white;
-            border: 1px solid #e9ecef;
-            border-radius: 6px;
-            padding: 20px;
-            font-family: 'Courier New', Monaco, monospace;
-            font-size: 12px;
-            color: #333;
-            line-height: 1.5;
-        }
-
-        .preview-section {
-            margin-bottom: 15px;
-        }
-
-        .preview-section strong {
-            color: #007bff;
-        }
-
-        .empty-automation-state {
-            text-align: center;
-            padding: 40px;
-            color: #666;
-        }
-
-        .empty-automation-state .icon {
-            font-size: 48px;
-            margin-bottom: 15px;
-            opacity: 0.5;
-        }
-
-        .empty-automation-state h3 {
-            font-size: 18px;
-            font-weight: 300;
-            color: #333;
-            margin-bottom: 10px;
-        }
-
-        .empty-automation-state p {
-            color: #666;
-            font-size: 14px;
-            font-weight: 300;
-            line-height: 1.5;
-        }
-
-        /* Add this CSS to your <style> section */
-
-.trigger-card, .condition-card, .action-card {
-    background: white;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    padding: 15px;
-    margin-bottom: 10px;
-    transition: all 0.2s ease;
-}
-
-.trigger-card:hover, .condition-card:hover, .action-card:hover {
-    border-color: #333;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-
-.card-header-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-}
-
-.card-type-select {
-    padding: 6px 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 14px;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    min-width: 150px;
-}
-
-.remove-card-btn {
-    background: #dc3545;
-    color: white;
-    border: none;
-    padding: 4px 8px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 12px;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-}
-
-.remove-card-btn:hover {
-    background: #c82333;
-}
-
-.card-content-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 15px;
-}
-
-.form-group textarea {
-    resize: vertical;
-    min-height: 60px;
-}
     </style>
 </head>
 <body>
@@ -1286,35 +388,31 @@
                 <div class="logo">Smart Sites</div>
             </div>
             <nav class="sidebar-nav">
-                <button class="nav-link active" onclick="showPage('overview')">
+                <button class="nav-link active" onclick="showPage('overview', event)">
                     <div class="nav-icon">📊</div>
                     <span class="nav-text">Overview</span>
                 </button>
-                <button class="nav-link" onclick="showPage('devices')">
+                <button class="nav-link" onclick="showPage('devices', event)">
                     <div class="nav-icon">📱</div>
                     <span class="nav-text">Devices</span>
                 </button>
-                <button class="nav-link" onclick="showPage('history')">
+                <button class="nav-link" onclick="showPage('history', event)">
                     <div class="nav-icon">📈</div>
                     <span class="nav-text">History</span>
                 </button>
-                <button class="nav-link" onclick="showPage('locations')">
+                <button class="nav-link" onclick="showPage('locations', event)">
                     <div class="nav-icon">📍</div>
                     <span class="nav-text">Locations</span>
                 </button>
-                <button class="nav-link" onclick="showPage('automations')">
+                <button class="nav-link" onclick="showPage('automations', event)">
                     <div class="nav-icon">⚡</div>
                     <span class="nav-text">Automations</span>
                 </button>
-                <button class="nav-link" onclick="showPage('esphome')">
-                    <div class="nav-icon">🔧</div>
-                    <span class="nav-text">ESPHome Builder</span>
-                </button>
-                <button class="nav-link" onclick="showPage('power')">
+                <button class="nav-link" onclick="showPage('power', event)">
                     <div class="nav-icon">🔋</div>
                     <span class="nav-text">Power</span>
                 </button>
-                <button class="nav-link" onclick="showPage('reports')">
+                <button class="nav-link" onclick="showPage('reports', event)">
                     <div class="nav-icon">📄</div>
                     <span class="nav-text">Reports</span>
                 </button>
@@ -1342,7 +440,8 @@
                         <h3 class="card-title">Welcome to Smart Sites</h3>
                     </div>
                     <div class="card-content">
-                        <p>Your dashboard is empty. Click "Edit Dashboard" to add cards and customize your view.</p>
+                        <p>Your construction site management dashboard. Use the sidebar to navigate between different sections.</p>
+                        <p>Click "Edit Dashboard" to customize your view and add monitoring cards.</p>
                     </div>
                 </div>
             </div>
@@ -1374,29 +473,14 @@
                             <option value="power">Power</option>
                         </select>
                     </div>
-                    <div class="filter-group">
-                        <label>Entity</label>
-                        <select id="entity-filter" onchange="filterDevices()">
-                            <option value="">All Entities</option>
-                            <option value="mmwave">mmWave</option>
-                            <option value="lux">Lux</option>
-                            <option value="temperature">Temperature</option>
-                            <option value="humidity">Humidity</option>
-                        </select>
-                    </div>
-                    <div class="filter-group">
-                        <label>Label</label>
-                        <select id="label-filter" onchange="filterDevices()">
-                            <option value="">All Labels</option>
-                            <option value="toilet">Toilet</option>
-                            <option value="office">Office</option>
-                            <option value="workshop">Workshop</option>
-                        </select>
-                    </div>
                 </div>
 
                 <div class="device-grid" id="device-grid">
-                    <!-- Devices will be loaded here -->
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📱</div>
+                        <h3>No devices found</h3>
+                        <p>Add devices to monitor your construction site.</p>
+                    </div>
                 </div>
             </div>
 
@@ -1424,7 +508,11 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <!-- History entries will be loaded here -->
+                                <tr>
+                                    <td colspan="6" style="text-align: center; padding: 40px; color: #666;">
+                                        No history data available yet.
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -1442,229 +530,31 @@
                 </div>
                 
                 <div class="device-grid" id="locations-grid">
-                    <!-- Locations will be loaded here -->
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📍</div>
+                        <h3>No locations configured</h3>
+                        <p>Add site locations to organize your devices.</p>
+                    </div>
                 </div>
             </div>
 
             <!-- Automations Page -->
-<div class="page-content" id="automations-page">
-    <div class="page-header">
-        <h1 class="page-title">Automations</h1>
-        <button class="edit-btn" onclick="showAutomationBuilder()">
-            <span>➕</span>
-            <span>Create Automation</span>
-        </button>
-    </div>
-    
-    <!-- Automation Templates -->
-    <div class="card" style="margin-bottom: 20px;">
-        <div class="card-header">
-            <h3 class="card-title">Quick Start Templates</h3>
-        </div>
-        <div class="card-content">
-            <div class="template-grid" id="template-grid">
-                <!-- Templates will be loaded here -->
-            </div>
-        </div>
-    </div>
-
-    <!-- Existing Automations -->
-    <div class="card">
-        <div class="card-header">
-            <h3 class="card-title">Your Automations</h3>
-        </div>
-        <div class="card-content">
-            <div class="automation-list" id="automation-list">
-                <!-- Automations will be loaded here -->
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Automation Builder Modal - ADD this after the automations page -->
-<div class="modal" id="automation-builder-modal" style="display: none;">
-    <div class="modal-content automation-modal">
-        <div class="modal-header">
-            <h2 id="automation-modal-title">Create New Automation</h2>
-            <span class="close" onclick="closeAutomationBuilder()">&times;</span>
-        </div>
-        
-        <div class="automation-builder">
-            <!-- Basic Information -->
-            <div class="builder-section">
-                <h3>Basic Information</h3>
-                <div class="form-group">
-                    <label>Automation Name</label>
-                    <input type="text" id="automation-name" placeholder="e.g., Motion-Activated Workshop Lights" />
-                </div>
-                <div class="form-group">
-                    <label>Description</label>
-                    <textarea id="automation-description" placeholder="Describe what this automation does..."></textarea>
-                </div>
-            </div>
-
-            <!-- Triggers Section -->
-            <div class="builder-section">
-                <div class="section-header">
-                    <h3>When (Triggers)</h3>
-                    <button class="add-btn" onclick="addTrigger()">+ Add Trigger</button>
-                </div>
-                <div class="triggers-container" id="triggers-container">
-                    <!-- Trigger cards will be added here -->
-                </div>
-            </div>
-
-            <!-- Conditions Section -->
-            <div class="builder-section">
-                <div class="section-header">
-                    <h3>If (Conditions) - Optional</h3>
-                    <button class="add-btn" onclick="addCondition()">+ Add Condition</button>
-                </div>
-                <div class="conditions-container" id="conditions-container">
-                    <!-- Condition cards will be added here -->
-                </div>
-            </div>
-
-            <!-- Actions Section -->
-            <div class="builder-section">
-                <div class="section-header">
-                    <h3>Then (Actions)</h3>
-                    <button class="add-btn" onclick="addAction()">+ Add Action</button>
-                </div>
-                <div class="actions-container" id="actions-container">
-                    <!-- Action cards will be added here -->
-                </div>
-            </div>
-
-            <!-- Preview Section -->
-            <div class="builder-section">
-                <h3>Preview</h3>
-                <div class="automation-preview" id="automation-preview">
-                    <!-- Live preview will be shown here -->
-                </div>
-            </div>
-        </div>
-
-        <div class="modal-footer">
-            <button class="btn-secondary" onclick="closeAutomationBuilder()">Cancel</button>
-            <button class="btn-primary" onclick="saveAutomation()" id="save-automation-btn">Save Automation</button>
-        </div>
-    </div>
-</div>
-
-            <!-- ESPHome Page -->
-            <div class="page-content" id="esphome-page">
+            <div class="page-content" id="automations-page">
                 <div class="page-header">
-                    <h1 class="page-title">ESPHome Builder</h1>
-                    <button class="edit-btn" onclick="showDeviceWizard()">
+                    <h1 class="page-title">Automations</h1>
+                    <button class="edit-btn" onclick="createAutomation()">
                         <span>➕</span>
-                        <span>Add Device</span>
+                        <span>Create Automation</span>
                     </button>
                 </div>
                 
-                <!-- Device Discovery -->
-                <div class="card" style="margin-bottom: 20px;">
+                <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">Device Discovery</h3>
+                        <h3 class="card-title">Automation Rules</h3>
                     </div>
                     <div class="card-content">
-                        <p>Scan your network for existing ESPHome devices or create new configurations.</p>
-                        <button class="discover-btn" onclick="discoverDevices()">
-                            <span>🔍</span>
-                            <span>Scan Network</span>
-                        </button>
-                        <div id="discovery-results"></div>
-                    </div>
-                </div>
-
-                <!-- ESPHome Devices Grid -->
-                <div class="esphome-devices-grid" id="esphome-devices-grid">
-                    <!-- Devices will be loaded here -->
-                </div>
-
-                <!-- Device Creation Wizard Modal -->
-                <div class="modal" id="device-wizard-modal" style="display: none;">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h2>Create New ESP32 Device</h2>
-                            <span class="close" onclick="closeDeviceWizard()">&times;</span>
-                        </div>
-                        
-                        <div class="wizard-steps">
-                            <div class="step active" data-step="1">1. Device Type</div>
-                            <div class="step" data-step="2">2. Configuration</div>
-                            <div class="step" data-step="3">3. Location</div>
-                            <div class="step" data-step="4">4. Review</div>
-                        </div>
-
-                        <div class="wizard-content">
-                            <!-- Step 1: Device Type Selection -->
-                            <div class="wizard-step active" id="step-1">
-                                <h3>Select Device Type</h3>
-                                <div class="device-types-grid" id="device-types-grid">
-                                    <!-- Device types will be loaded here -->
-                                </div>
-                            </div>
-
-                            <!-- Step 2: Pin Configuration -->
-                            <div class="wizard-step" id="step-2">
-                                <h3>Configure Pins & Settings</h3>
-                                <div class="pin-config" id="pin-config">
-                                    <div class="esp32-diagram">
-                                        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDQwMCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjZjhmOWZhIi8+CjxyZWN0IHg9IjUwIiB5PSI1MCIgd2lkdGg9IjMwMCIgaGVpZ2h0PSIyMDAiIGZpbGw9IiMzMzMiIHJ4PSI4Ii8+Cjx0ZXh0IHg9IjIwMCIgeT0iMTUwIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE0Ij5FU1AzMiBEZXZraXQ8L3RleHQ+CjwhLS0gUGluIGxhYmVscyB3aWxsIGJlIGFkZGVkIGR5bmFtaWNhbGx5IC0tPgo8L3N2Zz4=" alt="ESP32 Pinout" />
-                                    </div>
-                                    <div class="pin-settings" id="pin-settings">
-                                        <!-- Pin configuration options -->
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Step 3: Location Assignment -->
-                            <div class="wizard-step" id="step-3">
-                                <h3>Assign Location</h3>
-                                <div class="location-config">
-                                    <div class="form-group">
-                                        <label>Device Name</label>
-                                        <input type="text" id="device-name" placeholder="e.g., Main Office Motion Sensor" />
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Site Location</label>
-                                        <select id="device-location">
-                                            <option value="">Select Location</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>WiFi Network</label>
-                                        <input type="text" id="wifi-ssid" placeholder="Network Name" />
-                                    </div>
-                                    <div class="form-group">
-                                        <label>WiFi Password</label>
-                                        <input type="password" id="wifi-password" placeholder="Network Password" />
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Step 4: Review & Generate -->
-                            <div class="wizard-step" id="step-4">
-                                <h3>Review Configuration</h3>
-                                <div class="config-review">
-                                    <div class="review-section">
-                                        <h4>Device Information</h4>
-                                        <div id="review-device-info"></div>
-                                    </div>
-                                    <div class="review-section">
-                                        <h4>Generated Configuration</h4>
-                                        <pre id="generated-config"></pre>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="wizard-footer">
-                            <button class="btn-secondary" onclick="previousStep()" id="prev-btn" style="display: none;">Previous</button>
-                            <button class="btn-primary" onclick="nextStep()" id="next-btn">Next</button>
-                            <button class="btn-primary" onclick="createDevice()" id="create-btn" style="display: none;">Create Device</button>
-                        </div>
+                        <p>Create automated responses to sensor data and environmental conditions.</p>
+                        <p>Set up alerts, lighting controls, and safety monitoring rules for your construction site.</p>
                     </div>
                 </div>
             </div>
@@ -1685,7 +575,7 @@
                     </div>
                     <div class="card-content">
                         <p>Monitor real-time power consumption across your construction site using CT clamps and smart meters.</p>
-                        <p>Coming soon: Real-time power monitoring dashboard with usage analytics.</p>
+                        <p>Track energy usage, identify power spikes, and optimize electrical efficiency.</p>
                     </div>
                 </div>
             </div>
@@ -1706,7 +596,7 @@
                     </div>
                     <div class="card-content">
                         <p>Generate detailed reports for construction site monitoring data, energy consumption, and device performance.</p>
-                        <p>Coming soon: Automated email reports and customizable report templates.</p>
+                        <p>Export data for regulatory compliance and project documentation.</p>
                     </div>
                 </div>
             </div>
@@ -1721,38 +611,40 @@
         let editMode = false;
         let currentPage = 'overview';
 
-        // ESPHome JavaScript functionality
-        let currentStep = 1;
-        let selectedDeviceType = null;
-        let deviceConfig = {};
-        let deviceTemplates = {};
-
-        // Navigation
-        function showPage(pageId) {
+        // Navigation - Fixed to properly handle events
+        function showPage(pageId, event) {
+            console.log('Switching to page:', pageId);
+            
             // Hide all pages
             const pages = document.querySelectorAll('.page-content');
             pages.forEach(page => page.classList.remove('active'));
             
             // Show selected page
-            document.getElementById(pageId + '-page').classList.add('active');
+            const targetPage = document.getElementById(pageId + '-page');
+            if (targetPage) {
+                targetPage.classList.add('active');
+            }
             
             // Update active nav link
             const navLinks = document.querySelectorAll('.nav-link');
             navLinks.forEach(link => link.classList.remove('active'));
-            event.target.closest('.nav-link').classList.add('active');
+            
+            if (event && event.target) {
+                const clickedLink = event.target.closest('.nav-link');
+                if (clickedLink) {
+                    clickedLink.classList.add('active');
+                }
+            }
             
             // Load page-specific data
             currentPage = pageId;
             loadPageData(pageId);
-            
-            // Initialize ESPHome page if selected
-            if (pageId === 'esphome') {
-                initializeESPHomePage();
-            }
         }
 
         // Load page data
         async function loadPageData(pageId) {
+            console.log('Loading data for page:', pageId);
+            
             switch (pageId) {
                 case 'overview':
                     await loadDashboardStats();
@@ -1772,12 +664,18 @@
                 case 'power':
                     await loadPowerData();
                     break;
+                case 'reports':
+                    console.log('Reports page loaded');
+                    break;
+                default:
+                    console.log('Unknown page:', pageId);
             }
         }
 
         // Dashboard functions
         async function loadDashboardStats() {
             try {
+                // Try to fetch from API, but provide fallback for demo
                 const response = await fetch(`${API_BASE}/dashboard-stats`);
                 const stats = await response.json();
                 
@@ -1801,7 +699,27 @@
                     </div>
                 `;
             } catch (error) {
-                console.error('Failed to load dashboard stats:', error);
+                console.log('API not available, showing demo data');
+                // Fallback demo data when API is not available
+                const grid = document.getElementById('dashboard-grid');
+                grid.innerHTML = `
+                    <div class="stat-card">
+                        <div class="stat-value">0</div>
+                        <div class="stat-label">Total Devices</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">0</div>
+                        <div class="stat-label">Online Devices</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">0W</div>
+                        <div class="stat-label">Power Consumption</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">0</div>
+                        <div class="stat-label">Recent Alerts</div>
+                    </div>
+                `;
             }
         }
 
@@ -1811,28 +729,20 @@
             btn.innerHTML = editMode ? 
                 '<span>💾</span><span>Save Dashboard</span>' : 
                 '<span>✏️</span><span>Edit Dashboard</span>';
+            
+            console.log('Edit mode:', editMode ? 'enabled' : 'disabled');
+            alert(editMode ? 'Edit mode enabled! Dashboard customization coming soon.' : 'Edit mode disabled.');
         }
 
         // Device functions
         async function loadDevices() {
             try {
-                const params = new URLSearchParams();
-                const locationFilter = document.getElementById('location-filter')?.value;
-                const sensorTypeFilter = document.getElementById('sensor-type-filter')?.value;
-                const entityFilter = document.getElementById('entity-filter')?.value;
-                const labelFilter = document.getElementById('label-filter')?.value;
-                
-                if (locationFilter) params.append('location', locationFilter);
-                if (sensorTypeFilter) params.append('sensor_type', sensorTypeFilter);
-                if (entityFilter) params.append('entity', entityFilter);
-                if (labelFilter) params.append('label', labelFilter);
-                
-                const response = await fetch(`${API_BASE}/devices?${params}`);
+                const response = await fetch(`${API_BASE}/devices`);
                 const devices = await response.json();
-                
                 renderDevices(devices);
             } catch (error) {
-                console.error('Failed to load devices:', error);
+                console.log('Failed to load devices, showing empty state');
+                // The empty state is already in the HTML
             }
         }
 
@@ -1844,7 +754,7 @@
                     <div class="empty-state">
                         <div class="empty-state-icon">📱</div>
                         <h3>No devices found</h3>
-                        <p>Try adjusting your filters or add a new device.</p>
+                        <p>Add devices to monitor your construction site.</p>
                     </div>
                 `;
                 return;
@@ -1871,11 +781,12 @@
         }
 
         function filterDevices() {
+            console.log('Filtering devices...');
             loadDevices();
         }
 
         function addDevice() {
-            alert('Add device functionality coming soon!');
+            alert('Add device functionality - connect your ESP32 sensors here!');
         }
 
         // History functions
@@ -1896,12 +807,12 @@
                     </tr>
                 `).join('');
             } catch (error) {
-                console.error('Failed to load history:', error);
+                console.log('Failed to load history');
             }
         }
 
         function exportHistory() {
-            window.open(`${API_BASE}/history?format=csv`, '_blank');
+            alert('Export history to CSV - feature coming soon!');
         }
 
         // Location functions
@@ -1911,6 +822,17 @@
                 const locations = await response.json();
                 
                 const grid = document.getElementById('locations-grid');
+                if (locations.length === 0) {
+                    grid.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📍</div>
+                            <h3>No locations configured</h3>
+                            <p>Add site locations to organize your devices.</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
                 grid.innerHTML = locations.map(location => `
                     <div class="device-card">
                         <div class="device-name">${location.name}</div>
@@ -1919,716 +841,58 @@
                     </div>
                 `).join('');
             } catch (error) {
-                console.error('Failed to load locations:', error);
+                console.log('Failed to load locations');
             }
         }
 
         function addLocation() {
             const name = prompt('Enter location name:');
             if (name) {
-                fetch(`${API_BASE}/locations`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name, description: '' })
-                }).then(() => loadLocations());
+                alert(`Location "${name}" would be added to the system.`);
+                // In real implementation:
+                // fetch(`${API_BASE}/locations`, {
+                //     method: 'POST',
+                //     headers: { 'Content-Type': 'application/json' },
+                //     body: JSON.stringify({ name, description: '' })
+                // }).then(() => loadLocations());
             }
         }
 
         // Automation functions
         async function loadAutomations() {
-            try {
-                const response = await fetch(`${API_BASE}/automations`);
-                const automations = await response.json();
-                console.log('Automations loaded:', automations);
-            } catch (error) {
-                console.error('Failed to load automations:', error);
-            }
+            console.log('Loading automations...');
+            // Automation loading logic would go here
         }
 
         function createAutomation() {
-            alert('Automation builder coming soon!');
+            alert('Automation builder - create smart rules for your construction site!');
         }
 
         // Power functions
         async function loadPowerData() {
-            try {
-                const response = await fetch(`${API_BASE}/power-consumption`);
-                const data = await response.json();
-                console.log('Power data loaded:', data);
-            } catch (error) {
-                console.error('Failed to load power data:', error);
-            }
+            console.log('Loading power data...');
+            // Power data loading logic would go here
         }
 
         function addPowerMeter() {
-            alert('CT clamp configuration coming soon!');
+            alert('Add CT clamp for power monitoring - track electrical usage!');
         }
 
+        // Reports functions
         function generateReport() {
-            alert('Report generation coming soon!');
+            alert('Generate construction site reports - export data for compliance!');
         }
 
-        // ESPHome Functions
-        // Load ESPHome page data
-        async function loadESPHomeData() {
-            try {
-                // Load device templates
-                const templatesResponse = await fetch(`${API_BASE}/esphome/templates`);
-                deviceTemplates = await templatesResponse.json();
-                
-                // Load existing devices
-                await loadESPHomeDevices();
-                
-                // Load locations for dropdown
-                await loadLocationsDropdown();
-                
-            } catch (error) {
-                console.error('Failed to load ESPHome data:', error);
-            }
-        }
-
-        // Load existing ESPHome devices
-        async function loadESPHomeDevices() {
-            try {
-                const response = await fetch(`${API_BASE}/esphome/devices`);
-                const devices = await response.json();
-                
-                renderESPHomeDevices(devices);
-            } catch (error) {
-                console.error('Failed to load ESPHome devices:', error);
-            }
-        }
-
-        // Render ESPHome devices grid
-        function renderESPHomeDevices(devices) {
-            const grid = document.getElementById('esphome-devices-grid');
-            
-            if (devices.length === 0) {
-                grid.innerHTML = `
-                    <div class="card">
-                        <div class="card-content" style="text-align: center; padding: 40px;">
-                            <div style="font-size: 48px; margin-bottom: 20px;">🔧</div>
-                            <h3>No ESP32 Devices Yet</h3>
-                            <p>Create your first ESP32 device configuration to get started with construction site monitoring.</p>
-                            <button class="btn-primary" onclick="showDeviceWizard()" style="margin-top: 15px;">
-                                Create First Device
-                            </button>
-                        </div>
-                    </div>
-                `;
-                return;
-            }
-            
-            grid.innerHTML = devices.map(device => {
-                const statusClass = getStatusClass(device.compilation_status);
-                const statusText = getStatusText(device.compilation_status);
-                
-                return `
-                    <div class="esphome-device-card">
-                        <div class="device-status-indicator ${statusClass}"></div>
-                        <h3>${device.name}</h3>
-                        <p><strong>Type:</strong> ${device.type}</p>
-                        <p><strong>Location:</strong> ${device.location || 'Unassigned'}</p>
-                        <p><strong>IP Address:</strong> ${device.ip_address || 'Not connected'}</p>
-                        <p><strong>Status:</strong> ${statusText}</p>
-                        <p><strong>Last Seen:</strong> ${device.last_seen ? new Date(device.last_seen).toLocaleString() : 'Never'}</p>
-                        
-                        <div class="device-actions">
-                            <button class="compile-btn" onclick="compileDevice(${device.id})" 
-                                    ${device.compilation_status === 'compiling' ? 'disabled' : ''}>
-                                🔨 Compile
-                            </button>
-                            <button class="upload-btn" onclick="uploadFirmware(${device.id})"
-                                    ${device.compilation_status !== 'success' ? 'disabled' : ''}>
-                                📤 Upload
-                            </button>
-                            <button class="logs-btn" onclick="showDeviceLogs(${device.id})">
-                                📝 Logs
-                            </button>
-                            <button onclick="editDevice(${device.id})">
-                                ✏️ Edit
-                            </button>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function getStatusClass(status) {
-            switch (status) {
-                case 'success': return 'online';
-                case 'compiling': return 'compiling';
-                case 'error': return 'offline';
-                default: return 'offline';
-            }
-        }
-
-        function getStatusText(status) {
-            switch (status) {
-                case 'success': return 'Ready to upload';
-                case 'compiling': return 'Compiling...';
-                case 'error': return 'Compilation failed';
-                case 'pending': return 'Waiting to compile';
-                default: return 'Unknown';
-            }
-        }
-
-        // Device discovery
-        async function discoverDevices() {
-            const button = event.target;
-            const originalText = button.innerHTML;
-            button.innerHTML = '<span>🔍</span><span>Scanning...</span>';
-            button.disabled = true;
-            
-            try {
-                const response = await fetch(`${API_BASE}/esphome/discover`);
-                const discovered = await response.json();
-                
-                const resultsDiv = document.getElementById('discovery-results');
-                
-                if (discovered.length === 0) {
-                    resultsDiv.innerHTML = '<p>No ESPHome devices found on the network.</p>';
-                } else {
-                    resultsDiv.innerHTML = `
-                        <h4>Discovered Devices:</h4>
-                        ${discovered.map(device => `
-                            <div class="discovered-device">
-                                <div>
-                                    <strong>${device.hostname || device.ip}</strong><br>
-                                    <small>IP: ${device.ip}</small>
-                                </div>
-                                <button onclick="adoptDevice('${device.ip}')">Adopt</button>
-                            </div>
-                        `).join('')}
-                    `;
-                }
-            } catch (error) {
-                console.error('Discovery failed:', error);
-                document.getElementById('discovery-results').innerHTML = 
-                    '<p style="color: red;">Discovery failed. Make sure devices are powered on and connected.</p>';
-            } finally {
-                button.innerHTML = originalText;
-                button.disabled = false;
-            }
-        }
-
-        // Show device creation wizard
-        function showDeviceWizard() {
-            document.getElementById('device-wizard-modal').style.display = 'flex';
-            currentStep = 1;
-            selectedDeviceType = null;
-            deviceConfig = {};
-            
-            showStep(1);
-            loadDeviceTypes();
-        }
-
-        // Close device wizard
-        function closeDeviceWizard() {
-            document.getElementById('device-wizard-modal').style.display = 'none';
-        }
-
-        // Load device types in wizard
-        function loadDeviceTypes() {
-            const grid = document.getElementById('device-types-grid');
-            
-            const typeIcons = {
-                'motion_sensor': '👋',
-                'light_sensor': '💡',
-                'air_quality': '🌬️',
-                'noise_monitor': '🔊',
-                'power_monitor': '⚡'
-            };
-            
-            grid.innerHTML = Object.entries(deviceTemplates).map(([key, template]) => `
-                <div class="device-type-card" onclick="selectDeviceType('${key}')">
-                    <div class="device-type-icon">${typeIcons[key] || '📱'}</div>
-                    <div class="device-type-name">${template.name}</div>
-                    <div class="device-type-description">${template.description}</div>
-                </div>
-            `).join('');
-        }
-
-        // Select device type
-        function selectDeviceType(type) {
-            selectedDeviceType = type;
-            deviceConfig.type = type;
-            
-            // Update UI
-            document.querySelectorAll('.device-type-card').forEach(card => {
-                card.classList.remove('selected');
-            });
-            event.target.closest('.device-type-card').classList.add('selected');
-            
-            // Enable next button
-            document.getElementById('next-btn').disabled = false;
-        }
-
-        // Load locations dropdown
-        async function loadLocationsDropdown() {
-            try {
-                const response = await fetch(`${API_BASE}/locations`);
-                const locations = await response.json();
-                
-                const select = document.getElementById('device-location');
-                select.innerHTML = '<option value="">Select Location</option>' +
-                    locations.map(loc => `<option value="${loc.id}">${loc.name}</option>`).join('');
-            } catch (error) {
-                console.error('Failed to load locations:', error);
-            }
-        }
-
-        // Wizard navigation
-        function nextStep() {
-            if (currentStep < 4) {
-                if (validateStep(currentStep)) {
-                    currentStep++;
-                    showStep(currentStep);
-                    
-                    if (currentStep === 2) {
-                        loadPinConfiguration();
-                    } else if (currentStep === 4) {
-                        generateConfigPreview();
-                    }
-                }
-            }
-        }
-
-        function previousStep() {
-            if (currentStep > 1) {
-                currentStep--;
-                showStep(currentStep);
-            }
-        }
-
-        function showStep(step) {
-            // Update step indicators
-            document.querySelectorAll('.step').forEach((stepEl, index) => {
-                if (index + 1 <= step) {
-                    stepEl.classList.add('active');
-                } else {
-                    stepEl.classList.remove('active');
-                }
-            });
-            
-            // Show/hide step content
-            document.querySelectorAll('.wizard-step').forEach((stepEl, index) => {
-                if (index + 1 === step) {
-                    stepEl.classList.add('active');
-                } else {
-                    stepEl.classList.remove('active');
-                }
-            });
-            
-            // Update buttons
-            const prevBtn = document.getElementById('prev-btn');
-            const nextBtn = document.getElementById('next-btn');
-            const createBtn = document.getElementById('create-btn');
-            
-            prevBtn.style.display = step > 1 ? 'block' : 'none';
-            nextBtn.style.display = step < 4 ? 'block' : 'none';
-            createBtn.style.display = step === 4 ? 'block' : 'none';
-        }
-
-        // Load pin configuration for selected device type
-        function loadPinConfiguration() {
-            const template = deviceTemplates[selectedDeviceType];
-            const pinSettings = document.getElementById('pin-settings');
-            
-            // Generate pin configuration UI based on device type
-            pinSettings.innerHTML = `
-                <h4>Pin Configuration</h4>
-                <p>Configure the GPIO pins for your ${template.name}:</p>
-                <div class="pin-selector" id="pin-options">
-                    <!-- Pin options will be generated here -->
-                </div>
-            `;
-            
-            // Add specific pin configurations based on device type
-            generatePinOptions(template);
-        }
-
-        function generatePinOptions(template) {
-            const pinOptions = document.getElementById('pin-options');
-            const availablePins = [2, 4, 5, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 25, 26, 27, 32, 33];
-            
-            // Generate pin selection based on sensor requirements
-            if (template.sensors.includes('binary_sensor')) {
-                pinOptions.innerHTML += `
-                    <div>
-                        <label>Motion Sensor Pin:</label>
-                        <select class="pin-select" data-pin-type="motion">
-                            ${availablePins.map(pin => `<option value="GPIO${pin}">GPIO${pin}</option>`).join('')}
-                        </select>
-                    </div>
-                `;
-            }
-            
-            if (template.sensors.includes('sensor')) {
-                pinOptions.innerHTML += `
-                    <div>
-                        <label>Analog Sensor Pin:</label>
-                        <select class="pin-select" data-pin-type="analog">
-                            <option value="A0">A0</option>
-                            ${availablePins.map(pin => `<option value="GPIO${pin}">GPIO${pin}</option>`).join('')}
-                        </select>
-                    </div>
-                `;
-            }
-        }
-
-        // Generate configuration preview
-        function generateConfigPreview() {
-            const reviewInfo = document.getElementById('review-device-info');
-            const configPreview = document.getElementById('generated-config');
-            
-            reviewInfo.innerHTML = `
-                <p><strong>Name:</strong> ${deviceConfig.name}</p>
-                <p><strong>Type:</strong> ${deviceTemplates[selectedDeviceType].name}</p>
-                <p><strong>Location:</strong> ${document.getElementById('device-location').selectedOptions[0]?.text || 'None'}</p>
-                <p><strong>WiFi Network:</strong> ${deviceConfig.wifi_ssid || 'Not configured'}</p>
-            `;
-            
-            // Generate YAML preview
-            const config = generateYAMLConfig();
-            configPreview.textContent = config;
-        }
-
-        function generateYAMLConfig() {
-            const template = deviceTemplates[selectedDeviceType];
-            
-            return `esphome:
-  name: ${deviceConfig.name.toLowerCase().replace(/\s+/g, '_')}
-  platform: ESP32
-  board: esp32dev
-
-wifi:
-  ssid: "${deviceConfig.wifi_ssid || 'YourWiFi'}"
-  password: "${deviceConfig.wifi_password || 'YourPassword'}"
-  
-  ap:
-    ssid: "${deviceConfig.name} Fallback"
-    password: "smartsites123"
-
-captive_portal:
-
-logger:
-
-api:
-  encryption:
-    key: "your-api-key-here"
-
-ota:
-  password: "your-ota-password"
-
-mqtt:
-  broker: 192.168.1.100
-  port: 1883
-  topic_prefix: smartsites/${deviceConfig.name.toLowerCase().replace(/\s+/g, '_')}
-
-web_server:
-  port: 80
-
-# Sensor configuration based on ${template.name}
-${generateSensorConfig(template)}`;
-        }
-
-        function generateSensorConfig(template) {
-            // Generate sensor configuration based on template
-            if (selectedDeviceType === 'motion_sensor') {
-                return `binary_sensor:
-  - platform: gpio
-    pin: GPIO2
-    name: "Motion"
-    device_class: motion`;
-            }
-            
-            if (selectedDeviceType === 'light_sensor') {
-                return `sensor:
-  - platform: adc
-    pin: A0
-    name: "Light Level"
-    unit_of_measurement: "lux"
-    update_interval: 30s`;
-            }
-            
-            // Add more sensor configurations...
-            return '# Sensor configuration will be added here';
-        }
-
-        // Create device
-        async function createDevice() {
-            const createBtn = document.getElementById('create-btn');
-            createBtn.disabled = true;
-            createBtn.textContent = 'Creating...';
-            
-            try {
-                const response = await fetch(`${API_BASE}/esphome/devices`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        name: deviceConfig.name,
-                        type: selectedDeviceType,
-                        site_location_id: deviceConfig.location_id || null,
-                        wifi_ssid: deviceConfig.wifi_ssid,
-                        wifi_password: deviceConfig.wifi_password,
-                        pins: deviceConfig.pins || {}
-                    })
-                });
-                
-                if (response.ok) {
-                    const result = await response.json();
-                    alert('Device created successfully! Compilation started.');
-                    closeDeviceWizard();
-                    loadESPHomeDevices(); // Refresh the devices list
-                } else {
-                    const error = await response.json();
-                    alert(`Failed to create device: ${error.message || 'Unknown error'}`);
-                }
-            } catch (error) {
-                console.error('Failed to create device:', error);
-                alert('Failed to create device. Please try again.');
-            } finally {
-                createBtn.disabled = false;
-                createBtn.textContent = 'Create Device';
-            }
-        }
-
-        // Device actions
-        async function compileDevice(deviceId) {
-            try {
-                const response = await fetch(`${API_BASE}/esphome/devices/${deviceId}/compile`, {
-                    method: 'POST'
-                });
-                
-                if (response.ok) {
-                    alert('Compilation started! Check the device status in a few minutes.');
-                    // Refresh devices to show compiling status
-                    setTimeout(loadESPHomeDevices, 1000);
-                } else {
-                    alert('Failed to start compilation');
-                }
-            } catch (error) {
-                console.error('Compilation failed:', error);
-                alert('Compilation failed');
-            }
-        }
-
-        async function uploadFirmware(deviceId) {
-            try {
-                const response = await fetch(`${API_BASE}/esphome/devices/${deviceId}/upload`, {
-                    method: 'POST'
-                });
-                
-                if (response.ok) {
-                    alert('Firmware upload started! The device should appear online shortly.');
-                    setTimeout(loadESPHomeDevices, 2000);
-                } else {
-                    alert('Failed to start firmware upload');
-                }
-            } catch (error) {
-                console.error('Upload failed:', error);
-                alert('Upload failed');
-            }
-        }
-
-        function showDeviceLogs(deviceId) {
-            // This would open a modal with real-time logs
-            alert('Device logs feature coming soon!');
-        }
-
-        function editDevice(deviceId) {
-            alert('Device editing feature coming soon!');
-        }
-
-        function adoptDevice(ip) {
-            alert(`Adopting device at ${ip} - feature coming soon!`);
-        }
-
-        // Initialize ESPHome page when it becomes active
-        function initializeESPHomePage() {
-            loadESPHomeData();
-        }
-
-        // Automation Builder Variables
-let currentAutomation = {
-    name: '',
-    description: '',
-    triggers: [],
-    conditions: [],
-    actions: []
-};
-
-let editingAutomationId = null;
-
-// Load automation page data
-async function loadAutomations() {
-    try {
-        // Load templates
-        const templatesResponse = await fetch(`${API_BASE}/automations/templates`);
-        const templates = await templatesResponse.json();
-        renderTemplates(templates);
-        
-        // Load existing automations
-        const rulesResponse = await fetch(`${API_BASE}/automations/rules`);
-        const rules = await rulesResponse.json();
-        renderAutomations(rules);
-        
-    } catch (error) {
-        console.error('Failed to load automation data:', error);
-    }
-}
-
-function renderTemplates(templates) {
-    const grid = document.getElementById('template-grid');
-    
-    const templateIcons = {
-        'motion_lights': '💡',
-        'noise_alert': '🔊',
-        'security_alert': '🚨'
-    };
-    
-    grid.innerHTML = Object.entries(templates).map(([key, template]) => `
-        <div class="template-card" onclick="useTemplate('${key}')">
-            <div class="template-icon">${templateIcons[key] || '⚡'}</div>
-            <div class="template-name">${template.name}</div>
-            <div class="template-description">${template.description}</div>
-        </div>
-    `).join('');
-}
-
-function renderAutomations(automations) {
-    const list = document.getElementById('automation-list');
-    
-    if (automations.length === 0) {
-        list.innerHTML = `
-            <div class="empty-automation-state">
-                <div class="icon">⚡</div>
-                <h3>No Automations Yet</h3>
-                <p>Create your first automation to make your construction site smarter.</p>
-            </div>
-        `;
-        return;
-    }
-    
-    list.innerHTML = automations.map(automation => `
-        <div class="automation-item">
-            <div class="automation-info">
-                <h4>${automation.name}</h4>
-                <p>${automation.description}</p>
-                <div class="automation-stats">
-                    <span>Triggered: ${automation.trigger_count} times</span>
-                    <span>Last: ${automation.last_triggered ? new Date(automation.last_triggered).toLocaleString() : 'Never'}</span>
-                    <span>Created: ${new Date(automation.created_at).toLocaleDateString()}</span>
-                </div>
-            </div>
-            <div class="automation-controls">
-                <div class="toggle-switch ${automation.is_enabled ? 'active' : ''}" 
-                     onclick="toggleAutomation(${automation.id})">
-                </div>
-                <div class="automation-actions">
-                    <button onclick="editAutomation(${automation.id})">✏️ Edit</button>
-                    <button onclick="duplicateAutomation(${automation.id})">📋 Copy</button>
-                    <button onclick="deleteAutomation(${automation.id})" style="color: #dc3545;">🗑️ Delete</button>
-                </div>
-            </div>
-        </div>
-    `).join('');
-}
-
-// Show/close automation builder
-function showAutomationBuilder() {
-    document.getElementById('automation-builder-modal').style.display = 'flex';
-    editingAutomationId = null;
-    resetAutomationBuilder();
-}
-
-function closeAutomationBuilder() {
-    document.getElementById('automation-builder-modal').style.display = 'none';
-    resetAutomationBuilder();
-}
-
-function resetAutomationBuilder() {
-    currentAutomation = {
-        name: '',
-        description: '',
-        triggers: [],
-        conditions: [],
-        actions: []
-    };
-    
-    document.getElementById('automation-name').value = '';
-    document.getElementById('automation-description').value = '';
-    document.getElementById('triggers-container').innerHTML = '';
-    document.getElementById('conditions-container').innerHTML = '';
-    document.getElementById('actions-container').innerHTML = '';
-    
-    updatePreview();
-}
-
-// Simple placeholder functions (you can expand these later)
-function addTrigger() {
-    alert('Trigger builder coming soon!');
-}
-
-function addCondition() {
-    alert('Condition builder coming soon!');
-}
-
-function addAction() {
-    alert('Action builder coming soon!');
-}
-
-function saveAutomation() {
-    const name = document.getElementById('automation-name').value;
-    if (!name) {
-        alert('Please enter an automation name');
-        return;
-    }
-    alert('Save automation coming soon!');
-}
-
-function updatePreview() {
-    const preview = document.getElementById('automation-preview');
-    const name = document.getElementById('automation-name').value || 'Untitled Automation';
-    preview.innerHTML = `<div class="preview-section"><strong>Name:</strong> ${name}</div>`;
-}
-
-function toggleAutomation(id) {
-    alert(`Toggle automation ${id} - coming soon!`);
-}
-
-function editAutomation(id) {
-    alert(`Edit automation ${id} - coming soon!`);
-}
-
-function duplicateAutomation(id) {
-    alert(`Duplicate automation ${id} - coming soon!`);
-}
-
-function deleteAutomation(id) {
-    if (confirm('Are you sure you want to delete this automation?')) {
-        alert(`Delete automation ${id} - coming soon!`);
-    }
-}
-
-function useTemplate(key) {
-    alert(`Use template ${key} - coming soon!`);
-}
-
-// Update the existing createAutomation function
-function createAutomation() {
-    showAutomationBuilder();
-}
-
-     
-  
         // Initialize app
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('Smart Sites app initialized');
             // Load initial page data
             loadPageData('overview');
+        });
+
+        // Error handling
+        window.addEventListener('error', function(e) {
+            console.error('JavaScript error:', e.error);
         });
     </script>
 </body>
