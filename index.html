@@ -23,7 +23,37 @@
             min-height: 100vh;
         }
 
-        /* Sidebar */
+        /* Advanced Mode Styles */
+        .advanced-btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s ease;
+        }
+
+        .advanced-btn:hover {
+            background: #0056b3;
+        }
+
+        .advanced-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 10000;
+            display: none;
+            overflow: auto;
+        }
+
+          /* Sidebar */
         .sidebar {
             width: 60px;
             background: white;
@@ -1153,17 +1183,20 @@
                 </div>
             </div>
 
-            <!-- ESPHome Builder Page -->
-            <div class="page-content" id="esphome-page">
-                <div class="page-header">
-                    <h1 class="page-title">ESPHome Builder</h1>
-                    <div class="header-actions">
-                        <button class="edit-btn" onclick="showDeviceWizard()">
-                            <span>➕</span>
-                            <span>Create ESP32 Device</span>
-                        </button>
-                    </div>
+            <!-- Replace the existing ESPHome page header -->
+                    <div class="page-header">
+                        <h1 class="page-title">ESPHome Builder</h1>
+                        <div class="header-actions">
+                            <button class="edit-btn" onclick="showDeviceWizard()">
+                        <span>➕</span>
+                        <span>Add Device</span>
+                    </button>
+                    <button class="advanced-btn" onclick="showAdvancedMode()">
+                        <span>🔧</span>
+                        <span>Advanced Mode</span>
+                    </button>
                 </div>
+            </div>
                 
                 <div class="card">
                     <div class="card-header">
@@ -2082,6 +2115,35 @@
             console.log('Filtering devices...');
         }
 
+        // Advanced Mode Functions
+        function showAdvancedMode() {
+            const modal = document.getElementById('advanced-modal');
+            modal.style.display = 'block';
+            initAdvancedWizard();
+        }
+
+        function closeAdvancedMode() {
+        document.getElementById('advanced-modal').style.display = 'none';
+        }
+
+// The advanced mode generates configurations that integrate with Smart Sites:
+function saveConfiguration() {
+    const config = {
+        board: boardType,
+        sensors: currentConfiguration,
+        yaml: generateYAMLConfig(),
+        timestamp: new Date().toISOString(),
+        mode: 'advanced'  // Identifies this as an advanced configuration
+    };
+    
+    // This would save to Smart Sites backend via existing API
+    fetch('/api/esphome/devices', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(config)
+    });
+}
+        
         // History functions
         async function loadHistory() {
             console.log('Loading history...');
@@ -2583,5 +2645,10 @@
             }
         });
     </script>
+
+    <!-- Advanced Mode Modal -->
+<div class="advanced-modal" id="advanced-modal" style="display: none;">
+    <!-- The complete modal content from the artifact above -->
+</div>
 </body>
 </html>
