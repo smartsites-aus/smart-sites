@@ -646,6 +646,51 @@
         .widget-card {
             animation: fadeIn 0.3s ease;
         }
+
+/* Dashboard styles */
+.edit-mode .widget-controls {
+    display: flex !important;
+}
+
+.save-mode {
+    background: #28a745 !important;
+}
+
+.save-mode:hover {
+    background: #218838 !important;
+}
+
+.widget-library {
+    position: fixed;
+    top: 0;
+    right: -400px;
+    width: 400px;
+    height: 100vh;
+    background: white;
+    box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+    transition: right 0.3s ease;
+    z-index: 200;
+    overflow-y: auto;
+}
+
+.widget-library.open {
+    right: 0 !important;
+}
+
+.library-widget:hover {
+    border-color: #007bff !important;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.widget-controls {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    display: none;
+    gap: 4px;
+    z-index: 10;
+}
     </style>
 </head>
 <body>
@@ -817,6 +862,7 @@
     </div>
 
     <script>
+    <script>
         // Dashboard state
         let editMode = false;
         let dashboardConfig = {
@@ -825,6 +871,8 @@
         let draggedWidget = null;
         let currentConfigWidget = null;
 
+        // ADD THESE LINES HERE (after the existing dashboard variables above):
+        
         // Sample data for demonstration
         const sampleData = {
             totalDevices: 24,
@@ -861,54 +909,6 @@
                 type: 'stat',
                 icon: '🚨',
                 data: () => sampleData.recentAlerts,
-                configurable: true
-            },
-            'device-status-chart': {
-                name: 'Device Status Distribution',
-                type: 'chart',
-                icon: '📊',
-                configurable: true
-            },
-            'power-trend': {
-                name: 'Power Usage Trend',
-                type: 'chart',
-                icon: '📈',
-                configurable: true
-            },
-            'temperature-chart': {
-                name: 'Temperature Monitoring',
-                type: 'chart',
-                icon: '🌡️',
-                configurable: true
-            },
-            'air-quality': {
-                name: 'Air Quality Index',
-                type: 'chart',
-                icon: '🌬️',
-                configurable: true
-            },
-            'recent-activity': {
-                name: 'Recent Activity Feed',
-                type: 'list',
-                icon: '📋',
-                configurable: true
-            },
-            'location-status': {
-                name: 'Location Status Overview',
-                type: 'grid',
-                icon: '📍',
-                configurable: true
-            },
-            'noise-levels': {
-                name: 'Noise Level Monitor',
-                type: 'gauge',
-                icon: '🔊',
-                configurable: true
-            },
-            'weather': {
-                name: 'Weather Conditions',
-                type: 'weather',
-                icon: '🌤️',
                 configurable: true
             }
         };
