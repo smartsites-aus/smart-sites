@@ -526,8 +526,17 @@ def get_esphome_devices():
 
 @app.route('/api/esphome/devices', methods=['POST'])
 def create_esphome_device():
-    """Create a new ESPHome device configuration"""
     data = request.get_json()
+    
+    # Handle both simple and advanced mode configurations
+    if data.get('mode') == 'advanced':
+        # Process advanced pin mapping configuration
+        config = generate_advanced_esphome_config(data)
+    else:
+        # Process simple wizard configuration (existing code)
+        config = generate_simple_esphome_config(data)
+    
+    # Save to database...
     
     try:
         # Validate required fields
