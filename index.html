@@ -881,36 +881,85 @@
         };
 
         // Widget templates
-        const widgetTemplates = {
-            'total-devices': {
-                name: 'Total Devices',
-                type: 'stat',
-                icon: '📱',
-                data: () => sampleData.totalDevices,
-                configurable: true
-            },
-            'online-devices': {
-                name: 'Online Devices',
-                type: 'stat',
-                icon: '🟢',
-                data: () => sampleData.onlineDevices,
-                configurable: true
-            },
-            'power-usage': {
-                name: 'Power Usage',
-                type: 'stat',
-                icon: '⚡',
-                data: () => sampleData.powerUsage + 'W',
-                configurable: true
-            },
-            'alerts': {
-                name: 'Recent Alerts',
-                type: 'stat',
-                icon: '🚨',
-                data: () => sampleData.recentAlerts,
-                configurable: true
-            }
-        };
+const widgetTemplates = {
+    'total-devices': {
+        name: 'Total Devices',
+        type: 'stat',
+        icon: '📱',
+        data: () => sampleData.totalDevices,
+        configurable: true
+    },
+    'online-devices': {
+        name: 'Online Devices',
+        type: 'stat',
+        icon: '🟢',
+        data: () => sampleData.onlineDevices,
+        configurable: true
+    },
+    'power-usage': {
+        name: 'Power Usage',
+        type: 'stat',
+        icon: '⚡',
+        data: () => sampleData.powerUsage + 'W',
+        configurable: true
+    },
+    'alerts': {
+        name: 'Recent Alerts',
+        type: 'stat',
+        icon: '🚨',
+        data: () => sampleData.recentAlerts,
+        configurable: true
+    },
+    // ADD THESE MISSING WIDGET TEMPLATES:
+    'device-status-chart': {
+        name: 'Device Status Distribution',
+        type: 'chart',
+        icon: '📊',
+        configurable: true
+    },
+    'power-trend': {
+        name: 'Power Usage Trend',
+        type: 'chart',
+        icon: '📈',
+        configurable: true
+    },
+    'temperature-chart': {
+        name: 'Temperature Monitoring',
+        type: 'chart',
+        icon: '🌡️',
+        configurable: true
+    },
+    'air-quality': {
+        name: 'Air Quality Index',
+        type: 'chart',
+        icon: '🌬️',
+        configurable: true
+    },
+    'recent-activity': {
+        name: 'Recent Activity Feed',
+        type: 'list',
+        icon: '📋',
+        configurable: true
+    },
+    'location-status': {
+        name: 'Location Status Overview',
+        type: 'grid',
+        icon: '📍',
+        configurable: true
+    },
+    'noise-levels': {
+        name: 'Noise Level Monitor',
+        type: 'gauge',
+        icon: '🔊',
+        configurable: true
+    },
+    'weather': {
+        name: 'Weather Conditions',
+        type: 'weather',
+        icon: '🌤️',
+        configurable: true
+    }
+};
 
         // Initialize dashboard
         function initializeDashboard() {
