@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Sites - Dashboard Editor</title>
+    <title>Smart Sites - Construction Site Management</title>
     <style>
         * {
             margin: 0;
@@ -111,9 +111,14 @@
         }
 
         .page-content {
+            display: none;
             padding: 30px;
             max-width: 1400px;
             margin: 0 auto;
+        }
+
+        .page-content.active {
+            display: block;
         }
 
         .page-header {
@@ -177,6 +182,39 @@
 
         .cancel-btn:hover {
             background: #545b62;
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 20px;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .card-content {
+            padding: 20px;
+        }
+
+        .card-content p {
+            color: #666;
+            margin-bottom: 10px;
+            font-weight: 300;
         }
 
         /* Dashboard Grid */
@@ -511,28 +549,6 @@
             font-size: 14px;
         }
 
-        /* Drop Zones */
-        .drop-zone {
-            min-height: 100px;
-            border: 2px dashed transparent;
-            border-radius: 8px;
-            transition: all 0.2s ease;
-            position: relative;
-        }
-
-        .drop-zone.drag-over {
-            border-color: #007bff;
-            background: rgba(0,123,255,0.1);
-        }
-
-        .drop-zone.empty {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #666;
-            font-style: italic;
-        }
-
         /* Welcome Card */
         .welcome-card {
             background: white;
@@ -597,6 +613,145 @@
             background: #0056b3;
         }
 
+        /* Filters */
+        .filters {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .filter-group label {
+            font-size: 12px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .filter-group select {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background: white;
+            font-size: 14px;
+            min-width: 150px;
+        }
+
+        /* Device Grid */
+        .device-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .device-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .device-status {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #dc3545;
+        }
+
+        .device-status.online {
+            background: #28a745;
+        }
+
+        .device-name {
+            font-size: 16px;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .device-info {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .device-sensors {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .sensor-reading {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .sensor-name {
+            color: #666;
+        }
+
+        .sensor-value {
+            color: #333;
+            font-weight: 500;
+        }
+
+        /* History Table */
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .history-table th {
+            background: #f8f9fa;
+            padding: 15px;
+            text-align: left;
+            font-weight: 500;
+            color: #333;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .history-table td {
+            padding: 15px;
+            border-bottom: 1px solid #e9ecef;
+            color: #666;
+        }
+
+        .history-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .history-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .sidebar {
@@ -635,6 +790,10 @@
                 width: 100%;
                 justify-content: center;
             }
+
+            .filters {
+                flex-direction: column;
+            }
         }
 
         /* Animation */
@@ -646,51 +805,6 @@
         .widget-card {
             animation: fadeIn 0.3s ease;
         }
-
-/* Dashboard styles */
-.edit-mode .widget-controls {
-    display: flex !important;
-}
-
-.save-mode {
-    background: #28a745 !important;
-}
-
-.save-mode:hover {
-    background: #218838 !important;
-}
-
-.widget-library {
-    position: fixed;
-    top: 0;
-    right: -400px;
-    width: 400px;
-    height: 100vh;
-    background: white;
-    box-shadow: -2px 0 10px rgba(0,0,0,0.1);
-    transition: right 0.3s ease;
-    z-index: 200;
-    overflow-y: auto;
-}
-
-.widget-library.open {
-    right: 0 !important;
-}
-
-.library-widget:hover {
-    border-color: #007bff !important;
-    transform: translateY(-2px);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-
-.widget-controls {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    display: none;
-    gap: 4px;
-    z-index: 10;
-}
     </style>
 </head>
 <body>
@@ -701,35 +815,35 @@
                 <div class="logo">Smart Sites</div>
             </div>
             <nav class="sidebar-nav">
-                <button class="nav-link active">
+                <button class="nav-link active" onclick="showPage('overview')">
                     <div class="nav-icon">📊</div>
                     <span class="nav-text">Overview</span>
                 </button>
-                <button class="nav-link">
+                <button class="nav-link" onclick="showPage('devices')">
                     <div class="nav-icon">📱</div>
                     <span class="nav-text">Devices</span>
                 </button>
-                <button class="nav-link">
+                <button class="nav-link" onclick="showPage('history')">
                     <div class="nav-icon">📈</div>
                     <span class="nav-text">History</span>
                 </button>
-                <button class="nav-link">
+                <button class="nav-link" onclick="showPage('locations')">
                     <div class="nav-icon">📍</div>
                     <span class="nav-text">Locations</span>
                 </button>
-                <button class="nav-link">
+                <button class="nav-link" onclick="showPage('automations')">
                     <div class="nav-icon">⚡</div>
                     <span class="nav-text">Automations</span>
                 </button>
-                <button class="nav-link">
+                <button class="nav-link" onclick="showPage('esphome')">
                     <div class="nav-icon">🔧</div>
                     <span class="nav-text">ESPHome Builder</span>
                 </button>
-                <button class="nav-link">
+                <button class="nav-link" onclick="showPage('power')">
                     <div class="nav-icon">🔋</div>
                     <span class="nav-text">Power</span>
                 </button>
-                <button class="nav-link">
+                <button class="nav-link" onclick="showPage('reports')">
                     <div class="nav-icon">📄</div>
                     <span class="nav-text">Reports</span>
                 </button>
@@ -738,7 +852,8 @@
 
         <!-- Main Content -->
         <main class="main-content">
-            <div class="page-content">
+            <!-- Overview Page -->
+            <div class="page-content active" id="overview-page">
                 <div class="page-header">
                     <h1 class="page-title">Dashboard</h1>
                     <div class="header-actions">
@@ -763,9 +878,283 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Devices Page -->
+            <div class="page-content" id="devices-page">
+                <div class="page-header">
+                    <h1 class="page-title">Devices</h1>
+                    <div class="header-actions">
+                        <button class="edit-btn" onclick="addDevice()">
+                            <span>➕</span>
+                            <span>Add Device</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="filters">
+                    <div class="filter-group">
+                        <label>Location</label>
+                        <select id="location-filter" onchange="filterDevices()">
+                            <option value="">All Locations</option>
+                            <option value="Main Office">Main Office</option>
+                            <option value="Workshop">Workshop</option>
+                            <option value="Storage">Storage</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Sensor Type</label>
+                        <select id="sensor-type-filter" onchange="filterDevices()">
+                            <option value="">All Types</option>
+                            <option value="motion">Motion</option>
+                            <option value="light">Light</option>
+                            <option value="air_quality">Air Quality</option>
+                            <option value="power">Power</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="device-grid" id="device-grid">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📱</div>
+                        <h3>No devices found</h3>
+                        <p>Add devices to monitor your construction site or use the ESPHome Builder to create custom ESP32 sensors.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- History Page -->
+            <div class="page-content" id="history-page">
+                <div class="page-header">
+                    <h1 class="page-title">History</h1>
+                    <div class="header-actions">
+                        <button class="edit-btn" onclick="exportHistory()">
+                            <span>📥</span>
+                            <span>Export CSV</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-content">
+                        <table class="history-table" id="history-table">
+                            <thead>
+                                <tr>
+                                    <th>Timestamp</th>
+                                    <th>Site Location</th>
+                                    <th>Device Type</th>
+                                    <th>Entity</th>
+                                    <th>Old Value</th>
+                                    <th>New Value</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="6" style="text-align: center; padding: 40px; color: #666;">
+                                        No history data available yet. Add devices to start monitoring.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Locations Page -->
+            <div class="page-content" id="locations-page">
+                <div class="page-header">
+                    <h1 class="page-title">Site Locations</h1>
+                    <div class="header-actions">
+                        <button class="edit-btn" onclick="addLocation()">
+                            <span>➕</span>
+                            <span>Add Location</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="device-grid" id="locations-grid">
+                    <!-- Default locations -->
+                    <div class="device-card">
+                        <div class="device-name">Main Office</div>
+                        <div class="device-info">Primary administrative building</div>
+                        <div class="device-info">Devices: 0</div>
+                    </div>
+                    <div class="device-card">
+                        <div class="device-name">Workshop</div>
+                        <div class="device-info">Main construction workshop area</div>
+                        <div class="device-info">Devices: 0</div>
+                    </div>
+                    <div class="device-card">
+                        <div class="device-name">Storage</div>
+                        <div class="device-info">Equipment and materials storage</div>
+                        <div class="device-info">Devices: 0</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Automations Page -->
+            <div class="page-content" id="automations-page">
+                <div class="page-header">
+                    <h1 class="page-title">Automations</h1>
+                    <div class="header-actions">
+                        <button class="edit-btn" onclick="createAutomation()">
+                            <span>➕</span>
+                            <span>Create Automation</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Automation Rules</h3>
+                    </div>
+                    <div class="card-content">
+                        <p>Create automated responses to sensor data and environmental conditions.</p>
+                        <p>Set up alerts, lighting controls, and safety monitoring rules for your construction site.</p>
+                        <div style="margin-top: 20px;">
+                            <h4 style="margin-bottom: 10px;">Popular Automation Ideas:</h4>
+                            <ul style="margin-left: 20px; color: #666;">
+                                <li>Turn on lights when motion detected after hours</li>
+                                <li>Send alerts when noise levels exceed safety limits</li>
+                                <li>Monitor power consumption and send daily reports</li>
+                                <li>Alert when doors are left open outside work hours</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ESPHome Builder Page -->
+            <div class="page-content" id="esphome-page">
+                <div class="page-header">
+                    <h1 class="page-title">ESPHome Builder</h1>
+                    <div class="header-actions">
+                        <button class="edit-btn" onclick="showDeviceWizard()">
+                            <span>➕</span>
+                            <span>Create ESP32 Device</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">ESP32 Device Builder</h3>
+                    </div>
+                    <div class="card-content">
+                        <p>Create custom ESP32-based sensors for your construction site using ESPHome.</p>
+                        <p>Build motion sensors, environmental monitors, power meters, and more with easy-to-use templates.</p>
+                        
+                        <div style="margin-top: 20px;">
+                            <h4 style="margin-bottom: 15px;">Available Device Types:</h4>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                                <div style="border: 1px solid #e9ecef; border-radius: 6px; padding: 15px; text-align: center;">
+                                    <div style="font-size: 24px; margin-bottom: 8px;">👋</div>
+                                    <strong>Motion Sensor</strong>
+                                    <p style="font-size: 12px; color: #666; margin-top: 5px;">PIR or mmWave detection</p>
+                                </div>
+                                <div style="border: 1px solid #e9ecef; border-radius: 6px; padding: 15px; text-align: center;">
+                                    <div style="font-size: 24px; margin-bottom: 8px;">🌡️</div>
+                                    <strong>Climate Monitor</strong>
+                                    <p style="font-size: 12px; color: #666; margin-top: 5px;">Temperature & humidity</p>
+                                </div>
+                                <div style="border: 1px solid #e9ecef; border-radius: 6px; padding: 15px; text-align: center;">
+                                    <div style="font-size: 24px; margin-bottom: 8px;">⚡</div>
+                                    <strong>Power Monitor</strong>
+                                    <p style="font-size: 12px; color: #666; margin-top: 5px;">CT clamp monitoring</p>
+                                </div>
+                                <div style="border: 1px solid #e9ecef; border-radius: 6px; padding: 15px; text-align: center;">
+                                    <div style="font-size: 24px; margin-bottom: 8px;">🔊</div>
+                                    <strong>Noise Monitor</strong>
+                                    <p style="font-size: 12px; color: #666; margin-top: 5px;">Sound level detection</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Power Page -->
+            <div class="page-content" id="power-page">
+                <div class="page-header">
+                    <h1 class="page-title">Power Management</h1>
+                    <div class="header-actions">
+                        <button class="edit-btn" onclick="addPowerMeter()">
+                            <span>➕</span>
+                            <span>Add CT Clamp</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="dashboard-grid">
+                    <div class="stat-card">
+                        <div class="stat-value">0W</div>
+                        <div class="stat-label">Current Power Draw</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">0 kWh</div>
+                        <div class="stat-label">Daily Consumption</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">$0.00</div>
+                        <div class="stat-label">Daily Cost</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Power Monitoring</h3>
+                    </div>
+                    <div class="card-content">
+                        <p>Monitor real-time power consumption across your construction site using CT clamps and smart meters.</p>
+                        <p>Track energy usage, identify power spikes, and optimize electrical efficiency to reduce operational costs.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reports Page -->
+            <div class="page-content" id="reports-page">
+                <div class="page-header">
+                    <h1 class="page-title">Reports</h1>
+                    <div class="header-actions">
+                        <button class="edit-btn" onclick="generateReport()">
+                            <span>📊</span>
+                            <span>Generate Report</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Available Reports</h3>
+                    </div>
+                    <div class="card-content">
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
+                            <div style="border: 1px solid #e9ecef; border-radius: 6px; padding: 15px;">
+                                <h4 style="margin-bottom: 10px;">📱 Device Status Report</h4>
+                                <p style="color: #666; font-size: 14px; margin-bottom: 15px;">Complete overview of all devices, their status, and connectivity.</p>
+                                <button class="btn-primary" onclick="alert('Device report generation coming soon!')">Generate</button>
+                            </div>
+                            <div style="border: 1px solid #e9ecef; border-radius: 6px; padding: 15px;">
+                                <h4 style="margin-bottom: 10px;">⚡ Power Usage Report</h4>
+                                <p style="color: #666; font-size: 14px; margin-bottom: 15px;">Energy consumption analysis and cost breakdown.</p>
+                                <button class="btn-primary" onclick="alert('Power report generation coming soon!')">Generate</button>
+                            </div>
+                            <div style="border: 1px solid #e9ecef; border-radius: 6px; padding: 15px;">
+                                <h4 style="margin-bottom: 10px;">🚨 Safety & Alerts</h4>
+                                <p style="color: #666; font-size: 14px; margin-bottom: 15px;">Security incidents and safety monitoring summary.</p>
+                                <button class="btn-primary" onclick="alert('Safety report generation coming soon!')">Generate</button>
+                            </div>
+                            <div style="border: 1px solid #e9ecef; border-radius: 6px; padding: 15px;">
+                                <h4 style="margin-bottom: 10px;">📈 Historical Trends</h4>
+                                <p style="color: #666; font-size: 14px; margin-bottom: 15px;">Long-term data trends and pattern analysis.</p>
+                                <button class="btn-primary" onclick="alert('Trends report generation coming soon!')">Generate</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </main>
 
-        <!-- Widget Library Panel -->
+        <!-- Widget Library Panel (Only for Overview page) -->
         <div class="widget-library" id="widget-library">
             <div class="library-header">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
@@ -862,16 +1251,18 @@
     </div>
 
     <script>
-        // Dashboard state
+        // Configuration
+        const API_BASE = '/api';
+        
+        // State
         let editMode = false;
+        let currentPage = 'overview';
         let dashboardConfig = {
             widgets: []
         };
         let draggedWidget = null;
         let currentConfigWidget = null;
 
-        // ADD THESE LINES HERE (after the existing dashboard variables above):
-        
         // Sample data for demonstration
         const sampleData = {
             totalDevices: 24,
@@ -881,99 +1272,243 @@
         };
 
         // Widget templates
-const widgetTemplates = {
-    'total-devices': {
-        name: 'Total Devices',
-        type: 'stat',
-        icon: '📱',
-        data: () => sampleData.totalDevices,
-        configurable: true
-    },
-    'online-devices': {
-        name: 'Online Devices',
-        type: 'stat',
-        icon: '🟢',
-        data: () => sampleData.onlineDevices,
-        configurable: true
-    },
-    'power-usage': {
-        name: 'Power Usage',
-        type: 'stat',
-        icon: '⚡',
-        data: () => sampleData.powerUsage + 'W',
-        configurable: true
-    },
-    'alerts': {
-        name: 'Recent Alerts',
-        type: 'stat',
-        icon: '🚨',
-        data: () => sampleData.recentAlerts,
-        configurable: true
-    },
-    'device-status-chart': {
-        name: 'Device Status Distribution',
-        type: 'chart',
-        icon: '📊',
-        configurable: true
-    },
-    'power-trend': {
-        name: 'Power Usage Trend',
-        type: 'chart',
-        icon: '📈',
-        configurable: true
-    },
-    'temperature-chart': {
-        name: 'Temperature Monitoring',
-        type: 'chart',
-        icon: '🌡️',
-        configurable: true
-    },
-    'air-quality': {
-        name: 'Air Quality Index',
-        type: 'chart',
-        icon: '🌬️',
-        configurable: true
-    },
-    'recent-activity': {
-        name: 'Recent Activity Feed',
-        type: 'list',
-        icon: '📋',
-        configurable: true
-    },
-    'location-status': {
-        name: 'Location Status Overview',
-        type: 'grid',
-        icon: '📍',
-        configurable: true
-    },
-    'noise-levels': {
-        name: 'Noise Level Monitor',
-        type: 'gauge',
-        icon: '🔊',
-        configurable: true
-    },
-    'weather': {
-        name: 'Weather Conditions',
-        type: 'weather',
-        icon: '🌤️',
-        configurable: true
-    }
-};
+        const widgetTemplates = {
+            'total-devices': {
+                name: 'Total Devices',
+                type: 'stat',
+                icon: '📱',
+                data: () => sampleData.totalDevices,
+                configurable: true
+            },
+            'online-devices': {
+                name: 'Online Devices',
+                type: 'stat',
+                icon: '🟢',
+                data: () => sampleData.onlineDevices,
+                configurable: true
+            },
+            'power-usage': {
+                name: 'Power Usage',
+                type: 'stat',
+                icon: '⚡',
+                data: () => sampleData.powerUsage + 'W',
+                configurable: true
+            },
+            'alerts': {
+                name: 'Recent Alerts',
+                type: 'stat',
+                icon: '🚨',
+                data: () => sampleData.recentAlerts,
+                configurable: true
+            },
+            'device-status-chart': {
+                name: 'Device Status Distribution',
+                type: 'chart',
+                icon: '📊',
+                configurable: true
+            },
+            'power-trend': {
+                name: 'Power Usage Trend',
+                type: 'chart',
+                icon: '📈',
+                configurable: true
+            },
+            'temperature-chart': {
+                name: 'Temperature Monitoring',
+                type: 'chart',
+                icon: '🌡️',
+                configurable: true
+            },
+            'air-quality': {
+                name: 'Air Quality Index',
+                type: 'chart',
+                icon: '🌬️',
+                configurable: true
+            },
+            'recent-activity': {
+                name: 'Recent Activity Feed',
+                type: 'list',
+                icon: '📋',
+                configurable: true
+            },
+            'location-status': {
+                name: 'Location Status Overview',
+                type: 'grid',
+                icon: '📍',
+                configurable: true
+            },
+            'noise-levels': {
+                name: 'Noise Level Monitor',
+                type: 'gauge',
+                icon: '🔊',
+                configurable: true
+            },
+            'weather': {
+                name: 'Weather Conditions',
+                type: 'weather',
+                icon: '🌤️',
+                configurable: true
+            }
+        };
 
+        // Navigation
+        function showPage(pageId) {
+            console.log('Switching to page:', pageId);
+            
+            // Exit edit mode if switching pages
+            if (editMode) {
+                exitEditMode();
+            }
+            
+            // Hide all pages
+            const pages = document.querySelectorAll('.page-content');
+            pages.forEach(page => page.classList.remove('active'));
+            
+            // Show selected page
+            const targetPage = document.getElementById(pageId + '-page');
+            if (targetPage) {
+                targetPage.classList.add('active');
+            }
+            
+            // Update active nav link
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => link.classList.remove('active'));
+            
+            // Find and activate the correct nav link
+            const activeLink = Array.from(navLinks).find(link => 
+                link.textContent.trim().toLowerCase().includes(pageId) ||
+                (pageId === 'overview' && link.textContent.includes('Overview'))
+            );
+            if (activeLink) {
+                activeLink.classList.add('active');
+            }
+            
+            // Update current page
+            currentPage = pageId;
+            
+            // Load page-specific data
+            loadPageData(pageId);
+        }
+
+        // Load page data
+        async function loadPageData(pageId) {
+            console.log('Loading data for page:', pageId);
+            
+            switch (pageId) {
+                case 'overview':
+                    // Dashboard functionality is already loaded
+                    break;
+                case 'devices':
+                    await loadDevices();
+                    break;
+                case 'history':
+                    await loadHistory();
+                    break;
+                case 'locations':
+                    await loadLocations();
+                    break;
+                case 'automations':
+                    await loadAutomations();
+                    break;
+                case 'esphome':
+                    await loadESPHomeData();
+                    break;
+                case 'power':
+                    await loadPowerData();
+                    break;
+                case 'reports':
+                    console.log('Reports page loaded');
+                    break;
+                default:
+                    console.log('Unknown page:', pageId);
+            }
+        }
+
+        // Device functions
+        async function loadDevices() {
+            // For demo purposes, show empty state
+            // In a real app, this would fetch from API
+            console.log('Loading devices...');
+        }
+
+        function addDevice() {
+            alert('Add device functionality - integrate with ESPHome Builder or add manual device configuration!');
+        }
+
+        function filterDevices() {
+            console.log('Filtering devices...');
+        }
+
+        // History functions
+        async function loadHistory() {
+            console.log('Loading history...');
+        }
+
+        function exportHistory() {
+            alert('Export history to CSV - feature coming soon!');
+        }
+
+        // Location functions
+        async function loadLocations() {
+            console.log('Loading locations...');
+        }
+
+        function addLocation() {
+            const name = prompt('Enter location name:');
+            if (name) {
+                alert(`Location "${name}" would be added to the system.`);
+            }
+        }
+
+        // Automation functions
+        async function loadAutomations() {
+            console.log('Loading automations...');
+        }
+
+        function createAutomation() {
+            alert('Automation builder - create smart rules for your construction site!');
+        }
+
+        // ESPHome functions
+        async function loadESPHomeData() {
+            console.log('Loading ESPHome data...');
+        }
+
+        function showDeviceWizard() {
+            alert('ESP32 Device Wizard - create custom sensors with ESPHome templates!');
+        }
+
+        // Power functions
+        async function loadPowerData() {
+            console.log('Loading power data...');
+        }
+
+        function addPowerMeter() {
+            alert('Add CT clamp for power monitoring - track electrical usage!');
+        }
+
+        // Reports functions
+        function generateReport() {
+            alert('Generate construction site reports - export data for compliance!');
+        }
+
+        // Dashboard Editor Functions (Only for Overview page)
+        
         // Initialize dashboard
         function initializeDashboard() {
-            // Note: localStorage is not available in Claude.ai artifacts
-            // Dashboard config will be stored in memory only
             console.log('Initializing dashboard with in-memory storage');
-            
-            // Start with empty dashboard - in a real app, this would load from backend
             if (dashboardConfig.widgets.length === 0) {
                 renderDashboard();
             }
         }
 
-        // Toggle edit mode
+        // Toggle edit mode (only works on Overview page)
         function toggleEditMode() {
+            if (currentPage !== 'overview') {
+                alert('Dashboard editing is only available on the Overview page.');
+                return;
+            }
+
             const editBtn = document.getElementById('edit-btn');
             const dashboardGrid = document.getElementById('dashboard-grid');
             const headerActions = document.querySelector('.header-actions');
@@ -1018,65 +1553,42 @@ const widgetTemplates = {
             } else {
                 // Exit edit mode - save changes
                 saveDashboard();
-                exitEditMode();
             }
         }
 
         // Cancel edit mode
         function cancelEdit() {
             editMode = false;
-            renderDashboard(); // Restore original state
+            renderDashboard();
             exitEditMode();
         }
 
         // Exit edit mode UI
         function exitEditMode() {
-            console.log('Exiting edit mode...');
-            
             const editBtn = document.getElementById('edit-btn');
             const dashboardGrid = document.getElementById('dashboard-grid');
             const cancelBtn = document.getElementById('cancel-btn');
             const addWidgetBtn = document.getElementById('add-widget-header-btn');
 
-            // Reset edit mode state
             editMode = false;
-            console.log('Edit mode set to:', editMode);
             
-            // Reset button text and styling
-            if (editBtn) {
+            if (editBtn && currentPage === 'overview') {
                 editBtn.innerHTML = '<span>✏️</span><span>Edit Dashboard</span>';
                 editBtn.classList.remove('save-mode');
-                console.log('Edit button reset');
             }
             
-            // Reset dashboard grid styling
             if (dashboardGrid) {
                 dashboardGrid.classList.remove('edit-mode');
-                console.log('Dashboard grid styling reset');
             }
             
-            // Remove edit mode buttons
-            if (cancelBtn) {
-                cancelBtn.remove();
-                console.log('Cancel button removed');
-            }
+            if (cancelBtn) cancelBtn.remove();
+            if (addWidgetBtn) addWidgetBtn.remove();
 
-            if (addWidgetBtn) {
-                addWidgetBtn.remove();
-                console.log('Add widget button removed');
-            }
-
-            // Hide widget library
             hideWidgetLibrary();
-            console.log('Widget library hidden');
             
-            // Show welcome card if no widgets
             if (dashboardConfig.widgets.length === 0) {
                 renderDashboard();
-                console.log('Rendered dashboard with welcome card');
             }
-            
-            console.log('Edit mode exit completed');
         }
 
         // Show/hide widget library
@@ -1084,7 +1596,6 @@ const widgetTemplates = {
             const library = document.getElementById('widget-library');
             library.classList.add('open');
             
-            // Focus the search input for better UX
             setTimeout(() => {
                 const searchInput = library.querySelector('.library-search');
                 if (searchInput) {
@@ -1111,13 +1622,11 @@ const widgetTemplates = {
             dashboardConfig.widgets.push(widget);
             renderWidget(widget);
 
-            // Remove welcome card if it exists
             const welcomeCard = document.getElementById('welcome-card');
             if (welcomeCard) {
                 welcomeCard.remove();
             }
 
-            // Auto-close widget library after adding a widget
             hideWidgetLibrary();
         }
 
@@ -1125,12 +1634,10 @@ const widgetTemplates = {
         function renderDashboard() {
             const grid = document.getElementById('dashboard-grid');
             
-            // Clear existing widgets (except welcome card)
             const existingWidgets = grid.querySelectorAll('.widget-card');
             existingWidgets.forEach(widget => widget.remove());
 
             if (dashboardConfig.widgets.length === 0) {
-                // Show welcome card if no widgets
                 const existingWelcome = document.getElementById('welcome-card');
                 if (!existingWelcome) {
                     const welcomeCard = document.createElement('div');
@@ -1151,13 +1658,11 @@ const widgetTemplates = {
                     existingWelcome.style.display = 'block';
                 }
             } else {
-                // Hide welcome card and render widgets
                 const welcomeCard = document.getElementById('welcome-card');
                 if (welcomeCard) {
                     welcomeCard.style.display = 'none';
                 }
                 
-                // Render widgets
                 dashboardConfig.widgets.forEach(widget => {
                     try {
                         renderWidget(widget);
@@ -1178,7 +1683,6 @@ const widgetTemplates = {
             widgetElement.id = widget.id;
             widgetElement.draggable = true;
 
-            // Widget controls for edit mode
             const controls = `
                 <div class="widget-controls">
                     <button class="widget-control-btn configure-btn" onclick="configureWidget('${widget.id}')" title="Configure">
@@ -1190,7 +1694,6 @@ const widgetTemplates = {
                 </div>
             `;
 
-            // Widget content based on type
             let content = '';
             switch (template.type) {
                 case 'stat':
@@ -1220,7 +1723,6 @@ const widgetTemplates = {
 
             widgetElement.innerHTML = controls + content;
 
-            // Add drag event listeners
             widgetElement.addEventListener('dragstart', handleDragStart);
             widgetElement.addEventListener('dragend', handleDragEnd);
 
@@ -1278,7 +1780,6 @@ const widgetTemplates = {
                 dashboardConfig.widgets = dashboardConfig.widgets.filter(w => w.id !== widgetId);
                 document.getElementById(widgetId).remove();
                 
-                // Show welcome card if no widgets left
                 if (dashboardConfig.widgets.length === 0) {
                     renderDashboard();
                 }
@@ -1320,7 +1821,6 @@ const widgetTemplates = {
                 
                 if (!editMode || !draggedWidget) return;
                 
-                // Simple reordering logic - in a real app you'd implement more sophisticated positioning
                 const afterElement = getDragAfterElement(grid, e.clientY);
                 if (afterElement == null) {
                     grid.appendChild(draggedWidget);
@@ -1349,21 +1849,15 @@ const widgetTemplates = {
         function saveDashboard() {
             console.log('Saving dashboard configuration:', dashboardConfig);
             
-            // In a real app, this would save to the backend
-            // localStorage is not available in Claude.ai artifacts, so we'll simulate saving
-            
-            // Show success message briefly
             const editBtn = document.getElementById('edit-btn');
             const originalText = editBtn.innerHTML;
             editBtn.innerHTML = '<span>✅</span><span>Saved!</span>';
             editBtn.disabled = true;
             
-            // Simulate save delay and then exit edit mode
             setTimeout(() => {
                 console.log('Save completed, exiting edit mode');
                 editBtn.innerHTML = originalText;
                 editBtn.disabled = false;
-                // Exit edit mode
                 exitEditMode();
             }, 1000);
         }
@@ -1385,27 +1879,25 @@ const widgetTemplates = {
 
         // Initialize when page loads
         document.addEventListener('DOMContentLoaded', () => {
-            console.log('Dashboard editor initializing...');
+            console.log('Smart Sites app initialized');
             
             try {
                 initializeDashboard();
                 setupDragAndDrop();
-                console.log('Dashboard editor initialized successfully');
+                loadPageData('overview');
+                console.log('App initialized successfully');
             } catch (error) {
-                console.error('Error initializing dashboard editor:', error);
-                // Continue with basic functionality even if initialization fails
+                console.error('Error initializing app:', error);
             }
             
             // Simulate data updates
             setInterval(() => {
-                if (!editMode) {
+                if (!editMode && currentPage === 'overview') {
                     try {
-                        // Update sample data
                         sampleData.onlineDevices = Math.floor(Math.random() * 24) + 1;
                         sampleData.powerUsage = Math.floor(Math.random() * 500) + 1000;
                         sampleData.recentAlerts = Math.floor(Math.random() * 5);
                         
-                        // Re-render stat widgets
                         dashboardConfig.widgets.forEach(widget => {
                             try {
                                 if (widgetTemplates[widget.type] && widgetTemplates[widget.type].type === 'stat') {
@@ -1434,9 +1926,7 @@ const widgetTemplates = {
             const editBtn = document.getElementById('edit-btn');
             const addWidgetHeaderBtn = document.getElementById('add-widget-header-btn');
             
-            // Check if library is open
             if (library.classList.contains('open') && !library.contains(e.target)) {
-                // Don't close if clicking edit button or add widget button
                 if (editBtn && (e.target === editBtn || editBtn.contains(e.target))) {
                     return;
                 }
@@ -1445,7 +1935,6 @@ const widgetTemplates = {
                     return;
                 }
                 
-                // Don't close if clicking add widget buttons
                 const addWidgetBtns = document.querySelectorAll('.add-widget-btn');
                 let clickedAddWidget = false;
                 addWidgetBtns.forEach(btn => {
