@@ -1,1 +1,141 @@
+<div class="advanced-modal" id="advanced-modal">
+    <div class="advanced-modal-content">
+        <div class="advanced-modal-header">
+            <h2 class="advanced-modal-title">Advanced ESPHome Configuration</h2>
+            <button class="advanced-close" onclick="closeAdvancedMode()">&times;</button>
+        </div>
+        <div class="advanced-modal-body">
+            <!-- Advanced Mode Tabs -->
+            <div class="advanced-tabs">
+                <button class="advanced-tab active" onclick="showAdvancedTab('board')" id="board-tab">Board & Pins</button>
+                <button class="advanced-tab" onclick="showAdvancedTab('sensors')" id="sensors-tab">Sensors</button>
+                <button class="advanced-tab" onclick="showAdvancedTab('yaml')" id="yaml-tab">YAML Editor</button>
+                <button class="advanced-tab" onclick="showAdvancedTab('preview')" id="preview-tab">Preview</button>
+            </div>
 
+            <!-- Board & Pins Tab -->
+            <div class="advanced-tab-content active" id="board-content">
+                <div class="advanced-grid">
+                    <div class="board-selection">
+                        <h4>Board Type</h4>
+                        <select class="advanced-input" id="board-type" onchange="updateBoardDiagram()">
+                            <option value="esp32dev">ESP32 DevKit V1</option>
+                            <option value="esp32-wrover">ESP32 WROVER</option>
+                            <option value="esp32-cam">ESP32-CAM</option>
+                            <option value="esp32-s2">ESP32-S2</option>
+                            <option value="esp32-c3">ESP32-C3</option>
+                        </select>
+                        
+                        <h4 style="margin-top: 20px;">Device Name</h4>
+                        <input type="text" class="advanced-input" id="advanced-device-name" placeholder="my_esp32_device">
+                        
+                        <h4 style="margin-top: 20px;">WiFi Configuration</h4>
+                        <input type="text" class="advanced-input" id="advanced-wifi-ssid" placeholder="WiFi Network Name" style="margin-bottom: 10px;">
+                        <input type="password" class="advanced-input" id="advanced-wifi-password" placeholder="WiFi Password">
+                    </div>
+                    
+                    <div class="board-diagram">
+                        <h4>Pin Mapping</h4>
+                        <div class="esp32-visual" id="esp32-visual">
+                            <!-- ESP32 Visual Diagram -->
+                            <svg width="400" height="600" viewBox="0 0 400 600" style="border: 1px solid #ddd; border-radius: 8px; background: #f8f9fa;">
+                                <!-- ESP32 Board Outline -->
+                                <rect x="50" y="50" width="300" height="500" fill="#2c3e50" rx="10"/>
+                                <rect x="60" y="60" width="280" height="480" fill="#34495e" rx="5"/>
+                                
+                                <!-- Board Label -->
+                                <text x="200" y="90" text-anchor="middle" fill="white" font-size="14" font-weight="bold">ESP32 DevKit V1</text>
+                                
+                                <!-- Left Side Pins -->
+                                <g id="left-pins">
+                                    <!-- GPIO Pins -->
+                                    <rect x="30" y="120" width="40" height="15" fill="#e74c3c" class="pin-rect" data-pin="3V3"/>
+                                    <text x="15" y="132" fill="#333" font-size="10">3V3</text>
+                                    
+                                    <rect x="30" y="140" width="40" height="15" fill="#95a5a6" class="pin-rect" data-pin="EN"/>
+                                    <text x="20" y="152" fill="#333" font-size="10">EN</text>
+                                    
+                                    <rect x="30" y="160" width="40" height="15" fill="#3498db" class="pin-rect" data-pin="GPIO36"/>
+                                    <text x="5" y="172" fill="#333" font-size="10">GPIO36</text>
+                                    
+                                    <rect x="30" y="180" width="40" height="15" fill="#3498db" class="pin-rect" data-pin="GPIO39"/>
+                                    <text x="5" y="192" fill="#333" font-size="10">GPIO39</text>
+                                    
+                                    <!-- Additional pins... -->
+                                </g>
+                                
+                                <!-- Right Side Pins -->
+                                <g id="right-pins">
+                                    <rect x="330" y="120" width="40" height="15" fill="#95a5a6" class="pin-rect" data-pin="GND2"/>
+                                    <text x="375" y="132" fill="#333" font-size="10">GND</text>
+                                    
+                                    <rect x="330" y="140" width="40" height="15" fill="#3498db" class="pin-rect" data-pin="GPIO23"/>
+                                    <text x="375" y="152" fill="#333" font-size="10">GPIO23</text>
+                                    
+                                    <!-- Additional pins... -->
+                                </g>
+                                
+                                <!-- USB Connector -->
+                                <rect x="170" y="30" width="60" height="20" fill="#95a5a6" rx="3"/>
+                                <text x="200" y="45" text-anchor="middle" fill="white" font-size="10">USB</text>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Pin Assignment Area -->
+                <div class="pin-assignments" style="margin-top: 20px;">
+                    <h4>Pin Assignments</h4>
+                    <div id="selected-pins-list" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-top: 15px;">
+                        <!-- Selected pins will appear here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sensors Tab -->
+            <div class="advanced-tab-content" id="sensors-content" style="display: none;">
+                <div class="sensors-config">
+                    <div class="sensors-toolbar">
+                        <h4>Sensor Configuration</h4>
+                        <button class="btn-primary" onclick="addSensorConfig()">+ Add Sensor</button>
+                    </div>
+                    
+                    <div id="sensors-list" style="margin-top: 20px;">
+                        <!-- Sensor configurations will be added here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- YAML Editor Tab -->
+            <div class="advanced-tab-content" id="yaml-content" style="display: none;">
+                <div class="yaml-editor-container">
+                    <div class="yaml-toolbar">
+                        <h4>ESPHome Configuration</h4>
+                        <div class="yaml-actions">
+                            <button class="btn-secondary" onclick="generateYAML()">🔄 Regenerate</button>
+                            <button class="btn-secondary" onclick="validateYAML()">✓ Validate</button>
+                            <button class="btn-secondary" onclick="downloadYAML()">📥 Download</button>
+                        </div>
+                    </div>
+                    <textarea id="yaml-editor" class="yaml-editor" placeholder="ESPHome YAML configuration will appear here..."></textarea>
+                    <div id="yaml-validation" class="yaml-validation"></div>
+                </div>
+            </div>
+
+            <!-- Preview Tab -->
+            <div class="advanced-tab-content" id="preview-content" style="display: none;">
+                <div class="config-preview">
+                    <h4>Configuration Preview</h4>
+                    <div class="preview-summary" id="preview-summary">
+                        <!-- Preview summary will be generated here -->
+                    </div>
+                    
+                    <div class="preview-actions" style="margin-top: 30px;">
+                        <button class="btn-primary" onclick="saveAdvancedConfig()">💾 Save Configuration</button>
+                        <button class="btn-secondary" onclick="compileAdvancedConfig()">🔨 Compile & Upload</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
