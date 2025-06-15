@@ -1,1 +1,76 @@
+<div class="widget-library" id="widget-library">
+    <div class="library-header">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <h3 class="library-title" style="margin-bottom: 0;">Widget Library</h3>
+            <button class="config-close" onclick="hideWidgetLibrary()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #666;">&times;</button>
+        </div>
+        <input type="text" class="library-search" placeholder="Search widgets..." oninput="filterWidgets(this.value)">
+    </div>
+    <div class="library-content">
+        <div class="widget-category">
+            <h4 class="category-title">Statistics</h4>
+            <div class="widget-library-grid">
+                <div class="library-widget" onclick="addWidget('total-devices')">
+                    <span class="library-widget-icon">📱</span>
+                    <div class="library-widget-name">Total Devices</div>
+                </div>
+                <div class="library-widget" onclick="addWidget('online-devices')">
+                    <span class="library-widget-icon">🟢</span>
+                    <div class="library-widget-name">Online Devices</div>
+                </div>
+                <div class="library-widget" onclick="addWidget('power-usage')">
+                    <span class="library-widget-icon">⚡</span>
+                    <div class="library-widget-name">Power Usage</div>
+                </div>
+                <div class="library-widget" onclick="addWidget('alerts')">
+                    <span class="library-widget-icon">🚨</span>
+                    <div class="library-widget-name">Recent Alerts</div>
+                </div>
+            </div>
+        </div>
 
+        <div class="widget-category">
+            <h4 class="category-title">Charts</h4>
+            <div class="widget-library-grid">
+                <div class="library-widget" onclick="addWidget('device-status-chart')">
+                    <span class="library-widget-icon">📊</span>
+                    <div class="library-widget-name">Device Status</div>
+                </div>
+                <div class="library-widget" onclick="addWidget('power-trend')">
+                    <span class="library-widget-icon">📈</span>
+                    <div class="library-widget-name">Power Trend</div>
+                </div>
+                <div class="library-widget" onclick="addWidget('temperature-chart')">
+                    <span class="library-widget-icon">🌡️</span>
+                    <div class="library-widget-name">Temperature</div>
+                </div>
+                <div class="library-widget" onclick="addWidget('air-quality')">
+                    <span class="library-widget-icon">🌬️</span>
+                    <div class="library-widget-name">Air Quality</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="widget-category">
+            <h4 class="category-title">Monitoring</h4>
+            <div class="widget-library-grid">
+                <div class="library-widget" onclick="addWidget('recent-activity')">
+                    <span class="library-widget-icon">📋</span>
+                    <div class="library-widget-name">Recent Activity</div>
+                </div>
+                <div class="library-widget" onclick="addWidget('location-status')">
+                    <span class="library-widget-icon">📍</span>
+                    <div class="library-widget-name">Location Status</div>
+                </div>
+                <div class="library-widget" onclick="addWidget('noise-levels')">
+                    <span class="library-widget-icon">🔊</span>
+                    <div class="library-widget-name">Noise Levels</div>
+                </div>
+                <div class="library-widget" onclick="addWidget('weather')">
+                    <span class="library-widget-icon">🌤️</span>
+                    <div class="library-widget-name">Weather</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
