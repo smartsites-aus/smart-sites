@@ -1,1 +1,41 @@
-
+<div class="page-content" id="reports-page">
+    <div class="page-header">
+        <h1 class="page-title">Reports</h1>
+        <div class="header-actions">
+            <button class="edit-btn" onclick="generateReport()">
+                <span>📊</span>
+                <span>Generate Report</span>
+            </button>
+        </div>
+    </div>
+    
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Available Reports</h3>
+        </div>
+        <div class="card-content">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
+                <div style="border: 1px solid #e9ecef; border-radius: 6px; padding: 15px;">
+                    <h4 style="margin-bottom: 10px;">📱 Device Status Report</h4>
+                    <p style="color: #666; font-size: 14px; margin-bottom: 15px;">Complete overview of all devices, their status, and connectivity.</p>
+                    <button class="btn-primary" onclick="alert('Device report generation coming soon!')">Generate</button>
+                </div>
+                <div style="border: 1px solid #e9ecef; border-radius: 6px; padding: 15px;">
+                    <h4 style="margin-bottom: 10px;">⚡ Power Usage Report</h4>
+                    <p style="color: #666; font-size: 14px; margin-bottom: 15px;">Energy consumption analysis and cost breakdown.</p>
+                    <button class="btn-primary" onclick="alert('Power report generation coming soon!')">Generate</button>
+                </div>
+                <div style="border: 1px solid #e9ecef; border-radius: 6px; padding: 15px;">
+                    <h4 style="margin-bottom: 10px;">🚨 Safety & Alerts</h4>
+                    <p style="color: #666; font-size: 14px; margin-bottom: 15px;">Security incidents and safety monitoring summary.</p>
+                    <button class="btn-primary" onclick="alert('Safety report generation coming soon!')">Generate</button>
+                </div>
+                <div style="border: 1px solid #e9ecef; border-radius: 6px; padding: 15px;">
+                    <h4 style="margin-bottom: 10px;">📈 Historical Trends</h4>
+                    <p style="color: #666; font-size: 14px; margin-bottom: 15px;">Long-term data trends and pattern analysis.</p>
+                    <button class="btn-primary" onclick="alert('Trends report generation coming soon!')">Generate</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
