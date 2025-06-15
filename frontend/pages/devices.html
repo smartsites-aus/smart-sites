@@ -1,1 +1,41 @@
+<div class="page-content" id="devices-page">
+    <div class="page-header">
+        <h1 class="page-title">Devices</h1>
+        <div class="header-actions">
+            <button class="edit-btn" onclick="addDevice()">
+                <span>➕</span>
+                <span>Add Device</span>
+            </button>
+        </div>
+    </div>
+    
+    <div class="filters">
+        <div class="filter-group">
+            <label>Location</label>
+            <select id="location-filter" onchange="filterDevices()">
+                <option value="">All Locations</option>
+                <option value="Main Office">Main Office</option>
+                <option value="Workshop">Workshop</option>
+                <option value="Storage">Storage</option>
+            </select>
+        </div>
+        <div class="filter-group">
+            <label>Sensor Type</label>
+            <select id="sensor-type-filter" onchange="filterDevices()">
+                <option value="">All Types</option>
+                <option value="motion">Motion</option>
+                <option value="light">Light</option>
+                <option value="air_quality">Air Quality</option>
+                <option value="power">Power</option>
+            </select>
+        </div>
+    </div>
 
+    <div class="device-grid" id="device-grid">
+        <div class="empty-state">
+            <div class="empty-state-icon">📱</div>
+            <h3>No devices found</h3>
+            <p>Add devices to monitor your construction site or use the ESPHome Builder to create custom ESP32 sensors.</p>
+        </div>
+    </div>
+</div>
