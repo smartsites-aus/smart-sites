@@ -1,1 +1,55 @@
-
+<div class="page-content" id="esphome-page">
+    <div class="page-header">
+        <h1 class="page-title">ESPHome Builder</h1>
+        <div class="header-actions">
+            <button class="edit-btn" onclick="showDeviceWizard()">
+                <span>➕</span>
+                <span>Add Device</span>
+            </button>
+            <button class="advanced-btn" onclick="showAdvancedMode()">
+                <span>🔧</span>
+                <span>Advanced Mode</span>
+            </button>
+        </div>
+    </div>
+    
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">ESP32 Device Builder</h3>
+        </div>
+        <div class="card-content">
+            <p>Create custom ESP32-based sensors for your construction site using ESPHome.</p>
+            <p>Build motion sensors, environmental monitors, power meters, and more with easy-to-use templates.</p>
+            
+            <div style="margin-top: 20px;">
+                <h4 style="margin-bottom: 15px;">Available Device Types:</h4>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                    <div style="border: 1px solid #e9ecef; border-radius: 6px; padding: 15px; text-align: center;">
+                        <div style="font-size: 24px; margin-bottom: 8px;">👋</div>
+                        <strong>Motion Sensor</strong>
+                        <p style="font-size: 12px; color: #666; margin-top: 5px;">PIR or mmWave detection</p>
+                    </div>
+                    <div style="border: 1px solid #e9ecef; border-radius: 6px; padding: 15px; text-align: center;">
+                        <div style="font-size: 24px; margin-bottom: 8px;">🌡️</div>
+                        <strong>Climate Monitor</strong>
+                        <p style="font-size: 12px; color: #666; margin-top: 5px;">Temperature & humidity</p>
+                    </div>
+                    <div style="border: 1px solid #e9ecef; border-radius: 6px; padding: 15px; text-align: center;">
+                        <div style="font-size: 24px; margin-bottom: 8px;">⚡</div>
+                        <strong>Power Monitor</strong>
+                        <p style="font-size: 12px; color: #666; margin-top: 5px;">CT clamp monitoring</p>
+                    </div>
+                    <div style="border: 1px solid #e9ecef; border-radius: 6px; padding: 15px; text-align: center;">
+                        <div style="font-size: 24px; margin-bottom: 8px;">🔊</div>
+                        <strong>Noise Monitor</strong>
+                        <p style="font-size: 12px; color: #666; margin-top: 5px;">Sound level detection</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="esphome-devices-grid" style="margin-top: 30px;">
+                <!-- ESPHome devices will be loaded here -->
+            </div>
+        </div>
+    </div>
+</div>
