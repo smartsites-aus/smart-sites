@@ -1,1 +1,35 @@
-
+<div class="page-content" id="history-page">
+    <div class="page-header">
+        <h1 class="page-title">History</h1>
+        <div class="header-actions">
+            <button class="edit-btn" onclick="exportHistory()">
+                <span>📥</span>
+                <span>Export CSV</span>
+            </button>
+        </div>
+    </div>
+    
+    <div class="card">
+        <div class="card-content">
+            <table class="history-table" id="history-table">
+                <thead>
+                    <tr>
+                        <th>Timestamp</th>
+                        <th>Site Location</th>
+                        <th>Device Type</th>
+                        <th>Entity</th>
+                        <th>Old Value</th>
+                        <th>New Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 40px; color: #666;">
+                            No history data available yet. Add devices to start monitoring.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
