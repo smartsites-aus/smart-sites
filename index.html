@@ -53,6 +53,45 @@
             overflow: auto;
         }
 
+        .advanced-modal-content {
+            background: white;
+            margin: 20px auto;
+            padding: 20px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 1200px;
+            position: relative;
+        }
+
+        .advanced-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .advanced-modal-title {
+            font-size: 24px;
+            font-weight: 300;
+            color: #333;
+        }
+
+        .advanced-close {
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: #666;
+            padding: 5px;
+            line-height: 1;
+        }
+
+        .advanced-close:hover {
+            color: #333;
+        }
+
           /* Sidebar */
         .sidebar {
             width: 60px;
@@ -1183,20 +1222,21 @@
                 </div>
             </div>
 
-            <!-- Replace the existing ESPHome page header -->
-                    <div class="page-header">
-                        <h1 class="page-title">ESPHome Builder</h1>
-                        <div class="header-actions">
-                            <button class="edit-btn" onclick="showDeviceWizard()">
-                        <span>➕</span>
-                        <span>Add Device</span>
-                    </button>
-                    <button class="advanced-btn" onclick="showAdvancedMode()">
-                        <span>🔧</span>
-                        <span>Advanced Mode</span>
-                    </button>
+            <!-- ESPHome Page -->
+            <div class="page-content" id="esphome-page">
+                <div class="page-header">
+                    <h1 class="page-title">ESPHome Builder</h1>
+                    <div class="header-actions">
+                        <button class="edit-btn" onclick="showDeviceWizard()">
+                            <span>➕</span>
+                            <span>Add Device</span>
+                        </button>
+                        <button class="advanced-btn" onclick="showAdvancedMode()">
+                            <span>🔧</span>
+                            <span>Advanced Mode</span>
+                        </button>
+                    </div>
                 </div>
-            </div>
                 
                 <div class="card">
                     <div class="card-header">
@@ -1412,6 +1452,33 @@
                 <div class="config-footer">
                     <button class="btn-secondary" onclick="closeConfigModal()">Cancel</button>
                     <button class="btn-primary" onclick="saveWidgetConfig()">Save</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Advanced Mode Modal -->
+        <div class="advanced-modal" id="advanced-modal">
+            <div class="advanced-modal-content">
+                <div class="advanced-modal-header">
+                    <h2 class="advanced-modal-title">Advanced ESPHome Configuration</h2>
+                    <button class="advanced-close" onclick="closeAdvancedMode()">&times;</button>
+                </div>
+                <div class="advanced-modal-body">
+                    <p>Advanced pin mapping and custom ESPHome configuration builder.</p>
+                    <p>This feature allows experienced users to create complex sensor configurations with custom pin assignments, advanced filtering, and integration options.</p>
+                    
+                    <div style="margin-top: 30px; padding: 20px; background: #f8f9fa; border-radius: 6px;">
+                        <h4 style="margin-bottom: 15px;">🚧 Coming Soon</h4>
+                        <p style="color: #666; margin-bottom: 10px;">• Visual pin mapping interface</p>
+                        <p style="color: #666; margin-bottom: 10px;">• Custom YAML editor with syntax highlighting</p>
+                        <p style="color: #666; margin-bottom: 10px;">• Advanced sensor filtering and calibration</p>
+                        <p style="color: #666; margin-bottom: 10px;">• Integration with external systems (MQTT, Home Assistant)</p>
+                        <p style="color: #666;">• Real-time configuration validation</p>
+                    </div>
+                    
+                    <div style="margin-top: 30px; text-align: center;">
+                        <button class="btn-primary" onclick="closeAdvancedMode()">Close</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -2102,6 +2169,16 @@
             }
         }
 
+        // Advanced Mode Functions
+        function showAdvancedMode() {
+            const modal = document.getElementById('advanced-modal');
+            modal.style.display = 'block';
+        }
+
+        function closeAdvancedMode() {
+            document.getElementById('advanced-modal').style.display = 'none';
+        }
+        
         // Device functions
         async function loadDevices() {
             console.log('Loading devices...');
@@ -2115,35 +2192,6 @@
             console.log('Filtering devices...');
         }
 
-        // Advanced Mode Functions
-        function showAdvancedMode() {
-            const modal = document.getElementById('advanced-modal');
-            modal.style.display = 'block';
-            initAdvancedWizard();
-        }
-
-        function closeAdvancedMode() {
-        document.getElementById('advanced-modal').style.display = 'none';
-        }
-
-// The advanced mode generates configurations that integrate with Smart Sites:
-function saveConfiguration() {
-    const config = {
-        board: boardType,
-        sensors: currentConfiguration,
-        yaml: generateYAMLConfig(),
-        timestamp: new Date().toISOString(),
-        mode: 'advanced'  // Identifies this as an advanced configuration
-    };
-    
-    // This would save to Smart Sites backend via existing API
-    fetch('/api/esphome/devices', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(config)
-    });
-}
-        
         // History functions
         async function loadHistory() {
             console.log('Loading history...');
@@ -2645,10 +2693,5 @@ function saveConfiguration() {
             }
         });
     </script>
-
-    <!-- Advanced Mode Modal -->
-<div class="advanced-modal" id="advanced-modal" style="display: none;">
-    <!-- The complete modal content from the artifact above -->
-</div>
 </body>
 </html>
