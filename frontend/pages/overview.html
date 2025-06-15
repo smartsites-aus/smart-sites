@@ -1,1 +1,25 @@
-
+<div class="page-content active" id="overview-page">
+    <div class="page-header">
+        <h1 class="page-title">Dashboard</h1>
+        <div class="header-actions">
+            <button class="edit-btn" onclick="toggleEditMode()" id="edit-btn">
+                <span>✏️</span>
+                <span>Edit Dashboard</span>
+            </button>
+        </div>
+    </div>
+    
+    <div class="dashboard-grid" id="dashboard-grid">
+        <!-- Initial welcome card -->
+        <div class="welcome-card" id="welcome-card">
+            <h2 class="welcome-title">Welcome to Smart Sites</h2>
+            <p class="welcome-text">Customize your dashboard by adding widgets that matter most to your construction site operations.</p>
+            <div class="welcome-actions">
+                <button class="add-widget-btn" onclick="showWidgetLibrary()">
+                    <span>➕</span>
+                    <span>Add Your First Widget</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
