@@ -1,4 +1,4 @@
-// Smart Sites - Main Application Controller
+// Smart Sites - Main Application Controller (Fixed for Flask)
 class SmartSitesApp {
     constructor() {
         this.currentPage = 'overview';
@@ -21,6 +21,12 @@ class SmartSitesApp {
         console.log('Initializing Smart Sites application...');
         
         try {
+            // Check if we're running through Flask
+            if (!this.isRunningThroughServer()) {
+                this.showServerRequiredMessage();
+                return;
+            }
+            
             // Load components
             await this.loadComponents();
             
@@ -41,7 +47,34 @@ class SmartSitesApp {
             console.log('Smart Sites application initialized successfully');
         } catch (error) {
             console.error('Error initializing application:', error);
+            this.showErrorMessage('Failed to initialize application: ' + error.message);
         }
+    }
+
+    isRunningThroughServer() {
+        // Check if we're running through a web server (not file://)
+        return window.location.protocol === 'http:' || window.location.protocol === 'https:';
+    }
+
+    showServerRequiredMessage() {
+        document.body.innerHTML = `
+            <div style="padding: 40px; text-align: center; font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                <h2>🏗️ Smart Sites Setup Required</h2>
+                <p style="color: #666; margin: 20px 0;">Smart Sites needs to run through the Flask backend server.</p>
+                
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; text-align: left; margin: 20px 0;">
+                    <h3>Quick Start:</h3>
+                    <pre style="background: #e9ecef; padding: 15px; border-radius: 4px; margin: 10px 0;">cd /path/to/smart-sites
+python app.py</pre>
+                    <p>Then open: <strong>http://localhost:5000</strong></p>
+                </div>
+                
+                <div style="background: #e7f3ff; padding: 15px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #007bff;">
+                    <strong>💡 Why?</strong><br>
+                    Smart Sites integrates with ESPHome, handles device management, and provides real-time monitoring - all of which require the Flask backend.
+                </div>
+            </div>
+        `;
     }
 
     async loadComponents() {
@@ -49,29 +82,78 @@ class SmartSitesApp {
         
         try {
             // Load sidebar
-            const sidebarResponse = await fetch('components/sidebar.html');
+            const sidebarResponse = await fetch('/components/sidebar.html');
+            if (!sidebarResponse.ok) {
+                throw new Error(`Failed to load sidebar: ${sidebarResponse.status}`);
+            }
             const sidebarHtml = await sidebarResponse.text();
             document.getElementById('sidebar-container').innerHTML = sidebarHtml;
 
             // Load widget library
-            const widgetLibraryResponse = await fetch('components/widget-library.html');
-            const widgetLibraryHtml = await widgetLibraryResponse.text();
-            document.getElementById('components-container').innerHTML += widgetLibraryHtml;
+            const widgetLibraryResponse = await fetch('/components/widget-library.html');
+            if (widgetLibraryResponse.ok) {
+                const widgetLibraryHtml = await widgetLibraryResponse.text();
+                document.getElementById('components-container').innerHTML += widgetLibraryHtml;
+            }
 
             // Load config modal
-            const configModalResponse = await fetch('components/config-modal.html');
-            const configModalHtml = await configModalResponse.text();
-            document.getElementById('components-container').innerHTML += configModalHtml;
+            const configModalResponse = await fetch('/components/config-modal.html');
+            if (configModalResponse.ok) {
+                const configModalHtml = await configModalResponse.text();
+                document.getElementById('components-container').innerHTML += configModalHtml;
+            }
 
             // Load advanced modal
-            const advancedModalResponse = await fetch('components/advanced-modal.html');
-            const advancedModalHtml = await advancedModalResponse.text();
-            document.getElementById('components-container').innerHTML += advancedModalHtml;
+            const advancedModalResponse = await fetch('/components/advanced-modal.html');
+            if (advancedModalResponse.ok) {
+                const advancedModalHtml = await advancedModalResponse.text();
+                document.getElementById('components-container').innerHTML += advancedModalHtml;
+            }
 
             console.log('UI components loaded successfully');
         } catch (error) {
             console.error('Error loading components:', error);
+            // Show fallback UI
+            this.showFallbackUI();
         }
+    }
+
+    showFallbackUI() {
+        // Create basic sidebar if loading fails
+        document.getElementById('sidebar-container').innerHTML = `
+            <aside class="sidebar">
+                <div class="sidebar-header">
+                    <div class="logo">Smart Sites</div>
+                </div>
+                <nav class="sidebar-nav">
+                    <button class="nav-link active" onclick="showPage('overview')">
+                        <div class="nav-icon">📊</div>
+                        <span class="nav-text">Overview</span>
+                    </button>
+                    <button class="nav-link" onclick="showPage('devices')">
+                        <div class="nav-icon">📱</div>
+                        <span class="nav-text">Devices</span>
+                    </button>
+                    <button class="nav-link" onclick="showPage('esphome')">
+                        <div class="nav-icon">🔧</div>
+                        <span class="nav-text">ESPHome</span>
+                    </button>
+                </nav>
+            </aside>
+        `;
+    }
+
+    showErrorMessage(message) {
+        const container = document.getElementById('page-container') || document.body;
+        container.innerHTML = `
+            <div style="padding: 40px; text-align: center;">
+                <h2 style="color: #dc3545;">⚠️ Error</h2>
+                <p>${message}</p>
+                <button onclick="location.reload()" style="padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                    Reload Application
+                </button>
+            </div>
+        `;
     }
 
     setupEventListeners() {
