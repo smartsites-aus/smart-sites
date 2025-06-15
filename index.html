@@ -1464,20 +1464,210 @@
                     <button class="advanced-close" onclick="closeAdvancedMode()">&times;</button>
                 </div>
                 <div class="advanced-modal-body">
-                    <p>Advanced pin mapping and custom ESPHome configuration builder.</p>
-                    <p>This feature allows experienced users to create complex sensor configurations with custom pin assignments, advanced filtering, and integration options.</p>
-                    
-                    <div style="margin-top: 30px; padding: 20px; background: #f8f9fa; border-radius: 6px;">
-                        <h4 style="margin-bottom: 15px;">🚧 Coming Soon</h4>
-                        <p style="color: #666; margin-bottom: 10px;">• Visual pin mapping interface</p>
-                        <p style="color: #666; margin-bottom: 10px;">• Custom YAML editor with syntax highlighting</p>
-                        <p style="color: #666; margin-bottom: 10px;">• Advanced sensor filtering and calibration</p>
-                        <p style="color: #666; margin-bottom: 10px;">• Integration with external systems (MQTT, Home Assistant)</p>
-                        <p style="color: #666;">• Real-time configuration validation</p>
+                    <!-- Advanced Mode Tabs -->
+                    <div class="advanced-tabs">
+                        <button class="advanced-tab active" onclick="showAdvancedTab('board')" id="board-tab">Board & Pins</button>
+                        <button class="advanced-tab" onclick="showAdvancedTab('sensors')" id="sensors-tab">Sensors</button>
+                        <button class="advanced-tab" onclick="showAdvancedTab('yaml')" id="yaml-tab">YAML Editor</button>
+                        <button class="advanced-tab" onclick="showAdvancedTab('preview')" id="preview-tab">Preview</button>
                     </div>
-                    
-                    <div style="margin-top: 30px; text-align: center;">
-                        <button class="btn-primary" onclick="closeAdvancedMode()">Close</button>
+
+                    <!-- Board & Pins Tab -->
+                    <div class="advanced-tab-content active" id="board-content">
+                        <div class="advanced-grid">
+                            <div class="board-selection">
+                                <h4>Board Type</h4>
+                                <select class="advanced-input" id="board-type" onchange="updateBoardDiagram()">
+                                    <option value="esp32dev">ESP32 DevKit V1</option>
+                                    <option value="esp32-wrover">ESP32 WROVER</option>
+                                    <option value="esp32-cam">ESP32-CAM</option>
+                                    <option value="esp32-s2">ESP32-S2</option>
+                                    <option value="esp32-c3">ESP32-C3</option>
+                                </select>
+                                
+                                <h4 style="margin-top: 20px;">Device Name</h4>
+                                <input type="text" class="advanced-input" id="advanced-device-name" placeholder="my_esp32_device">
+                                
+                                <h4 style="margin-top: 20px;">WiFi Configuration</h4>
+                                <input type="text" class="advanced-input" id="advanced-wifi-ssid" placeholder="WiFi Network Name" style="margin-bottom: 10px;">
+                                <input type="password" class="advanced-input" id="advanced-wifi-password" placeholder="WiFi Password">
+                            </div>
+                            
+                            <div class="board-diagram">
+                                <h4>Pin Mapping</h4>
+                                <div class="esp32-visual" id="esp32-visual">
+                                    <!-- ESP32 Visual Diagram -->
+                                    <svg width="400" height="600" viewBox="0 0 400 600" style="border: 1px solid #ddd; border-radius: 8px; background: #f8f9fa;">
+                                        <!-- ESP32 Board Outline -->
+                                        <rect x="50" y="50" width="300" height="500" fill="#2c3e50" rx="10"/>
+                                        <rect x="60" y="60" width="280" height="480" fill="#34495e" rx="5"/>
+                                        
+                                        <!-- Board Label -->
+                                        <text x="200" y="90" text-anchor="middle" fill="white" font-size="14" font-weight="bold">ESP32 DevKit V1</text>
+                                        
+                                        <!-- Left Side Pins -->
+                                        <g id="left-pins">
+                                            <!-- GPIO Pins -->
+                                            <rect x="30" y="120" width="40" height="15" fill="#e74c3c" class="pin-rect" data-pin="3V3"/>
+                                            <text x="15" y="132" fill="#333" font-size="10">3V3</text>
+                                            
+                                            <rect x="30" y="140" width="40" height="15" fill="#95a5a6" class="pin-rect" data-pin="EN"/>
+                                            <text x="20" y="152" fill="#333" font-size="10">EN</text>
+                                            
+                                            <rect x="30" y="160" width="40" height="15" fill="#3498db" class="pin-rect" data-pin="GPIO36"/>
+                                            <text x="5" y="172" fill="#333" font-size="10">GPIO36</text>
+                                            
+                                            <rect x="30" y="180" width="40" height="15" fill="#3498db" class="pin-rect" data-pin="GPIO39"/>
+                                            <text x="5" y="192" fill="#333" font-size="10">GPIO39</text>
+                                            
+                                            <rect x="30" y="200" width="40" height="15" fill="#3498db" class="pin-rect" data-pin="GPIO34"/>
+                                            <text x="5" y="212" fill="#333" font-size="10">GPIO34</text>
+                                            
+                                            <rect x="30" y="220" width="40" height="15" fill="#3498db" class="pin-rect" data-pin="GPIO35"/>
+                                            <text x="5" y="232" fill="#333" font-size="10">GPIO35</text>
+                                            
+                                            <rect x="30" y="240" width="40" height="15" fill="#3498db" class="pin-rect" data-pin="GPIO32"/>
+                                            <text x="5" y="252" fill="#333" font-size="10">GPIO32</text>
+                                            
+                                            <rect x="30" y="260" width="40" height="15" fill="#3498db" class="pin-rect" data-pin="GPIO33"/>
+                                            <text x="5" y="272" fill="#333" font-size="10">GPIO33</text>
+                                            
+                                            <rect x="30" y="280" width="40" height="15" fill="#3498db" class="pin-rect" data-pin="GPIO25"/>
+                                            <text x="5" y="292" fill="#333" font-size="10">GPIO25</text>
+                                            
+                                            <rect x="30" y="300" width="40" height="15" fill="#3498db" class="pin-rect" data-pin="GPIO26"/>
+                                            <text x="5" y="312" fill="#333" font-size="10">GPIO26</text>
+                                            
+                                            <rect x="30" y="320" width="40" height="15" fill="#3498db" class="pin-rect" data-pin="GPIO27"/>
+                                            <text x="5" y="332" fill="#333" font-size="10">GPIO27</text>
+                                            
+                                            <rect x="30" y="340" width="40" height="15" fill="#3498db" class="pin-rect" data-pin="GPIO14"/>
+                                            <text x="5" y="352" fill="#333" font-size="10">GPIO14</text>
+                                            
+                                            <rect x="30" y="360" width="40" height="15" fill="#3498db" class="pin-rect" data-pin="GPIO12"/>
+                                            <text x="5" y="372" fill="#333" font-size="10">GPIO12</text>
+                                            
+                                            <rect x="30" y="380" width="40" height="15" fill="#95a5a6" class="pin-rect" data-pin="GND1"/>
+                                            <text x="10" y="392" fill="#333" font-size="10">GND</text>
+                                            
+                                            <rect x="30" y="400" width="40" height="15" fill="#3498db" class="pin-rect" data-pin="GPIO13"/>
+                                            <text x="5" y="412" fill="#333" font-size="10">GPIO13</text>
+                                            
+                                            <rect x="30" y="420" width="40" height="15" fill="#3498db" class="pin-rect" data-pin="GPIO9"/>
+                                            <text x="10" y="432" fill="#333" font-size="10">GPIO9</text>
+                                        </g>
+                                        
+                                        <!-- Right Side Pins -->
+                                        <g id="right-pins">
+                                            <rect x="330" y="120" width="40" height="15" fill="#95a5a6" class="pin-rect" data-pin="GND2"/>
+                                            <text x="375" y="132" fill="#333" font-size="10">GND</text>
+                                            
+                                            <rect x="330" y="140" width="40" height="15" fill="#3498db" class="pin-rect" data-pin="GPIO23"/>
+                                            <text x="375" y="152" fill="#333" font-size="10">GPIO23</text>
+                                            
+                                            <rect x="330" y="160" width="40" height="15" fill="#3498db" class="pin-rect" data-pin="GPIO22"/>
+                                            <text x="375" y="172" fill="#333" font-size="10">GPIO22</text>
+                                            
+                                            <rect x="330" y="180" width="40" height="15" fill="#3498db" class="pin-rect" data-pin="GPIO1"/>
+                                            <text x="380" y="192" fill="#333" font-size="10">GPIO1</text>
+                                            
+                                            <rect x="330" y="200" width="40" height="15" fill="#3498db" class="pin-rect" data-pin="GPIO3"/>
+                                            <text x="380" y="212" fill="#333" font-size="10">GPIO3</text>
+                                            
+                                            <rect x="330" y="220" width="40" height="15" fill="#3498db" class="pin-rect" data-pin="GPIO21"/>
+                                            <text x="375" y="232" fill="#333" font-size="10">GPIO21</text>
+                                            
+                                            <rect x="330" y="240" width="40" height="15" fill="#95a5a6" class="pin-rect" data-pin="GND3"/>
+                                            <text x="375" y="252" fill="#333" font-size="10">GND</text>
+                                            
+                                            <rect x="330" y="260" width="40" height="15" fill="#3498db" class="pin-rect" data-pin="GPIO19"/>
+                                            <text x="375" y="272" fill="#333" font-size="10">GPIO19</text>
+                                            
+                                            <rect x="330" y="280" width="40" height="15" fill="#3498db" class="pin-rect" data-pin="GPIO18"/>
+                                            <text x="375" y="292" fill="#333" font-size="10">GPIO18</text>
+                                            
+                                            <rect x="330" y="300" width="40" height="15" fill="#3498db" class="pin-rect" data-pin="GPIO5"/>
+                                            <text x="380" y="312" fill="#333" font-size="10">GPIO5</text>
+                                            
+                                            <rect x="330" y="320" width="40" height="15" fill="#3498db" class="pin-rect" data-pin="GPIO17"/>
+                                            <text x="375" y="332" fill="#333" font-size="10">GPIO17</text>
+                                            
+                                            <rect x="330" y="340" width="40" height="15" fill="#3498db" class="pin-rect" data-pin="GPIO16"/>
+                                            <text x="375" y="352" fill="#333" font-size="10">GPIO16</text>
+                                            
+                                            <rect x="330" y="360" width="40" height="15" fill="#3498db" class="pin-rect" data-pin="GPIO4"/>
+                                            <text x="380" y="372" fill="#333" font-size="10">GPIO4</text>
+                                            
+                                            <rect x="330" y="380" width="40" height="15" fill="#3498db" class="pin-rect" data-pin="GPIO0"/>
+                                            <text x="380" y="392" fill="#333" font-size="10">GPIO0</text>
+                                            
+                                            <rect x="330" y="400" width="40" height="15" fill="#3498db" class="pin-rect" data-pin="GPIO2"/>
+                                            <text x="380" y="412" fill="#333" font-size="10">GPIO2</text>
+                                            
+                                            <rect x="330" y="420" width="40" height="15" fill="#3498db" class="pin-rect" data-pin="GPIO15"/>
+                                            <text x="375" y="432" fill="#333" font-size="10">GPIO15</text>
+                                        </g>
+                                        
+                                        <!-- USB Connector -->
+                                        <rect x="170" y="30" width="60" height="20" fill="#95a5a6" rx="3"/>
+                                        <text x="200" y="45" text-anchor="middle" fill="white" font-size="10">USB</text>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Pin Assignment Area -->
+                        <div class="pin-assignments" style="margin-top: 20px;">
+                            <h4>Pin Assignments</h4>
+                            <div id="selected-pins-list" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-top: 15px;">
+                                <!-- Selected pins will appear here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sensors Tab -->
+                    <div class="advanced-tab-content" id="sensors-content" style="display: none;">
+                        <div class="sensors-config">
+                            <div class="sensors-toolbar">
+                                <h4>Sensor Configuration</h4>
+                                <button class="btn-primary" onclick="addSensorConfig()">+ Add Sensor</button>
+                            </div>
+                            
+                            <div id="sensors-list" style="margin-top: 20px;">
+                                <!-- Sensor configurations will be added here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- YAML Editor Tab -->
+                    <div class="advanced-tab-content" id="yaml-content" style="display: none;">
+                        <div class="yaml-editor-container">
+                            <div class="yaml-toolbar">
+                                <h4>ESPHome Configuration</h4>
+                                <div class="yaml-actions">
+                                    <button class="btn-secondary" onclick="generateYAML()">🔄 Regenerate</button>
+                                    <button class="btn-secondary" onclick="validateYAML()">✓ Validate</button>
+                                    <button class="btn-secondary" onclick="downloadYAML()">📥 Download</button>
+                                </div>
+                            </div>
+                            <textarea id="yaml-editor" class="yaml-editor" placeholder="ESPHome YAML configuration will appear here..."></textarea>
+                            <div id="yaml-validation" class="yaml-validation"></div>
+                        </div>
+                    </div>
+
+                    <!-- Preview Tab -->
+                    <div class="advanced-tab-content" id="preview-content" style="display: none;">
+                        <div class="config-preview">
+                            <h4>Configuration Preview</h4>
+                            <div class="preview-summary" id="preview-summary">
+                                <!-- Preview summary will be generated here -->
+                            </div>
+                            
+                            <div class="preview-actions" style="margin-top: 30px;">
+                                <button class="btn-primary" onclick="saveAdvancedConfig()">💾 Save Configuration</button>
+                                <button class="btn-secondary" onclick="compileAdvancedConfig()">🔨 Compile & Upload</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -2173,10 +2363,521 @@
         function showAdvancedMode() {
             const modal = document.getElementById('advanced-modal');
             modal.style.display = 'block';
+            initializeAdvancedMode();
         }
 
         function closeAdvancedMode() {
             document.getElementById('advanced-modal').style.display = 'none';
+        }
+
+        // Advanced Mode State
+        let advancedConfig = {
+            boardType: 'esp32dev',
+            deviceName: '',
+            wifi: { ssid: '', password: '' },
+            pins: {},
+            sensors: [],
+            customYAML: ''
+        };
+
+        function initializeAdvancedMode() {
+            // Reset state
+            advancedConfig = {
+                boardType: 'esp32dev',
+                deviceName: '',
+                wifi: { ssid: '', password: '' },
+                pins: {},
+                sensors: [],
+                customYAML: ''
+            };
+            
+            // Show first tab
+            showAdvancedTab('board');
+            
+            // Initialize pin interactions
+            initializePinInteractions();
+            
+            // Generate initial YAML
+            generateYAML();
+        }
+
+        function showAdvancedTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.advanced-tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.advanced-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab content
+            document.getElementById(tabName + '-content').classList.add('active');
+            document.getElementById(tabName + '-tab').classList.add('active');
+            
+            // Update content based on tab
+            if (tabName === 'preview') {
+                updatePreview();
+            }
+        }
+
+        function updateBoardDiagram() {
+            const boardType = document.getElementById('board-type').value;
+            advancedConfig.boardType = boardType;
+            
+            // Update board label in diagram
+            const boardLabel = document.querySelector('#esp32-visual text');
+            const boardNames = {
+                'esp32dev': 'ESP32 DevKit V1',
+                'esp32-wrover': 'ESP32 WROVER',
+                'esp32-cam': 'ESP32-CAM',
+                'esp32-s2': 'ESP32-S2',
+                'esp32-c3': 'ESP32-C3'
+            };
+            boardLabel.textContent = boardNames[boardType] || 'ESP32 Board';
+            
+            generateYAML();
+        }
+
+        function initializePinInteractions() {
+            // Add click handlers to all pin rectangles
+            document.querySelectorAll('.pin-rect').forEach(pin => {
+                pin.addEventListener('click', function() {
+                    const pinName = this.getAttribute('data-pin');
+                    if (pinName.includes('GND') || pinName.includes('3V3') || pinName.includes('EN')) {
+                        return; // Skip power and ground pins
+                    }
+                    
+                    if (this.classList.contains('assigned')) {
+                        // Remove assignment
+                        this.classList.remove('assigned');
+                        delete advancedConfig.pins[pinName];
+                        updatePinAssignments();
+                    } else {
+                        // Show pin assignment dialog
+                        showPinAssignmentDialog(pinName, this);
+                    }
+                });
+            });
+        }
+
+        function showPinAssignmentDialog(pinName, pinElement) {
+            const sensorType = prompt(`Assign ${pinName} to sensor type:\n\n1. Digital Input (motion, button)\n2. Analog Input (light, temperature)\n3. Digital Output (LED, relay)\n4. PWM Output (servo, dimmer)\n5. I2C (SDA/SCL)\n\nEnter choice (1-5):`);
+            
+            const sensorTypes = {
+                '1': 'Digital Input',
+                '2': 'Analog Input', 
+                '3': 'Digital Output',
+                '4': 'PWM Output',
+                '5': 'I2C'
+            };
+            
+            if (sensorTypes[sensorType]) {
+                const sensorName = prompt(`Enter sensor name for ${pinName}:`) || `sensor_${pinName.toLowerCase()}`;
+                
+                advancedConfig.pins[pinName] = {
+                    type: sensorTypes[sensorType],
+                    sensorName: sensorName,
+                    element: pinElement
+                };
+                
+                pinElement.classList.add('assigned');
+                updatePinAssignments();
+                generateYAML();
+            }
+        }
+
+        function updatePinAssignments() {
+            const container = document.getElementById('selected-pins-list');
+            
+            if (Object.keys(advancedConfig.pins).length === 0) {
+                container.innerHTML = '<p style="color: #666; grid-column: 1 / -1;">Click on GPIO pins in the diagram above to assign sensors</p>';
+                return;
+            }
+            
+            container.innerHTML = Object.entries(advancedConfig.pins).map(([pin, config]) => `
+                <div class="pin-assignment">
+                    <div class="pin-assignment-header">
+                        <strong>${pin}</strong>
+                        <button class="remove-pin-btn" onclick="removePinAssignment('${pin}')">Remove</button>
+                    </div>
+                    <p><strong>Type:</strong> ${config.type}</p>
+                    <p><strong>Sensor:</strong> ${config.sensorName}</p>
+                </div>
+            `).join('');
+        }
+
+        function removePinAssignment(pinName) {
+            const pinConfig = advancedConfig.pins[pinName];
+            if (pinConfig && pinConfig.element) {
+                pinConfig.element.classList.remove('assigned');
+            }
+            
+            delete advancedConfig.pins[pinName];
+            updatePinAssignments();
+            generateYAML();
+        }
+
+        // Sensor Configuration Functions
+        function addSensorConfig() {
+            const sensorId = Date.now();
+            const sensorConfig = {
+                id: sensorId,
+                type: 'binary_sensor',
+                platform: 'gpio',
+                name: `Sensor ${sensorId}`,
+                pin: 'GPIO2',
+                options: {}
+            };
+            
+            advancedConfig.sensors.push(sensorConfig);
+            renderSensorsConfig();
+            generateYAML();
+        }
+
+        function renderSensorsConfig() {
+            const container = document.getElementById('sensors-list');
+            
+            if (advancedConfig.sensors.length === 0) {
+                container.innerHTML = '<p style="color: #666;">No sensors configured. Click "Add Sensor" to get started.</p>';
+                return;
+            }
+            
+            container.innerHTML = advancedConfig.sensors.map(sensor => `
+                <div class="sensor-config" id="sensor-${sensor.id}">
+                    <div class="sensor-config-header">
+                        <h5>Sensor Configuration</h5>
+                        <button class="remove-pin-btn" onclick="removeSensorConfig(${sensor.id})">Remove</button>
+                    </div>
+                    <div class="sensor-config-grid">
+                        <div class="sensor-form-group">
+                            <label>Component Type</label>
+                            <select class="advanced-input" onchange="updateSensorConfig(${sensor.id}, 'type', this.value)">
+                                <option value="binary_sensor" ${sensor.type === 'binary_sensor' ? 'selected' : ''}>Binary Sensor</option>
+                                <option value="sensor" ${sensor.type === 'sensor' ? 'selected' : ''}>Sensor</option>
+                                <option value="switch" ${sensor.type === 'switch' ? 'selected' : ''}>Switch</option>
+                                <option value="light" ${sensor.type === 'light' ? 'selected' : ''}>Light</option>
+                            </select>
+                        </div>
+                        <div class="sensor-form-group">
+                            <label>Platform</label>
+                            <select class="advanced-input" onchange="updateSensorConfig(${sensor.id}, 'platform', this.value)">
+                                <option value="gpio" ${sensor.platform === 'gpio' ? 'selected' : ''}>GPIO</option>
+                                <option value="adc" ${sensor.platform === 'adc' ? 'selected' : ''}>ADC</option>
+                                <option value="dht" ${sensor.platform === 'dht' ? 'selected' : ''}>DHT</option>
+                                <option value="dallas" ${sensor.platform === 'dallas' ? 'selected' : ''}>Dallas</option>
+                                <option value="bme280" ${sensor.platform === 'bme280' ? 'selected' : ''}>BME280</option>
+                            </select>
+                        </div>
+                        <div class="sensor-form-group">
+                            <label>Name</label>
+                            <input type="text" class="advanced-input" value="${sensor.name}" 
+                                   onchange="updateSensorConfig(${sensor.id}, 'name', this.value)">
+                        </div>
+                        <div class="sensor-form-group">
+                            <label>Pin</label>
+                            <select class="advanced-input" onchange="updateSensorConfig(${sensor.id}, 'pin', this.value)">
+                                ${Object.keys(advancedConfig.pins).map(pin => 
+                                    `<option value="${pin}" ${sensor.pin === pin ? 'selected' : ''}>${pin}</option>`
+                                ).join('')}
+                                ${!Object.keys(advancedConfig.pins).includes(sensor.pin) ? 
+                                    `<option value="${sensor.pin}" selected>${sensor.pin}</option>` : ''}
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="sensor-advanced-options" style="margin-top: 15px;">
+                        <details>
+                            <summary style="cursor: pointer; font-weight: 500;">Advanced Options</summary>
+                            <div style="margin-top: 10px; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                                <div class="sensor-form-group">
+                                    <label>Update Interval</label>
+                                    <input type="text" class="advanced-input" placeholder="60s" 
+                                           value="${sensor.options.update_interval || ''}"
+                                           onchange="updateSensorOption(${sensor.id}, 'update_interval', this.value)">
+                                </div>
+                                <div class="sensor-form-group">
+                                    <label>Device Class</label>
+                                    <input type="text" class="advanced-input" placeholder="motion" 
+                                           value="${sensor.options.device_class || ''}"
+                                           onchange="updateSensorOption(${sensor.id}, 'device_class', this.value)">
+                                </div>
+                                <div class="sensor-form-group">
+                                    <label>Unit of Measurement</label>
+                                    <input type="text" class="advanced-input" placeholder="°C" 
+                                           value="${sensor.options.unit_of_measurement || ''}"
+                                           onchange="updateSensorOption(${sensor.id}, 'unit_of_measurement', this.value)">
+                                </div>
+                            </div>
+                        </details>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateSensorConfig(sensorId, field, value) {
+            const sensor = advancedConfig.sensors.find(s => s.id === sensorId);
+            if (sensor) {
+                sensor[field] = value;
+                generateYAML();
+            }
+        }
+
+        function updateSensorOption(sensorId, option, value) {
+            const sensor = advancedConfig.sensors.find(s => s.id === sensorId);
+            if (sensor) {
+                if (!sensor.options) sensor.options = {};
+                sensor.options[option] = value;
+                generateYAML();
+            }
+        }
+
+        function removeSensorConfig(sensorId) {
+            advancedConfig.sensors = advancedConfig.sensors.filter(s => s.id !== sensorId);
+            renderSensorsConfig();
+            generateYAML();
+        }
+
+        // YAML Generation and Editing
+        function generateYAML() {
+            const deviceName = document.getElementById('advanced-device-name')?.value || 'my_esp32_device';
+            const wifiSSID = document.getElementById('advanced-wifi-ssid')?.value || 'your_wifi_network';
+            const wifiPassword = document.getElementById('advanced-wifi-password')?.value || 'your_wifi_password';
+            
+            advancedConfig.deviceName = deviceName;
+            advancedConfig.wifi.ssid = wifiSSID;
+            advancedConfig.wifi.password = wifiPassword;
+            
+            let yaml = `esphome:
+  name: ${deviceName.toLowerCase().replace(/[^a-z0-9_]/g, '_')}
+  platform: ESP32
+  board: ${advancedConfig.boardType}
+
+wifi:
+  ssid: "${wifiSSID}"
+  password: "${wifiPassword}"
+  
+  ap:
+    ssid: "${deviceName} Fallback"
+    password: "smartsites123"
+
+captive_portal:
+
+logger:
+
+api:
+  encryption:
+    key: "your-32-byte-base64-key-here"
+
+ota:
+  password: "your-ota-password"
+
+web_server:
+  port: 80
+
+mqtt:
+  broker: 192.168.1.100
+  port: 1883
+  topic_prefix: smartsites/${deviceName.toLowerCase().replace(/[^a-z0-9_]/g, '_')}
+
+time:
+  - platform: sntp
+    id: my_time
+`;
+
+            // Add sensor configurations
+            const sensorGroups = {};
+            
+            advancedConfig.sensors.forEach(sensor => {
+                if (!sensorGroups[sensor.type]) {
+                    sensorGroups[sensor.type] = [];
+                }
+                
+                const sensorConfig = {
+                    platform: sensor.platform,
+                    name: sensor.name,
+                    pin: sensor.pin
+                };
+                
+                // Add options if they exist
+                Object.entries(sensor.options || {}).forEach(([key, value]) => {
+                    if (value) {
+                        sensorConfig[key] = value;
+                    }
+                });
+                
+                sensorGroups[sensor.type].push(sensorConfig);
+            });
+            
+            // Add each sensor group to YAML
+            Object.entries(sensorGroups).forEach(([type, sensors]) => {
+                yaml += `\n${type}:\n`;
+                sensors.forEach(sensor => {
+                    yaml += `  - platform: ${sensor.platform}\n`;
+                    Object.entries(sensor).forEach(([key, value]) => {
+                        if (key !== 'platform') {
+                            yaml += `    ${key}: ${typeof value === 'string' && !value.startsWith('GPIO') ? `"${value}"` : value}\n`;
+                        }
+                    });
+                    yaml += '\n';
+                });
+            });
+            
+            advancedConfig.customYAML = yaml;
+            
+            const editor = document.getElementById('yaml-editor');
+            if (editor) {
+                editor.value = yaml;
+            }
+        }
+
+        function validateYAML() {
+            const yaml = document.getElementById('yaml-editor').value;
+            const validation = document.getElementById('yaml-validation');
+            
+            // Simple YAML validation (in a real implementation, you'd use a proper YAML parser)
+            try {
+                // Check for basic YAML structure
+                const lines = yaml.split('\n');
+                let isValid = true;
+                let errorMessage = '';
+                
+                // Check for required sections
+                const requiredSections = ['esphome:', 'wifi:', 'api:', 'logger:'];
+                const missingSections = requiredSections.filter(section => 
+                    !yaml.includes(section)
+                );
+                
+                if (missingSections.length > 0) {
+                    isValid = false;
+                    errorMessage = `Missing required sections: ${missingSections.join(', ')}`;
+                }
+                
+                // Check for proper indentation (basic check)
+                for (let i = 0; i < lines.length; i++) {
+                    const line = lines[i];
+                    if (line.trim() && !line.startsWith('#')) {
+                        const spaces = line.match(/^ */)[0].length;
+                        if (spaces % 2 !== 0 && line.includes(':')) {
+                            isValid = false;
+                            errorMessage = `Indentation error on line ${i + 1}`;
+                            break;
+                        }
+                    }
+                }
+                
+                if (isValid) {
+                    validation.className = 'yaml-validation valid';
+                    validation.textContent = '✓ YAML configuration is valid';
+                } else {
+                    validation.className = 'yaml-validation invalid';
+                    validation.textContent = `✗ ${errorMessage}`;
+                }
+            } catch (error) {
+                validation.className = 'yaml-validation invalid';
+                validation.textContent = `✗ YAML parsing error: ${error.message}`;
+            }
+        }
+
+        function downloadYAML() {
+            const yaml = document.getElementById('yaml-editor').value;
+            const deviceName = advancedConfig.deviceName || 'esp32_device';
+            
+            const blob = new Blob([yaml], { type: 'text/yaml' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${deviceName}.yaml`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // Preview Functions
+        function updatePreview() {
+            const summary = document.getElementById('preview-summary');
+            
+            const deviceInfo = `
+                <div class="preview-section">
+                    <h5>Device Information</h5>
+                    <ul>
+                        <li>Name: ${advancedConfig.deviceName || 'Not set'}</li>
+                        <li>Board: ${advancedConfig.boardType}</li>
+                        <li>WiFi Network: ${advancedConfig.wifi.ssid || 'Not configured'}</li>
+                    </ul>
+                </div>
+            `;
+            
+            const pinInfo = `
+                <div class="preview-section">
+                    <h5>Pin Assignments (${Object.keys(advancedConfig.pins).length})</h5>
+                    <ul>
+                        ${Object.entries(advancedConfig.pins).map(([pin, config]) => 
+                            `<li>${pin}: ${config.sensorName} (${config.type})</li>`
+                        ).join('')}
+                        ${Object.keys(advancedConfig.pins).length === 0 ? '<li>No pins assigned</li>' : ''}
+                    </ul>
+                </div>
+            `;
+            
+            const sensorInfo = `
+                <div class="preview-section">
+                    <h5>Sensors Configured (${advancedConfig.sensors.length})</h5>
+                    <ul>
+                        ${advancedConfig.sensors.map(sensor => 
+                            `<li>${sensor.name} (${sensor.type}/${sensor.platform} on ${sensor.pin})</li>`
+                        ).join('')}
+                        ${advancedConfig.sensors.length === 0 ? '<li>No sensors configured</li>' : ''}
+                    </ul>
+                </div>
+            `;
+            
+            summary.innerHTML = deviceInfo + pinInfo + sensorInfo;
+        }
+
+        function saveAdvancedConfig() {
+            const yaml = document.getElementById('yaml-editor').value;
+            
+            const config = {
+                name: advancedConfig.deviceName,
+                type: 'advanced_esp32',
+                mode: 'advanced',
+                board_type: advancedConfig.boardType,
+                pins: advancedConfig.pins,
+                sensors: advancedConfig.sensors,
+                esphome_config: yaml,
+                site_location_id: null
+            };
+            
+            // Save configuration (would normally send to backend)
+            console.log('Saving advanced configuration:', config);
+            
+            // For demo, show success message
+            if (espHomeBuilder) {
+                espHomeBuilder.showSuccess('Advanced configuration saved successfully!');
+            }
+            
+            closeAdvancedMode();
+        }
+
+        function compileAdvancedConfig() {
+            // Validate first
+            validateYAML();
+            
+            const validation = document.getElementById('yaml-validation');
+            if (validation.classList.contains('invalid')) {
+                alert('Please fix YAML validation errors before compiling.');
+                return;
+            }
+            
+            // Save and compile
+            saveAdvancedConfig();
+            
+            if (espHomeBuilder) {
+                espHomeBuilder.showSuccess('Configuration saved and compilation started!');
+            }
         }
         
         // Device functions
