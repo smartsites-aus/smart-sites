@@ -405,3 +405,4 @@ body {
         flex-direction: column;
     }
 }
+.page-content { display: block !important; }
